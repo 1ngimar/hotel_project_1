@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller"/>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <center>
+       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+           <CheckBox fx:id="fimmStjornur" layoutX="14.0" layoutY="169.0" mnemonicParsing="false" text="5-star" />
+           <CheckBox fx:id="fjorarStjornur" layoutX="14.0" layoutY="192.0" mnemonicParsing="false" text="4-star" />
+           <CheckBox fx:id="trjarStrjornur" layoutX="14.0" layoutY="217.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="60.0" text="3-star" />
+           <Button layoutX="171.0" layoutY="88.0" mnemonicParsing="false" text="Button" />
+           <DatePicker layoutX="14.0" layoutY="49.0" />
+           <ChoiceBox id="afangastadir" layoutX="14.0" layoutY="88.0" prefWidth="150.0" />
+       </Pane>
+   </center>
+</BorderPane>
