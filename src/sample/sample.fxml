@@ -3,15 +3,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <center>
-       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-           <CheckBox fx:id="fimmStjornur" layoutX="14.0" layoutY="169.0" mnemonicParsing="false" text="5-star" />
-           <CheckBox fx:id="fjorarStjornur" layoutX="14.0" layoutY="192.0" mnemonicParsing="false" text="4-star" />
-           <CheckBox fx:id="trjarStrjornur" layoutX="14.0" layoutY="217.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="60.0" text="3-star" />
-           <Button layoutX="171.0" layoutY="88.0" mnemonicParsing="false" text="Button" />
-           <DatePicker layoutX="14.0" layoutY="49.0" />
-           <ChoiceBox id="afangastadir" layoutX="14.0" layoutY="88.0" prefWidth="150.0" />
-       </Pane>
-   </center>
-</BorderPane>
+<AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+             <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                 <CheckBox fx:id="fimmStjornur" layoutX="14.0" layoutY="169.0" mnemonicParsing="false" text="5-star" />
+                 <CheckBox fx:id="fjorarStjornur" layoutX="14.0" layoutY="192.0" mnemonicParsing="false" text="4-star" />
+                 <CheckBox fx:id="trjarStrjornur" layoutX="14.0" layoutY="217.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="60.0" text="3-star" />
+                 <Button fx:id="searchButton" layoutX="171.0" layoutY="88.0" mnemonicParsing="false" text="Leita" />
+                 <ChoiceBox id="afangastadir" fx:id="afangastadir" layoutX="14.0" layoutY="88.0" prefWidth="150.0" />
+               <ListView fx:id="hotelListView" layoutX="280.0" layoutY="13.0" prefHeight="367.0" prefWidth="307.0" />
+               <Button fx:id="user_1" layoutX="18.0" layoutY="14.0" mnemonicParsing="false" text="User 1" />
+               <Button fx:id="user_2" layoutX="74.0" layoutY="14.0" mnemonicParsing="false" text="User 2" />
+               <Button fx:id="user_3" layoutX="18.0" layoutY="46.0" mnemonicParsing="false" text="User 3" />
+               <Button fx:id="user_4" layoutX="74.0" layoutY="46.0" mnemonicParsing="false" text="User 4" />
+             </Pane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

@@ -13,6 +13,7 @@ public class Hotel {
     private int hotel_type;
     private int hotel_base_price;
 
+
     public Hotel(int hotel_id, String hotel_name, String hotel_location, int hotel_phone_number, int hotel_star_rating, boolean[] hotel_amenities, ArrayList<Room> hotel_room_list, int hotel_type, int hotel_base_price) {
         this.hotel_id = hotel_id;
         this.hotel_name = hotel_name;
