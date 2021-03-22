@@ -26,7 +26,6 @@ public class DataFactory {
         // Get all rooms
         ArrayList<ArrayList<Room>> rooms = getRooms();
 
-
         // Booking for user1
         ArrayList<Booking> booking1 = new ArrayList<>();
         ArrayList<Room> booking_room_list1 = new ArrayList<>();
@@ -38,7 +37,6 @@ public class DataFactory {
 
         return users;
     }
-
     // , int hotel_type, int hotel_base_price
     public ArrayList<Hotel> getHotels() {
         // Get all rooms!!
