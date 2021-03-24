@@ -37,13 +37,30 @@ public class DataFactory {
 
         return users;
     }
+
+    public ObservableList<Hotel> getLocation() {
+        ObservableList<Hotel> locations = FXCollections.observableArrayList();
+        Hotel location1 = new Hotel("Reykjavík");
+        Hotel location2 = new Hotel("Akureyri");
+        Hotel location3 = new Hotel("Egilsstaðir");
+        Hotel location4 = new Hotel("Ísafjörður");
+
+        locations.add(location1);
+        locations.add(location2);
+        locations.add(location3);
+        locations.add(location4);
+        return locations;
+    }
+
+
+
     // , int hotel_type, int hotel_base_price
     public ArrayList<Hotel> getHotels() {
         // Get all rooms!!
         ArrayList<ArrayList<Room>> all_rooms = getRooms();
 
         // Listinn af ollum hotelunum okkar
-        ArrayList<Hotel> hotels = new ArrayList<>();
+        ArrayList<Hotel> hotels = new ArrayList();
 
         // Hotel Reykjavik
         boolean[] h_amenities1 = {false, false, false};
@@ -57,12 +74,12 @@ public class DataFactory {
 
         // Hotel Egilstaðir
         boolean[] h_amenities3 = {false, false, false};
-        hotels.add(new Hotel(3, "Hotel Edda Egilstadir", "Egilstaðir", 4550000,
+        hotels.add(new Hotel(3, "Hotel Edda Egilstadir", "Egilsstaðir", 4550000,
                 1, h_amenities3, all_rooms.get(0), 3, 10000));
 
         // Hotel Egilstaðir
         boolean[] h_amenities4 = {false, false, false};
-        hotels.add(new Hotel(4, "Hotel Icelandair Egilstadir", "Egilstaðir", 4550001,
+        hotels.add(new Hotel(4, "Hotel Icelandair Egilstadir", "Egilsstaðir", 4550001,
                 5, h_amenities4, all_rooms.get(0), 3, 10000));
 
         // Hotel Akureyri
