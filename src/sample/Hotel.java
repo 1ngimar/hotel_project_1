@@ -12,6 +12,8 @@ public class Hotel {
     private ArrayList<Room> hotel_room_list;
     private int hotel_type;
     private int hotel_base_price;
+    private String hotel_city;
+    private Hotel hotel;
 
 
     public Hotel(int hotel_id, String hotel_name, String hotel_location, int hotel_phone_number, int hotel_star_rating, boolean[] hotel_amenities, ArrayList<Room> hotel_room_list, int hotel_type, int hotel_base_price) {
@@ -24,6 +26,26 @@ public class Hotel {
         this.hotel_room_list = hotel_room_list;
         this.hotel_type = hotel_type;
         this.hotel_base_price = hotel_base_price;
+    }
+
+    @Override
+    public String toString() {
+        return hotel_city;
+    }
+
+    public Hotel(String hotel_city) {
+        this.hotel_city = hotel_city;
+    }
+    public Hotel getHotel() {
+        return hotel;
+    }
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
+    }
+    public String getHotel_city() { return hotel_city;}
+
+    public void setHotel_city(String hotel_city) {
+        this.hotel_city = hotel_city;
     }
 
     public int getHotel_id() {
