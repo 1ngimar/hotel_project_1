@@ -6,7 +6,14 @@ import javafx.collections.ObservableList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static sample.Room.RoomAmmenities;
+import static sample.Room.RoomAmmenities.*;
+import static sample.Room.RoomCategory.*;
+
 public class DataFactory {
+    // Create all rooms
+    public ArrayList<Room> all_rooms = this.createRooms();
+
     public DataFactory() {
     }
 
@@ -20,6 +27,14 @@ public class DataFactory {
         User user6 = new User(6, "Gísli Súrsson", "utlaginn", 8965665, "gislisursson@gmail.com", "Sæból 1");
 
 
+        // Test filter
+        ArrayList<Room> hotel_one_rooms = getRoomsByHotelId(1);
+
+        for (Room room : hotel_one_rooms) {
+            System.out.println(room.getRoom_id());
+        }
+
+
         // Get all hotels
         ArrayList<Hotel> hotels = getHotels();
 
@@ -28,6 +43,7 @@ public class DataFactory {
 
         // Booking for user1
         ArrayList<Booking> booking1 = new ArrayList<>();
+
         ArrayList<Room> booking_room_list1 = new ArrayList<>();
         // Get the rooms for this user and add them to a list for that one user
         booking_room_list1.add(rooms.get(0).get(0));
@@ -108,6 +124,31 @@ public class DataFactory {
 
     ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
 
+    public ArrayList<Room> createRooms() {
+        ArrayList<Room> all_rooms = new ArrayList<>();
+
+        all_rooms.add(new Room(1, SINGLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1));
+        all_rooms.add(new Room(2, DOUBLE, 1.5, new RoomAmmenities[]{TV, OCEAN_VIEW}, room_occupancy_setup, 2));
+        all_rooms.add(new Room(3, FAMILY, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1));
+        all_rooms.add(new Room(4, DOUBLE, 1.5, new RoomAmmenities[]{OCEAN_VIEW, BALCONY}, room_occupancy_setup, 3));
+        all_rooms.add(new Room(5, DOUBLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 2));
+
+        return all_rooms;
+    }
+
+    public ArrayList<Room> getRoomsByHotelId(int hotel_id) {
+        ArrayList<Room> filtered_rooms = new ArrayList<Room>();
+
+        for (Room room : this.all_rooms) {
+            if (room.getHotel_id() == hotel_id) {
+                filtered_rooms.add(room);
+            }
+        }
+
+        return filtered_rooms;
+    }
+
+
     public ArrayList<ArrayList<Room>> getRooms() {
 
         // Listi af listum af herbergjum
@@ -117,15 +158,15 @@ public class DataFactory {
         ArrayList<Room> rooms_for_hotel_1 = new ArrayList<>();
         // Eitt eintak af herbergi
         boolean[] r_amenities1 = {false, false, false};
-        rooms_for_hotel_1.add(new Room(1, 1, 1.5, r_amenities1, room_occupancy_setup));
+        rooms_for_hotel_1.add(new Room(1, SINGLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 2));
 
         // Annad eintak af herbergi
         boolean[] r_amenities2 = {false, false, false};
-        rooms_for_hotel_1.add(new Room(2, 2, 2.5, r_amenities2, room_occupancy_setup));
+        rooms_for_hotel_1.add(new Room(2, SINGLE, 2.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1));
 
         // Thridja eintak af herbergi
         boolean[] r_amenities3 = {false, false, false};
-        rooms_for_hotel_1.add(new Room(3, 2, 2.5, r_amenities3, room_occupancy_setup));
+        rooms_for_hotel_1.add(new Room(3, SINGLE, 2.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 0));
 
         // Setjum oll herbergi fyrir hotel 1 inn i adallistann
         all_rooms.add(rooms_for_hotel_1);
