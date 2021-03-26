@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+public class HotelSearchController implements Initializable {
     @FXML
     private Button searchButton;
     @FXML
@@ -37,6 +37,7 @@ public class Controller implements Initializable {
     private Button user_4;
     private DataFactory dataFactory = new DataFactory();
     private ObservableList<User> users = FXCollections.observableArrayList();
+    private String selectedLocation;
     //private ObservableList<Hotel> hotels = FXCollections.observableArrayList();
     private ObservableList<Hotel> locations = FXCollections.observableArrayList();
     @Override
@@ -49,17 +50,27 @@ public class Controller implements Initializable {
     }
 
 
-    public void listLocationHotels(MouseEvent mouseEvent) {
-        Hotel selectedLocation = (Hotel) afangastadir.getSelectionModel().getSelectedItem();
+    public void listSearchResults(MouseEvent mouseEvent) {
+
+        selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
 
         hotelListView.setItems(getSelectedHotels(selectedLocation));
     }
 
-    private ObservableList<Hotel> getSelectedHotels(Hotel hotel) {
-        ObservableList<Hotel> listHotels = FXCollections.observableArrayList();
+    @Override
+    public String toString() {
+        return selectedLocation;
+    }
+
+    private ObservableList<String> getSelectedHotels(String location) {
+        ObservableList<String> listHotels = FXCollections.observableArrayList();
         ArrayList<Hotel> hotelList = dataFactory.getHotels();
+
+        //Setjum oll hotel med sama location og er valid i stadsetningar "drop-down" glugganum inn i leitarnidurstodur
         for(Hotel hotels: hotelList) {
-            listHotels.add(hotels.getHotel());
+            if (hotels.getHotel_location().equals(selectedLocation)) {
+                listHotels.add(hotels.getHotel_name());
+            }
         }
         return listHotels;
     }
