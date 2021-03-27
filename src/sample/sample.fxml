@@ -32,7 +32,7 @@
                <DatePicker fx:id="dep_date_selector" layoutX="77.0" layoutY="162.0" />
                <Label layoutX="18.0" layoutY="91.0" text="Staðsetning*" />
                <Label layoutX="18.0" layoutY="200.0" text="Fjöldi gesta" />
-               <TextField layoutX="202.0" layoutY="196.0" prefHeight="25.0" prefWidth="47.0" />
+               <TextField fx:id="numOfGuestsTextField" layoutX="202.0" layoutY="196.0" prefHeight="25.0" prefWidth="47.0" />
                <Label fx:id="error_label" layoutX="7.0" layoutY="242.0" prefHeight="17.0" prefWidth="190.0" underline="true" />
              </Pane>
          </center>

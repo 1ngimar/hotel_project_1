@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -44,11 +45,16 @@ public class HotelSearchController implements Initializable {
     private Label koma_label;
     @FXML
     private Label brottfor_label;
+    @FXML
+    private Label stadsetningLabel;
+    @FXML
+    private TextField numOfGuestsTextField;
     private DataFactory dataFactory = new DataFactory();
     private ObservableList<User> users = FXCollections.observableArrayList();
     private String selected_location = "";
     private LocalDate selected_arr_date;
     private LocalDate selected_dep_date;
+    private int selectedNumOfGuests;
     private ObservableList<Hotel> locations = FXCollections.observableArrayList();
 
     @Override
@@ -61,42 +67,33 @@ public class HotelSearchController implements Initializable {
         ArrayList<ObservableList<Hotel>> master_list = new ArrayList<>();
         error_label.setText("");
 
-        try { //Get hotels by location
-            System.out.println("trying to find selected location");
-            selected_location = afangastadir.getSelectionModel().getSelectedItem().toString();
-            System.out.println("found selected location");
-            error_label.setText("");
-            master_list.add(get_hotels_by_location(selected_location));
-            
-            //hotelListView.setItems(getSelectedHotels(selectedLocation));
+        try { //Get hotels by required search options
+            try { //Get hotels by location
+                selected_location = afangastadir.getSelectionModel().getSelectedItem().toString();
+            }catch (NullPointerException eLocationError) {
+                stadsetningLabel.setTextFill(Color.RED);
+                //eLocationError.printStackTrace();
+            }
+            try { //Get hotels by arrival date
+                selected_arr_date = arr_date_selector.getValue();
+            }catch (NullPointerException eDepDateError){
+                koma_label.setTextFill(Color.RED);
+                //eDepDateError.printStackTrace();
+            }
+            try { //Get hotels by departure date
+                selected_dep_date = dep_date_selector.getValue();
+            }catch (NullPointerException eDepDateError){
+                brottfor_label.setTextFill(Color.RED);
+                //eDepDateError.printStackTrace();
+            }
+
         } catch (NullPointerException e) {
-            System.out.println("Engin staðsetning valin!");
-            error_label.setText("Vinsamlegast veldu staðsetningu"); //er ekki ad virka
+            error_label.setText("Vinsamlegast fylltu rauða reiti"); //er ekki ad virka
+            //System.out.println("Engin staðsetning valin!");
             //e.printStackTrace();
         }
 
-        try {
-            System.out.println("Trying to see if user chose arrival date");
-            selected_arr_date = arr_date_selector.getValue();
-        }catch (NullPointerException e){
-            koma_label.setTextFill(Color.RED);
-        }
-
-        try {
-            selected_arr_date = dep_date_selector.getValue();
-        }catch (NullPointerException e){
-            koma_label.setTextFill(Color.RED);
-        }
-
-        try { //Get hotels by dates
-            error_label.setText("");
-            master_list.add(getHotelsByDate(selected_arr_date,selected_dep_date));
-            //hotelListView.setItems(getHotelsByDate(selected_arr_date,selected_dep_date));
-        } catch (NullPointerException e){
-            e.printStackTrace();
-        }
-
-        try {
+        if(fimmStjornur.isSelected() || fjorarStjornur.isSelected() || trjarStrjornur.isSelected()){
             boolean[] starRatingArray = new boolean[3];
             if (fimmStjornur.isSelected()) {
                 starRatingArray[0] = true;
@@ -107,12 +104,41 @@ public class HotelSearchController implements Initializable {
             if (trjarStrjornur.isSelected()) {
                 starRatingArray[2] = true;
             }
-            //kalla hér á getHotelsByStarRating
+            // Add all hotels that have chosen star rating by user
             master_list.add(getHotelsByStarRating(starRatingArray));
-
-        }catch (NullPointerException e){
-            e.printStackTrace();
         }
+
+        if(!numOfGuestsTextField.getAccessibleText().equals("")) {
+            try {
+                selectedNumOfGuests = Integer.parseInt(numOfGuestsTextField.getAccessibleText());
+            }catch (Exception notIntExpection){
+                //deal with this later
+            }
+        }
+
+        // // Add required search oprtions (hotels to master_list)
+        if (selected_location != null && selected_arr_date != null && selected_dep_date != null) {
+            //Clean up all error messages
+            error_label.setText("");
+            //stadsetningLabel.setTextFill(Color.BLACK);
+            koma_label.setTextFill(Color.BLACK);
+            brottfor_label.setTextFill(Color.BLACK);
+
+            master_list.add(get_hotels_by_location(selected_location));
+            master_list.add(getHotelsByDate(selected_arr_date,selected_dep_date));
+
+            System.out.println("trying to get correct hotels from master_list");
+            ObservableList<Hotel> searchResult = getCorrectHotels(master_list);
+            System.out.println(searchResult.size());
+
+            for (int i = 0; i < searchResult.size(); i++) {
+                System.out.println(searchResult.get(i));
+            }
+
+        }else {
+            //error_label.setText("Vinsamlegast fylltu rauða reiti");
+        }
+
         /*
         for (int i = 0; i < master_list.size(); i++) {
             ObservableList<Hotel> listToPrint = master_list.get(i);
@@ -123,19 +149,8 @@ public class HotelSearchController implements Initializable {
             }
         }
         */
-        try {
-            System.out.println("trying to get correct hotels from master_list");
-            ObservableList<Hotel> searchResult = getCorrectHotels(master_list);
-            //System.out.println(searchResult.size());
 
-            for (int i = 0; i < searchResult.size(); i++) {
-                System.out.println(searchResult.get(i));
-            }
-        } catch (NullPointerException e){
-            e.printStackTrace();
-        }
 
-        //ObservableList<Hotel> correct_hotels = getCorrectHotels(master_list);
     }
 
     @Override
@@ -193,6 +208,26 @@ public class HotelSearchController implements Initializable {
         return hotelsByDate;
     }
 
+    private ObservableList<Hotel> getHotelsByNumOfGuests(int numOfGuests){
+        ObservableList<Hotel> listByNumOfGuests = FXCollections.observableArrayList();
+        //ArrayList<ArrayList<Room>> listOfListOfRooms = dataFactory.getRooms();
+        ArrayList<Hotel> hotelList = dataFactory.getHotels();
+
+        //selectedNumOfGuests = numOfGuestsTextField.
+        for (Hotel h: hotelList) {
+            ArrayList<Room> roomList = h.getHotel_room_list();
+            if (selectedNumOfGuests == 1){
+                for (Room r: roomList) {
+                    if (r.getRoom_category() == Room.RoomCategory.SINGLE){
+                            listByNumOfGuests.add(h);
+                    }
+                }
+            }
+        }
+        return listByNumOfGuests;
+    }
+
+
     private ObservableList<Hotel> getHotelsByStarRating(boolean[] starRatingArray) {
         ObservableList<Hotel> listByStarRating = FXCollections.observableArrayList();
         ArrayList<Hotel> hotelListFromDF = dataFactory.getHotels();
@@ -221,16 +256,21 @@ public class HotelSearchController implements Initializable {
     }
 
     private ObservableList<Hotel> getCorrectHotels(ArrayList<ObservableList<Hotel>> master_list){
-        ObservableList<Hotel> correct_hotel_list = null;
-        //Tvöföld for-lykkja til að meta oll valin leitarskilyrdi
-        ObservableList<Hotel> list1 = master_list.get(0);
-        int num_of_matches = 1;
-        for (int i = 0; i < list1.size(); i++) {
-            Hotel hotel_i = list1.get(i);
+        ObservableList<Hotel> correct_hotel_list = FXCollections.observableArrayList();
+        ObservableList<Hotel> list1 = FXCollections.observableArrayList();
+        ObservableList<Hotel> list2 = FXCollections.observableArrayList();
+
+        list1.addAll(master_list.get(0));
+        int num_of_matches, hotel_i_id, hotel_j_id;
+
+        for (Hotel hotel_i : list1) {
+            num_of_matches = 1;
+            hotel_i_id = hotel_i.getHotel_id();     // Hérna kemur alltaf villa því að hotel_i er null
             for (int j = 1; j < master_list.size(); j++) {
-                ObservableList<Hotel> list2 = master_list.get(j);
-                for (int k = 0; k < list2.size(); k++) {
-                    if (hotel_i == list2.get(k)){
+                list2.addAll(master_list.get(j));
+                for (Hotel hotel_j : list2) {
+                    hotel_j_id = hotel_j.getHotel_id();
+                    if (hotel_i_id == hotel_j_id) {
                         num_of_matches++;
                     }
                 }
@@ -240,6 +280,7 @@ public class HotelSearchController implements Initializable {
             }
         }
         System.out.println("Trying to return correct_hotel_list");
+        System.out.println("Stærð correct listans er " + correct_hotel_list.size());
         return correct_hotel_list;
     }
 }
