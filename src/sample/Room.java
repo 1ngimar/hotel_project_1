@@ -23,14 +23,16 @@ public class Room {
     private double room_price_multiplier;
     private RoomAmmenities[] room_amenities;
     private ArrayList<LocalDate> room_occupancy;
+    private int room_capacity;
 
-    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmmenities[] room_amenities, ArrayList<LocalDate> room_occupancy, int hotel_id) {
+    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmmenities[] room_amenities, ArrayList<LocalDate> room_occupancy, int hotel_id, int room_capacity) {
         this.room_id = room_id;
         this.hotel_id = hotel_id;
         this.room_category = room_category;
         this.room_price_multiplier = room_price_multiplier;
         this.room_amenities = room_amenities;
         this.room_occupancy = room_occupancy;
+        this.room_capacity = room_capacity;
     }
 
     public int getHotel_id() {
@@ -79,5 +81,11 @@ public class Room {
 
     public void setRoom_occupancy(ArrayList<LocalDate> room_occupancy) {
         this.room_occupancy = room_occupancy;
+    }
+    public int getRoom_capacity() {
+        return room_capacity;
+    }
+    public void setRoom_capacity() {
+        this.room_capacity = room_capacity;
     }
 }

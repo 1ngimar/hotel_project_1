@@ -68,8 +68,6 @@ public class DataFactory {
         return locations;
     }
 
-
-
     // , int hotel_type, int hotel_base_price
     public ArrayList<Hotel> getHotels() {
         // Get all rooms!!
