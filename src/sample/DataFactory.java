@@ -78,42 +78,42 @@ public class DataFactory {
 
         // Hotel Reykjavik
         boolean[] h_amenities1 = {false, false, false};
-        hotels.add(new Hotel(1, "Hotel Edda Reykjavik", "Reykjavík", 5550000,
+        hotels.add(new Hotel(1, "Hotel Edda Reykjavik_1", "Reykjavík", 5550000,
                 2, h_amenities1, all_rooms.get(0), 3, 10000));
 
         // Hotel Reykjavik
         boolean[] h_amenities2 = {false, false, false};
-        hotels.add(new Hotel(2, "Hotel Icelandair Reykjavik", "Reykjavík", 5550001,
+        hotels.add(new Hotel(2, "Hotel Icelandair Reykjavik_2", "Reykjavík", 5550001,
                 4, h_amenities2, all_rooms.get(0), 3, 10000));
 
         // Hotel Egilstaðir
         boolean[] h_amenities3 = {false, false, false};
-        hotels.add(new Hotel(3, "Hotel Edda Egilstadir", "Egilsstaðir", 4550000,
+        hotels.add(new Hotel(3, "Hotel Edda Egilstadir_1", "Egilsstaðir", 4550000,
                 1, h_amenities3, all_rooms.get(0), 3, 10000));
 
         // Hotel Egilstaðir
         boolean[] h_amenities4 = {false, false, false};
-        hotels.add(new Hotel(4, "Hotel Icelandair Egilstadir", "Egilsstaðir", 4550001,
+        hotels.add(new Hotel(4, "Hotel Icelandair Egilstadir_2", "Egilsstaðir", 4550001,
                 5, h_amenities4, all_rooms.get(0), 3, 10000));
 
         // Hotel Akureyri
         boolean[] h_amenities5 = {false, false, false};
-        hotels.add(new Hotel(5, "Hotel Edda Akureyri", "Akureyri", 4560000,
+        hotels.add(new Hotel(5, "Hotel Edda Akureyri_1", "Akureyri", 4560000,
                 3, h_amenities5, all_rooms.get(0), 3, 10000));
 
         // Hotel Akureyri
         boolean[] h_amenities6 = {false, false, false};
-        hotels.add(new Hotel(6, "Hotel Icelandair Akureyri", "Akureyri", 4560001,
+        hotels.add(new Hotel(6, "Hotel Icelandair Akureyri_2", "Akureyri", 4560001,
                 4, h_amenities6, all_rooms.get(0), 3, 10000));
 
         // Hotel Ísafjörður
         boolean[] h_amenities7 = {false, false, false};
-        hotels.add(new Hotel(7, "Hotel Edda Isafjordur", "Ísafjörður", 4500000,
+        hotels.add(new Hotel(7, "Hotel Edda Isafjordur_1", "Ísafjörður", 4500000,
                 3, h_amenities7, all_rooms.get(0), 3, 10000));
 
         // Hotel Ísafjörður
         boolean[] h_amenities8 = {false, false, false};
-        hotels.add(new Hotel(8, "Hotel Icelandair Isafjordur", "Ísafjörður", 4500001,
+        hotels.add(new Hotel(8, "Hotel Icelandair Isafjordur_2", "Ísafjörður", 4500001,
                 5, h_amenities8, all_rooms.get(0), 3, 10000));
 
         return hotels;
