@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+
 public class HotelSearchController implements Initializable {
     @FXML
     private Button searchButton;
@@ -26,6 +27,8 @@ public class HotelSearchController implements Initializable {
     private CheckBox trjarStrjornur;
     @FXML
     private ListView hotelListView;
+    @FXML
+    private TextField noOfGuests;
     @FXML //test
     private Button user_1;
     @FXML //test
@@ -50,6 +53,9 @@ public class HotelSearchController implements Initializable {
     private TextField numOfGuestsTextField;
     private DataFactory dataFactory = new DataFactory();
     private ObservableList<User> users = FXCollections.observableArrayList();
+    private String selectedLocation;
+    private int selectedNoOfGuests;
+    //private ObservableList<Hotel> hotels = FXCollections.observableArrayList();
     private String selected_location = "";
     private LocalDate selected_arr_date;
     private LocalDate selected_dep_date;
@@ -63,6 +69,10 @@ public class HotelSearchController implements Initializable {
     }
 
     public void listSearchResults(MouseEvent mouseEvent) {
+        selectedNoOfGuests = Integer.parseInt(noOfGuests.getText());
+        hotelListView.setItems(getNoOfGuests(selectedNoOfGuests));
+        selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
+        hotelListView.setItems(getSelectedHotels(selectedLocation));
         ArrayList<ObservableList<Hotel>> master_list = new ArrayList<>();
         error_label.setText("");
 
@@ -168,6 +178,14 @@ public class HotelSearchController implements Initializable {
         return selected_location;
     }
 
+    private ObservableList<String> getSelectedHotels(String location) {
+        ObservableList<String> listHotels = FXCollections.observableArrayList();
+        ArrayList<Hotel> hotelList = dataFactory.getHotels();
+        //Setjum oll hotel med sama location og er valid i stadsetningar "drop-down" glugganum inn i leitarnidurstodur
+        for(Hotel hotels: hotelList) {
+            if (hotels.getHotel_location().equals(selectedLocation)) {
+                listHotels.add(hotels.getHotel_name());
+
     private ObservableList<Hotel> get_hotels_by_location(String location) {
         ObservableList<Hotel> listHotels = FXCollections.observableArrayList();
         ArrayList<Hotel> hotel_list_from_df = dataFactory.getHotels();
@@ -186,6 +204,20 @@ public class HotelSearchController implements Initializable {
             }
         }
         return listHotels;
+    }
+
+    private ObservableList<Room> getNoOfGuests(int noOfGuests) {
+        ObservableList<String> hotelsByNoOfGuests = FXCollections.observableArrayList();
+        ArrayList<ArrayList<Room>> roomList = dataFactory.getRooms();
+        ArrayList<Hotel> hotelRoomList = dataFactory.getHotels();
+        for(Hotel hotels: hotelRoomList) {
+            for (Room rooms : roomList) {
+                if (rooms.getRoom_capacity() == selectedNoOfGuests){
+                    hotelsByNoOfGuests.add(hotels.getHotel_name());
+                }
+
+            }
+        }
     }
 
     private ObservableList<Hotel> getHotelsByDate(LocalDate arrDate, LocalDate depDate) {
