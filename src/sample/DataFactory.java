@@ -125,11 +125,11 @@ public class DataFactory {
     public ArrayList<Room> createRooms() {
         ArrayList<Room> all_rooms = new ArrayList<>();
 
-        all_rooms.add(new Room(1, SINGLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1));
-        all_rooms.add(new Room(2, DOUBLE, 1.5, new RoomAmmenities[]{TV, OCEAN_VIEW}, room_occupancy_setup, 2));
-        all_rooms.add(new Room(3, FAMILY, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1));
-        all_rooms.add(new Room(4, DOUBLE, 1.5, new RoomAmmenities[]{OCEAN_VIEW, BALCONY}, room_occupancy_setup, 3));
-        all_rooms.add(new Room(5, DOUBLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 2));
+        all_rooms.add(new Room(1, SINGLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1, 1));
+        all_rooms.add(new Room(2, DOUBLE, 1.5, new RoomAmmenities[]{TV, OCEAN_VIEW}, room_occupancy_setup, 2, 2));
+        all_rooms.add(new Room(3, FAMILY, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1, 4));
+        all_rooms.add(new Room(4, DOUBLE, 1.5, new RoomAmmenities[]{OCEAN_VIEW, BALCONY}, room_occupancy_setup, 3, 2));
+        all_rooms.add(new Room(5, DOUBLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 2, 2));
 
         return all_rooms;
     }
@@ -156,15 +156,15 @@ public class DataFactory {
         ArrayList<Room> rooms_for_hotel_1 = new ArrayList<>();
         // Eitt eintak af herbergi
         boolean[] r_amenities1 = {false, false, false};
-        rooms_for_hotel_1.add(new Room(1, SINGLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 2));
+        rooms_for_hotel_1.add(new Room(1, SINGLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 2, 1));
 
         // Annad eintak af herbergi
         boolean[] r_amenities2 = {false, false, false};
-        rooms_for_hotel_1.add(new Room(2, SINGLE, 2.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1));
+        rooms_for_hotel_1.add(new Room(2, SINGLE, 2.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1, 1));
 
         // Thridja eintak af herbergi
         boolean[] r_amenities3 = {false, false, false};
-        rooms_for_hotel_1.add(new Room(3, SINGLE, 2.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 0));
+        rooms_for_hotel_1.add(new Room(3, SINGLE, 2.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 0, 1));
 
         // Setjum oll herbergi fyrir hotel 1 inn i adallistann
         all_rooms.add(rooms_for_hotel_1);
