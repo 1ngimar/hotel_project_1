@@ -120,11 +120,11 @@ public class DataFactory {
 
     }
 
-    ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
+    //ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
 
     public ArrayList<Room> createRooms() {
         ArrayList<Room> all_rooms = new ArrayList<>();
-
+        ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
         all_rooms.add(new Room(1, SINGLE, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1, 1));
         all_rooms.add(new Room(2, DOUBLE, 1.5, new RoomAmmenities[]{TV, OCEAN_VIEW}, room_occupancy_setup, 2, 2));
         all_rooms.add(new Room(3, FAMILY, 1.5, new RoomAmmenities[]{TV, BALCONY}, room_occupancy_setup, 1, 4));
