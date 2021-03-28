@@ -13,8 +13,9 @@ public class Room {
     enum RoomAmmenities {
         TV,
         OCEAN_VIEW,
-        BALCONY
-        // TODO add ammenities
+        BALCONY,
+        REFRIGERATOR,
+        ROOM_SERVICE
     }
 
     private int room_id;

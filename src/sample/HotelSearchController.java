@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,8 +37,8 @@ public class HotelSearchController implements Initializable {
     private DataFactory dataFactory = new DataFactory();
     private ObservableList<User> users = FXCollections.observableArrayList();
     private String selectedLocation;
-    //private ObservableList<Hotel> hotels = FXCollections.observableArrayList();
     private ObservableList<Hotel> locations = FXCollections.observableArrayList();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //hotels  = dataFactory.getHotels();
@@ -47,14 +46,6 @@ public class HotelSearchController implements Initializable {
         locations = dataFactory.getLocation();
         afangastadir.setItems(locations);
 
-    }
-
-
-    public void listSearchResults(MouseEvent mouseEvent) {
-
-        selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
-
-        hotelListView.setItems(getSelectedHotels(selectedLocation));
     }
 
     @Override
@@ -67,7 +58,7 @@ public class HotelSearchController implements Initializable {
         ArrayList<Hotel> hotelList = dataFactory.getHotels();
 
         //Setjum oll hotel med sama location og er valid i stadsetningar "drop-down" glugganum inn i leitarnidurstodur
-        for(Hotel hotels: hotelList) {
+        for (Hotel hotels : hotelList) {
             if (hotels.getHotel_location().equals(selectedLocation)) {
                 listHotels.add(hotels.getHotel_name());
             }
