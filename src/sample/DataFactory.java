@@ -112,10 +112,11 @@ public class DataFactory {
 
     }
 
-    ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
+    //ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
 
     public ArrayList<Room> createRooms() {
         ArrayList<Room> all_rooms = new ArrayList<>();
+        ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
 
         // Economy Hotel Reykjavík
         all_rooms.add(new Room(1, SINGLE, 1.5, new Room.RoomAmenities[]{TV}, room_occupancy_setup, 1, 1));
