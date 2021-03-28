@@ -27,8 +27,6 @@ public class HotelSearchController implements Initializable {
     private CheckBox trjarStrjornur;
     @FXML
     private ListView hotelListView;
-    @FXML
-    private TextField noOfGuests;
     @FXML //test
     private Button user_1;
     @FXML //test
@@ -54,7 +52,7 @@ public class HotelSearchController implements Initializable {
     private DataFactory dataFactory = new DataFactory();
     private ObservableList<User> users = FXCollections.observableArrayList();
     private String selectedLocation;
-    private int selectedNoOfGuests;
+    private String selectedNoOfGuests = "";
     //private ObservableList<Hotel> hotels = FXCollections.observableArrayList();
     private String selected_location = "";
     private LocalDate selected_arr_date;
@@ -69,7 +67,7 @@ public class HotelSearchController implements Initializable {
     }
 
     public void listSearchResults(MouseEvent mouseEvent) {
-        selectedNoOfGuests = Integer.parseInt(noOfGuests.getText());
+        //selectedNoOfGuests = Integer.parseInt(numOfGuestsTextField.getText());
         //hotelListView.setItems(getNoOfGuests(selectedNoOfGuests));
         selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
         hotelListView.setItems(getSelectedHotels(selectedLocation));
@@ -117,10 +115,6 @@ public class HotelSearchController implements Initializable {
             master_list.add(getHotelsByStarRating(starRatingArray));
         }
 
-        if (!numOfGuestsTextField.getAccessibleText().equals("")) {
-
-        }
-
         // // Add required search oprtions (hotels to master_list)
         if (selected_location != null && selected_arr_date != null && selected_dep_date != null) {
             //Clean up all error messages
@@ -131,12 +125,12 @@ public class HotelSearchController implements Initializable {
 
             master_list.add(get_hotels_by_location(selected_location));
 
-
-            if (!numOfGuestsTextField.getAccessibleText().equals("")) {
+            if (!numOfGuestsTextField.getText().equals("")) {
                 try {
-                    selectedNumOfGuests = Integer.parseInt(numOfGuestsTextField.getAccessibleText());
+                    selectedNumOfGuests = Integer.parseInt(numOfGuestsTextField.getText());
                 } catch (Exception notIntExpection) {
                     //deal with this later
+                    notIntExpection.printStackTrace();
                 }
                 master_list.add(getHotelsByNumOfGuestsAndDate(selectedNumOfGuests, selected_arr_date, selected_dep_date));
             } else {
@@ -298,7 +292,8 @@ public class HotelSearchController implements Initializable {
                 }
                 for (Room t : typeRoomList) {
                     room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k++) {
+                    int ro = room_occupancy.size();
+                    for (int k = 0; k < ro; k++) {
                         if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
                             room_occupied = true;
                         }
@@ -367,8 +362,8 @@ public class HotelSearchController implements Initializable {
         ObservableList<Hotel> correct_hotel_list = FXCollections.observableArrayList();
         ObservableList<Hotel> list1 = FXCollections.observableArrayList();
         ObservableList<Hotel> list2 = FXCollections.observableArrayList();
-
-        list1.addAll(master_list.get(0));
+        System.out.println(master_list);
+        list1.addAll(master_list.get(1));
         int num_of_matches, hotel_i_id, hotel_j_id;
 
         for (Hotel hotel_i : list1) {
