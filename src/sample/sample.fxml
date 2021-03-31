@@ -14,18 +14,15 @@
                  <Button fx:id="searchButton" layoutX="209.0" layoutY="238.0" mnemonicParsing="false" onMouseClicked="#listSearchResults" text="Leita" />
                  <ChoiceBox id="afangastadir" fx:id="afangastadir" layoutX="99.0" layoutY="87.0" prefWidth="150.0" />
                <ListView fx:id="hotelListView" layoutX="280.0" layoutY="13.0" prefHeight="367.0" prefWidth="307.0" />
-               <Button fx:id="user_1" layoutX="18.0" layoutY="14.0" mnemonicParsing="false" text="User 1" />
-               <Button fx:id="user_2" layoutX="74.0" layoutY="14.0" mnemonicParsing="false" text="User 2" />
-               <Button fx:id="user_3" layoutX="18.0" layoutY="46.0" mnemonicParsing="false" text="User 3" />
-               <Button fx:id="user_4" layoutX="74.0" layoutY="46.0" mnemonicParsing="false" text="User 4" />
                <Label fx:id="koma_label" layoutX="18.0" layoutY="137.0" text="Koma*" />
                <Label fx:id="brottfor_label" layoutX="18.0" layoutY="166.0" text="Brottför*" />
                <DatePicker fx:id="arr_date_selector" layoutX="77.0" layoutY="133.0" />
                <DatePicker fx:id="dep_date_selector" layoutX="77.0" layoutY="162.0" />
-               <Label layoutX="18.0" layoutY="91.0" text="Staðsetning*" />
+               <Label fx:id="stadsetningLabel" layoutX="18.0" layoutY="91.0" text="Staðsetning*" />
                <Label layoutX="18.0" layoutY="200.0" text="Fjöldi gesta" />
                <TextField fx:id="numOfGuestsTextField" layoutX="202.0" layoutY="196.0" prefHeight="25.0" prefWidth="47.0" />
                <Label fx:id="error_label" layoutX="7.0" layoutY="242.0" prefHeight="17.0" prefWidth="190.0" underline="true" />
+               <ChoiceBox fx:id="numOfGuestsCB" layoutX="48.0" layoutY="230.0" prefWidth="150.0" />
              </Pane>
          </center>
       </BorderPane>

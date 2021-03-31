@@ -4,9 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Room {
-    public Room() {
-
-    }
+    public Room() {}
 
     enum RoomCategory {
         SINGLE,
