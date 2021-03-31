@@ -56,6 +56,9 @@ public class HotelSearchController implements Initializable {
     private LocalDate selected_dep_date;
     private int selectedNumOfGuests;
     private ObservableList<String> locations = FXCollections.observableArrayList();
+    private ObservableList<Hotel> searchResults = FXCollections.observableArrayList();
+    private ObservableList<String> searchResultsHotelNames = FXCollections.observableArrayList();
+    private ObservableList<String> searchResultsHotelLocations = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -70,10 +73,15 @@ public class HotelSearchController implements Initializable {
     }
 
     public void listSearchResults(MouseEvent mouseEvent) {
+        try {
+            hotelListView.getItems().clear();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //selectedNoOfGuests = Integer.parseInt(numOfGuestsTextField.getText());
         //hotelListView.setItems(getNoOfGuests(selectedNoOfGuests));
         //selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
-        hotelListView.setItems(getSelectedHotels(selectedLocation));
+        //hotelListView.setItems(getSelectedHotels(selectedLocation));
         ArrayList<ObservableList<Hotel>> master_list = new ArrayList<>();
         error_label.setText("");
         try { //Get hotels by required search options
@@ -145,33 +153,27 @@ public class HotelSearchController implements Initializable {
             }
 
 
-            System.out.println("trying to get correct hotels from master_list");
-            ObservableList<Hotel> searchResult = getCorrectHotels(master_list);
-            System.out.println(searchResult.size());
+            // Get the final ("correct") search results by checking each list in master_list
+            searchResults = getCorrectHotels(master_list);
+            // call a function to show all the search results
 
-            for (int i = 0; i < searchResult.size(); i++) {
-                System.out.println(searchResult.get(i));
+            for (Hotel sr : searchResults) {
+                searchResultsHotelNames.add(sr.getHotel_name());
+                searchResultsHotelLocations.add(sr.getHotel_location());
             }
+
+            // Show only the names of the hotels in the listView
+            hotelListView.setItems(searchResultsHotelNames);
+
+            // delete the search results so that if the user would like to search again
+            //searchResults.removeAll();
+            //searchResultsHotelNames.removeAll();
+            //searchResultsHotelLocations.removeAll();
+
 
         } else {
             //error_label.setText("Vinsamlegast fylltu rauða reiti");
         }
-
-
-
-
-        /*
-        for (int i = 0; i < master_list.size(); i++) {
-            ObservableList<Hotel> listToPrint = master_list.get(i);
-            System.out.println("Þetta er listi númer" + i);
-            for (int j = 0; j < listToPrint.size() ; j++) {
-                Hotel hotelToPrint = listToPrint.get(j);
-                System.out.println(hotelToPrint.getHotel_name()); //fáum alltaf villu hér!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            }
-        }
-        */
-
-
     }
 
     @Override
@@ -179,53 +181,21 @@ public class HotelSearchController implements Initializable {
         return selectedLocation;
     }
 
-    private ObservableList<String> getSelectedHotels(String location) {
-        ObservableList<String> listHotels = FXCollections.observableArrayList();
-        ArrayList<Hotel> hotelList = dataFactory.getHotels();
-        //Setjum oll hotel med sama location og er valid i stadsetningar "drop-down" glugganum inn i leitarnidurstodur
-        for (Hotel hotels : hotelList) {
-            if (hotels.getHotel_location().equals(selectedLocation)) {
-                listHotels.add(hotels.getHotel_name());
-            }
-        }
-
-        return listHotels;
-    }
-
     private ObservableList<Hotel> get_hotels_by_location(String location) {
-        ObservableList<Hotel> listHotels = FXCollections.observableArrayList();
+        ObservableList<Hotel> hotelsByLocation = FXCollections.observableArrayList();
         ArrayList<Hotel> hotel_list_from_df = dataFactory.getHotels();
         if (location.equals("")) {
-            try {
-                System.out.println("Engin staðsetning valin");
-                //throw new Exception("No location selected");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            System.out.println("Engin staðsetning valin");
         }
 
-        for (Hotel hotels : hotel_list_from_df) {
-            if (hotels.getHotel_location().equals(selectedLocation)) {
-                listHotels.add(hotels.getHotel());
+        for (Hotel h : hotel_list_from_df) {
+            if (h.getHotel_location().equals(selectedLocation)) {
+                hotelsByLocation.add(h);
             }
         }
-        return listHotels;
+        return hotelsByLocation;
     }
 
-    /*
-    private ObservableList<Room> getNoOfGuests(int noOfGuests) {
-        ObservableList<String> hotelsByNoOfGuests = FXCollections.observableArrayList();
-        ArrayList<ArrayList<Room>> roomList = dataFactory.getRooms();
-        ArrayList<Hotel> hotelRoomList = dataFactory.getHotels();
-        for (Hotel hotels : hotelRoomList) {
-            for (Room rooms : roomList) {
-                if (rooms.getRoom_capacity() == selectedNoOfGuests) {
-                    hotelsByNoOfGuests.add(hotels.getHotel_name());
-                }
-            }
-        }
-    }
-    */
     private ObservableList<Hotel> getHotelsByDate(LocalDate arrDate, LocalDate depDate) {
         ObservableList<Hotel> hotelsByDate = FXCollections.observableArrayList();
         ArrayList<Hotel> hotels = dataFactory.getHotels();
@@ -285,6 +255,8 @@ public class HotelSearchController implements Initializable {
             //selectedNumOfGuests = numOfGuestsTextField.
             for (Hotel h : hotelList) {
                 roomList = h.getHotel_room_list();
+
+                // If selected number of guests is 1 then add all rooms w/SINGLE as roomtype to masterlist
                 if (selectedNumOfGuests == 1) {
                     for (Room r : roomList) {
                         if (r.getRoom_category() == Room.RoomCategory.SINGLE) {
@@ -306,6 +278,8 @@ public class HotelSearchController implements Initializable {
                         listByNumOfGuestsAndDate.add(h);
                     }
                 }
+
+                // If selected number of guests is 2 then add all rooms w/DOUBLE as roomtype to masterlist
                 if (selectedNumOfGuests == 2) {
                     for (Room r : roomList) {
                         if (r.getRoom_category() == Room.RoomCategory.DOUBLE) {
@@ -326,6 +300,8 @@ public class HotelSearchController implements Initializable {
                         listByNumOfGuestsAndDate.add(h);
                     }
                 }
+
+                // If selected number of guests is 3 to 4 then add all rooms w/FAMILY as roomtype to masterlist
                 if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
                     for (Room r : roomList) {
                         if (r.getRoom_category() == Room.RoomCategory.FAMILY) {
@@ -347,24 +323,26 @@ public class HotelSearchController implements Initializable {
                         listByNumOfGuestsAndDate.add(h);
                     }
                 }
-            }
-            if (selectedNumOfGuests > 4) {
-                for (Room r : roomList) {
-                    typeRoomList.add(r);
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k++) {
-                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                            room_occupied = true;
+
+                // If selected number of guests is more than 4 then add all rooms w/any roomtype to masterlist
+                if (selectedNumOfGuests > 4) {
+                    for (Room r : roomList) {
+                        typeRoomList.add(r);
+                    }
+                    for (Room t : typeRoomList) {
+                        room_occupancy = t.getRoom_occupancy();
+                        for (int k = 0; k < room_occupancy.size(); k++) {
+                            if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
+                                room_occupied = true;
+                            }
+                        }
+                        if (room_occupied) {
+                            num_of_occupied_rooms++;
                         }
                     }
-                    if (room_occupied) {
-                        num_of_occupied_rooms++;
+                    if (num_of_occupied_rooms < typeRoomList.size()) {
+                        listByNumOfGuestsAndDate.add(h);
                     }
-                }
-                if (num_of_occupied_rooms < typeRoomList.size()) {
-                    listByNumOfGuestsAndDate.add(h);
                 }
             }
         }
@@ -374,8 +352,8 @@ public class HotelSearchController implements Initializable {
     private ObservableList<Hotel> getHotelsByStarRating(boolean[] starRatingArray) {
     //private ArrayList<Hotel> getHotelsByStarRating(boolean[] starRatingArray) {
         ObservableList<Hotel> listByStarRating = FXCollections.observableArrayList();
-        Hotel h = new Hotel();
-        ArrayList<Hotel> listOfStarHotels = new ArrayList<>();
+        //Hotel h = new Hotel();
+        //ArrayList<Hotel> listOfStarHotels = new ArrayList<>();
         ArrayList<Hotel> hotelListFromDF = dataFactory.getHotels();
 
         if (starRatingArray[0]) {
@@ -411,19 +389,21 @@ public class HotelSearchController implements Initializable {
         ObservableList<Hotel> list1 = FXCollections.observableArrayList();
         ObservableList<Hotel> list2 = FXCollections.observableArrayList();
 
-        list1.addAll(master_list.get(1)); // er sett á 0 þá kemur NullpointerException, virkar bara með 1
-        System.out.println(list1);
+        list1.addAll(master_list.get(0));
+        //System.out.println(list1);
         int num_of_matches, hotel_i_id, hotel_j_id;
 
         for (Hotel hotel_i : list1) {
             num_of_matches = 1;
-            hotel_i_id = hotel_i.getHotel_id();     // Hérna kemur alltaf villa því að hotel_i er null
+            hotel_i_id = hotel_i.getHotel_id();
             for (int j = 1; j < master_list.size(); j++) {
+                list2.clear();
                 list2.addAll(master_list.get(j));
                 for (Hotel hotel_j : list2) {
                     hotel_j_id = hotel_j.getHotel_id();
                     if (hotel_i_id == hotel_j_id) {
                         num_of_matches++;
+                        break;
                     }
                 }
             }
