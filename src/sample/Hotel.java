@@ -3,23 +3,37 @@ package sample;
 import java.util.ArrayList;
 
 public class Hotel {
+    enum HotelAmenities {
+        SPA,
+        BREAKFAST_INCLUDED,
+        PARKING,
+        FREE_WIFI,
+        RESTAURANT,
+        HANDICAP_ACCESSIBLE
+    }
+
     private int hotel_id;
     private String hotel_name;
     private String hotel_location;
     private int hotel_phone_number;
     private int hotel_star_rating;
-    private boolean[] hotel_amenities;
-    private ArrayList<Room> hotel_room_list = new ArrayList<Room>();
+
+    private HotelAmenities[] hotel_amenities;
+    private ArrayList<Room> hotel_room_list;
     private int hotel_type;
     private int hotel_base_price;
     private String hotel_city;
     private Hotel hotel;
+
 
     public Hotel(){
 
     }
     public Hotel(int hotel_id, String hotel_name, String hotel_location, int hotel_phone_number, int hotel_star_rating, boolean[] hotel_amenities, ArrayList<Room> hotel_room_list, int hotel_type, int hotel_base_price) {
         /*
+
+    public Hotel(int hotel_id, String hotel_name, String hotel_location, int hotel_phone_number, int hotel_star_rating, HotelAmenities[] hotel_amenities, ArrayList<Room> hotel_room_list, int hotel_type, int hotel_base_price) {
+
         this.hotel_id = Objects.requireNonNull(hotel_id, "hotel_id must not be null");
         this.hotel_name = Objects.requireNonNull(hotel_name, "hotel_name must not be null");
         this.hotel_location = Objects.requireNonNull(hotel_location, "hotel_location must not be null");
@@ -50,13 +64,18 @@ public class Hotel {
     public Hotel(String hotel_city) {
         this.hotel_city = hotel_city;
     }
+
     public Hotel getHotel() {
         return hotel;
     }
+
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
     }
-    public String getHotel_city() { return hotel_city;}
+
+    public String getHotel_city() {
+        return hotel_city;
+    }
 
     public void setHotel_city(String hotel_city) {
         this.hotel_city = hotel_city;
@@ -102,11 +121,11 @@ public class Hotel {
         this.hotel_star_rating = hotel_star_rating;
     }
 
-    public boolean[] isHotel_amenities() {
+    public HotelAmenities[] isHotel_amenities() {
         return hotel_amenities;
     }
 
-    public void setHotel_amenities(boolean[] hotel_amenities) {
+    public void setHotel_amenities(HotelAmenities[] hotel_amenities) {
         this.hotel_amenities = hotel_amenities;
     }
 
