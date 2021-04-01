@@ -43,6 +43,8 @@ public class HotelSearchController implements Initializable {
     private Label stadsetningLabel;
     @FXML
     private TextField numOfGuestsTextField;
+    @FXML
+    private Label noResultsErrorMsg;
 
     private DataFactory dataFactory = new DataFactory();
     private ObservableList<User> users = FXCollections.observableArrayList();
@@ -62,11 +64,12 @@ public class HotelSearchController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        noResultsErrorMsg.setVisible(false);
         locations = dataFactory.getLocation();
         afangastadir.setItems(locations);
         int maxPeeps = 30;
         ObservableList<Integer> maxlist = FXCollections.observableArrayList();
-        for(int i = 1; i <= maxPeeps; i++) {
+        for (int i = 1; i <= maxPeeps; i++) {
             maxlist.add(i);
         }
         numOfGuestsCB.setItems(maxlist);
@@ -75,7 +78,7 @@ public class HotelSearchController implements Initializable {
     public void listSearchResults(MouseEvent mouseEvent) {
         try {
             hotelListView.getItems().clear();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //selectedNoOfGuests = Integer.parseInt(numOfGuestsTextField.getText());
@@ -87,7 +90,7 @@ public class HotelSearchController implements Initializable {
         try { //Get hotels by required search options
 
             //Get hotels by location
-            if(afangastadir.getSelectionModel().getSelectedItem() != null && arr_date_selector.getValue() != null && dep_date_selector.getValue() != null) {
+            if (afangastadir.getSelectionModel().getSelectedItem() != null && arr_date_selector.getValue() != null && dep_date_selector.getValue() != null) {
                 selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
                 //Get hotels by arrival date
                 selected_arr_date = arr_date_selector.getValue();
@@ -97,17 +100,17 @@ public class HotelSearchController implements Initializable {
                 throw new NullPointerException();
             }
         } catch (NullPointerException e) {
-            if(afangastadir.getSelectionModel().getSelectedItem() != null) {
+            if (afangastadir.getSelectionModel().getSelectedItem() != null) {
                 stadsetningLabel.setTextFill(Color.BLACK);
             } else {
                 stadsetningLabel.setTextFill(Color.RED);
             }
-            if(arr_date_selector.getValue() != null) {
+            if (arr_date_selector.getValue() != null) {
                 koma_label.setTextFill(Color.BLACK);
             } else {
                 koma_label.setTextFill(Color.RED);
             }
-            if(dep_date_selector.getValue() != null) {
+            if (dep_date_selector.getValue() != null) {
                 brottfor_label.setTextFill(Color.BLACK);
             } else {
                 brottfor_label.setTextFill(Color.RED);
@@ -157,13 +160,20 @@ public class HotelSearchController implements Initializable {
             searchResults = getCorrectHotels(master_list);
             // call a function to show all the search results
 
-            for (Hotel sr : searchResults) {
-                searchResultsHotelNames.add(sr.getHotel_name());
-                searchResultsHotelLocations.add(sr.getHotel_location());
+            if (searchResults.isEmpty()) {
+                noResultsErrorMsg.setVisible(true);
+            } else {
+                for (Hotel sr : searchResults) {
+                    searchResultsHotelNames.add(sr.getHotel_name());
+                    searchResultsHotelLocations.add(sr.getHotel_location());
+                }
+                noResultsErrorMsg.setVisible(false);
+                hotelListView.setItems(searchResultsHotelNames);
             }
 
+
             // Show only the names of the hotels in the listView
-            hotelListView.setItems(searchResultsHotelNames);
+
 
             // delete the search results so that if the user would like to search again
             //searchResults.removeAll();
@@ -200,7 +210,7 @@ public class HotelSearchController implements Initializable {
         ObservableList<Hotel> hotelsByDate = FXCollections.observableArrayList();
         ArrayList<Hotel> hotels = dataFactory.getHotels();
         int num_of_occupied_rooms = 0;
-        Boolean room_occupied = false;
+        boolean room_occupied;
 
         if (arrDate.isAfter(depDate)) {
             throw new IllegalArgumentException();
@@ -226,7 +236,7 @@ public class HotelSearchController implements Initializable {
                         num_of_occupied_rooms++;
                     }
                 }
-                if (num_of_occupied_rooms < roomList.size()) {
+                if (num_of_occupied_rooms <= roomList.size()) {
                     hotelsByDate.add(hotel);
                 }
             }
@@ -234,16 +244,15 @@ public class HotelSearchController implements Initializable {
         return hotelsByDate;
     }
 
-    private ObservableList<Hotel> getHotelsByNumOfGuestsAndDate(int numOfGuests, LocalDate
+    private ObservableList<Hotel> getHotelsByNumOfGuestsAndDate(int selectedNumOfGuests, LocalDate
             arrDate, LocalDate depDate) {
         ObservableList<Hotel> listByNumOfGuestsAndDate = FXCollections.observableArrayList();
         ArrayList<Room> roomList;
         ArrayList<Room> typeRoomList = new ArrayList<>();
-        //ArrayList<ArrayList<Room>> listOfListOfRooms = dataFactory.getRooms();
         ArrayList<Hotel> hotelList = dataFactory.getHotels();
         ArrayList<LocalDate> room_occupancy;
-        Boolean room_occupied = false;
-        int num_of_occupied_rooms = 0;
+        int hotel_capacity;
+        int num_of_occupied_rooms;
 
         if (arrDate.isAfter(depDate)) {
             throw new IllegalArgumentException();
@@ -255,7 +264,9 @@ public class HotelSearchController implements Initializable {
             //selectedNumOfGuests = numOfGuestsTextField.
             for (Hotel h : hotelList) {
                 roomList = h.getHotel_room_list();
-
+                hotel_capacity = 0;
+                num_of_occupied_rooms = 0;
+                typeRoomList.clear();
                 // If selected number of guests is 1 then add all rooms w/SINGLE as roomtype to masterlist
                 if (selectedNumOfGuests == 1) {
                     for (Room r : roomList) {
@@ -265,13 +276,10 @@ public class HotelSearchController implements Initializable {
                     }
                     for (Room t : typeRoomList) {
                         room_occupancy = t.getRoom_occupancy();
-                        for (int k = 0; k < room_occupancy.size(); k++) {
+                        for (int k = 0; k < room_occupancy.size(); k += 2) {
                             if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                                room_occupied = true;
+                                num_of_occupied_rooms++;
                             }
-                        }
-                        if (room_occupied) {
-                            num_of_occupied_rooms++;
                         }
                     }
                     if (num_of_occupied_rooms < typeRoomList.size()) {
@@ -286,21 +294,19 @@ public class HotelSearchController implements Initializable {
                             typeRoomList.add(r);
                         }
                     }
-
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    int ro = room_occupancy.size();
-                    for (int k = 0; k < ro; k++) {
-                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                            room_occupied = true;
+                    for (Room t : typeRoomList) {
+                        room_occupancy = t.getRoom_occupancy();
+                        int ro = room_occupancy.size();
+                        for (int k = 0; k < ro; k++) {
+                            if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
+                                num_of_occupied_rooms++;
+                            }
+                        }
+                        if (num_of_occupied_rooms < typeRoomList.size()) {
+                            listByNumOfGuestsAndDate.add(h);
                         }
                     }
-                    if (num_of_occupied_rooms < typeRoomList.size()) {
-                        listByNumOfGuestsAndDate.add(h);
-                    }
                 }
-
                 // If selected number of guests is 3 to 4 then add all rooms w/FAMILY as roomtype to masterlist
                 if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
                     for (Room r : roomList) {
@@ -310,13 +316,10 @@ public class HotelSearchController implements Initializable {
                     }
                     for (Room t : typeRoomList) {
                         room_occupancy = t.getRoom_occupancy();
-                        for (int k = 0; k < room_occupancy.size(); k++) {
+                        for (int k = 0; k < room_occupancy.size(); k += 2) {
                             if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                                room_occupied = true;
+                                num_of_occupied_rooms++;
                             }
-                        }
-                        if (room_occupied) {
-                            num_of_occupied_rooms++;
                         }
                     }
                     if (num_of_occupied_rooms < typeRoomList.size()) {
@@ -326,21 +329,19 @@ public class HotelSearchController implements Initializable {
 
                 // If selected number of guests is more than 4 then add all rooms w/any roomtype to masterlist
                 if (selectedNumOfGuests > 4) {
-                    for (Room r : roomList) {
-                        typeRoomList.add(r);
-                    }
-                    for (Room t : typeRoomList) {
+                    for (Room t : roomList) {
                         room_occupancy = t.getRoom_occupancy();
-                        for (int k = 0; k < room_occupancy.size(); k++) {
-                            if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                                room_occupied = true;
+                        if (room_occupancy.size() == 0) {
+                            hotel_capacity += t.getRoom_capacity();
+                        } else {
+                            for (int k = 0; k < room_occupancy.size(); k += 2) {
+                                if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
+                                    hotel_capacity += t.getRoom_capacity();
+                                }
                             }
                         }
-                        if (room_occupied) {
-                            num_of_occupied_rooms++;
-                        }
                     }
-                    if (num_of_occupied_rooms < typeRoomList.size()) {
+                    if (selectedNumOfGuests <= hotel_capacity) {
                         listByNumOfGuestsAndDate.add(h);
                     }
                 }
@@ -350,7 +351,7 @@ public class HotelSearchController implements Initializable {
     }
 
     private ObservableList<Hotel> getHotelsByStarRating(boolean[] starRatingArray) {
-    //private ArrayList<Hotel> getHotelsByStarRating(boolean[] starRatingArray) {
+        //private ArrayList<Hotel> getHotelsByStarRating(boolean[] starRatingArray) {
         ObservableList<Hotel> listByStarRating = FXCollections.observableArrayList();
         //Hotel h = new Hotel();
         //ArrayList<Hotel> listOfStarHotels = new ArrayList<>();
@@ -415,4 +416,109 @@ public class HotelSearchController implements Initializable {
         System.out.println("Stærð correct listans er " + correct_hotel_list.size());
         return correct_hotel_list;
     }
+
+    private ObservableList<Room> getRoomsByDate(LocalDate arrDate, LocalDate depDate, Hotel hotel) {
+        ObservableList<Room> roomsByDate = FXCollections.observableArrayList();
+        ArrayList<Room> roomList = hotel.getHotel_room_list();
+
+        if (arrDate.isAfter(depDate)) {
+            throw new IllegalArgumentException();
+        }
+        if (arrDate.isBefore(LocalDate.now()) || depDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        } else {
+            for (Room r : roomList) {
+                ArrayList<LocalDate> room_occupancy = r.getRoom_occupancy();
+                for (int k = 0; k < room_occupancy.size(); k += 2) {
+                    if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
+                        roomsByDate.add(r);
+                    }
+                }
+            }
+        }
+        return roomsByDate;
+    }
+
+    private ObservableList<Room> getRoomsByNumOfGuestsAndDate(int numOfGuests, LocalDate arrDate, LocalDate depDate, Hotel hotel) {
+        ObservableList<Room> listByNumOfGuestsAndDate = FXCollections.observableArrayList();
+        ArrayList<Room> roomList = hotel.getHotel_room_list();
+        ArrayList<Room> typeRoomList = new ArrayList<>();
+        ArrayList<LocalDate> room_occupancy;
+        int num_of_occupied_rooms = 0;
+
+
+        if (arrDate.isAfter(depDate)) {
+            throw new IllegalArgumentException();
+        }
+        if (arrDate.isBefore(LocalDate.now()) || depDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        } else {
+
+            //selectedNumOfGuests = numOfGuestsTextField.
+            // If selected number of guests is 1 then add all rooms w/SINGLE as roomtype to masterlist
+            if (selectedNumOfGuests == 1) {
+                for (Room r : roomList) {
+                    if (r.getRoom_category() == Room.RoomCategory.SINGLE) {
+                        typeRoomList.add(r);
+                    }
+                }
+                for (Room t : typeRoomList) {
+                    room_occupancy = t.getRoom_occupancy();
+                    for (int k = 0; k < room_occupancy.size(); k++) {
+                        if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
+                            listByNumOfGuestsAndDate.add(t);
+                        }
+                    }
+                }
+            }
+
+            // If selected number of guests is 2 then add all rooms w/DOUBLE as roomtype to masterlist
+            if (selectedNumOfGuests == 2) {
+                for (Room r : roomList) {
+                    if (r.getRoom_category() == Room.RoomCategory.DOUBLE) {
+                        typeRoomList.add(r);
+                    }
+                }
+                for (Room t : typeRoomList) {
+                    room_occupancy = t.getRoom_occupancy();
+                    int ro = room_occupancy.size();
+                    for (int k = 0; k < ro; k++) {
+                        if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
+                            listByNumOfGuestsAndDate.add(t);
+                        }
+                    }
+                }
+            }
+            // If selected number of guests is 3 to 4 then add all rooms w/FAMILY as roomtype to masterlist
+            if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
+                for (Room r : roomList) {
+                    if (r.getRoom_category() == Room.RoomCategory.FAMILY) {
+                        typeRoomList.add(r);
+                    }
+                }
+                for (Room t : typeRoomList) {
+                    room_occupancy = t.getRoom_occupancy();
+                    for (int k = 0; k < room_occupancy.size(); k++) {
+                        if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
+                            listByNumOfGuestsAndDate.add(t);
+                        }
+                    }
+                }
+            }
+
+            // If selected number of guests is more than 4 then add all rooms w/any roomtype to masterlist
+            if (selectedNumOfGuests > 4) {
+                for (Room t : roomList) {
+                    room_occupancy = t.getRoom_occupancy();
+                    for (int k = 0; k < room_occupancy.size(); k++) {
+                        if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
+                            listByNumOfGuestsAndDate.add(t);
+                        }
+                    }
+                }
+            }
+        }
+        return listByNumOfGuestsAndDate;
+    }
+
 }

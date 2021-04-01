@@ -47,8 +47,8 @@ public class DataFactory {
         ArrayList<Room> booking_room_list1 = new ArrayList<>();
         // Get the rooms for this user and add them to a list for that one user
         booking_room_list1.add(rooms.get(0));
-        booking1.add(new Booking(1, hotels.get(0), user1, LocalDate.of(2021, 2, 2),
-                LocalDate.of(2021, 3, 3), booking_room_list1, 2, false));
+        booking1.add(new Booking(1, hotels.get(0), user1, LocalDate.of(2021, 4, 2),
+                LocalDate.of(2021, 4, 3), booking_room_list1, 2, false));
         // end of booking for user1
 
         return users;
@@ -117,9 +117,12 @@ public class DataFactory {
     public ArrayList<Room> createRooms() {
         ArrayList<Room> all_rooms = new ArrayList<>();
         ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
+        ArrayList<LocalDate> room_occupancy_test = new ArrayList<>();
+        room_occupancy_test.add(LocalDate.of(2021, 4, 2));
+        room_occupancy_test.add(LocalDate.of(2021, 4, 3));
 
         // Economy Hotel Reykjavík
-        all_rooms.add(new Room(1, SINGLE, 1.5, new Room.RoomAmenities[]{TV}, room_occupancy_setup, 1, 1));
+        all_rooms.add(new Room(1, SINGLE, 1.5, new Room.RoomAmenities[]{TV}, room_occupancy_test, 1, 1));
         all_rooms.add(new Room(2, DOUBLE, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR}, room_occupancy_setup, 1, 2));
         all_rooms.add(new Room(3, FAMILY, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR, BALCONY}, room_occupancy_setup, 1, 4));
 
