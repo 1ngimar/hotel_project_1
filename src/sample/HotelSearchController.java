@@ -134,6 +134,25 @@ public class HotelSearchController implements Initializable {
             //ArrayList<Hotel> startListToAddToMaster = new ArrayList<Hotel>(getHotelsByStarRating(starRatingArray));
         }
 
+
+
+
+        /*
+        TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
+        */
+        //if (/* any amenity is selected */) {
+        int numberOfAmenities = 0;
+        for (Hotel.HotelAmenities a : Hotel.HotelAmenities.values()) {
+            numberOfAmenities++;
+        }
+        boolean[] selectedHotelAmenities = new boolean[numberOfAmenities];
+
+        // }
+
+
+        // master_list.add(getHotelsByAmenities(selectedHotelAmenities))
+
+
         if (selectedLocation != null && selected_arr_date != null && selected_dep_date != null) {
             //Clean up all error messages
             error_label.setText("");
@@ -385,6 +404,13 @@ public class HotelSearchController implements Initializable {
         //return listOfStarHotels;
     }
 
+
+    // TODO taka inn gildi úr boolean fylki sem var sett upp fyrir ofan og skila hótelum sem hafa öll þau amenities í boði
+    //private ObservableList<Hotel> getHotelsByAmenities(boolean[] selectedHotelAmenities) {
+
+    //}
+
+
     private ObservableList<Hotel> getCorrectHotels(ArrayList<ObservableList<Hotel>> master_list) {
         ObservableList<Hotel> correct_hotel_list = FXCollections.observableArrayList();
         ObservableList<Hotel> list1 = FXCollections.observableArrayList();
@@ -438,6 +464,7 @@ public class HotelSearchController implements Initializable {
         }
         return roomsByDate;
     }
+
 
     private ObservableList<Room> getRoomsByNumOfGuestsAndDate(int numOfGuests, LocalDate arrDate, LocalDate depDate, Hotel hotel) {
         ObservableList<Room> listByNumOfGuestsAndDate = FXCollections.observableArrayList();
