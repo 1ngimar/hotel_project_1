@@ -8,13 +8,19 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    Stage window;
+    Scene hotelSearchScene, roomSearchScene;
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
+        window = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hótel leitarvél");
-        primaryStage.setScene(new Scene(root, 600, 400));
-        primaryStage.setResizable(false);
-        primaryStage.show();
+        // Scene fyrir hótelleitarvél
+        hotelSearchScene = new Scene(root, 600, 400);
+        window.setTitle("Hótel leitarvél");
+        window.setScene(hotelSearchScene);
+        window.setResizable(false);
+        window.show();
     }
 
 

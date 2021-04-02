@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.HotelSearchController">
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.HotelSearchController">
    <children>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -23,6 +32,11 @@
                <TextField fx:id="numOfGuestsTextField" layoutX="202.0" layoutY="196.0" prefHeight="25.0" prefWidth="47.0" />
                <Label fx:id="error_label" layoutX="7.0" layoutY="242.0" prefHeight="17.0" prefWidth="190.0" underline="true" />
                <ChoiceBox fx:id="numOfGuestsCB" layoutX="48.0" layoutY="230.0" prefWidth="150.0" />
+               <Label fx:id="noResultsErrorMsg" layoutX="286.0" layoutY="21.0" prefHeight="94.0" prefWidth="293.0" text="Leit skilaði engum niðurstöðum, vinsamlegast reyndu aftur" textAlignment="CENTER" textFill="RED" textOverrun="CLIP" wrapText="true">
+                  <font>
+                     <Font size="17.0" />
+                  </font>
+               </Label>
              </Pane>
          </center>
       </BorderPane>
