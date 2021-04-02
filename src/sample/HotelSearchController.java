@@ -75,6 +75,18 @@ public class HotelSearchController implements Initializable {
         numOfGuestsCB.setItems(maxlist);
     }
 
+    public void resetLabels() {
+        // Reset labels
+        stadsetningLabel.setTextFill(Color.BLACK);
+        stadsetningLabel.setText("");
+        koma_label.setTextFill(Color.BLACK);
+        koma_label.setText("");
+        brottfor_label.setTextFill(Color.BLACK);
+        brottfor_label.setText("");
+        error_label.setTextFill(Color.BLACK);
+        error_label.setText("");
+    }
+
     public void listSearchResults(MouseEvent mouseEvent) {
         try {
             hotelListView.getItems().clear();
@@ -90,10 +102,7 @@ public class HotelSearchController implements Initializable {
 
         try { //Get hotels by required search options
             if (afangastadir.getSelectionModel().getSelectedItem() != null && arr_date_selector.getValue() != null && dep_date_selector.getValue() != null) {
-                stadsetningLabel.setTextFill(Color.BLACK);
-                koma_label.setTextFill(Color.BLACK);
-                brottfor_label.setTextFill(Color.BLACK);
-                error_label.setTextFill(Color.BLACK);
+                resetLabels();
                 //Get hotels by location
                 selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
                 //Get hotels by arrival date
@@ -146,12 +155,6 @@ public class HotelSearchController implements Initializable {
         // master_list.add(getHotelsByAmenities(selectedHotelAmenities))
 
         if (selectedLocation != null && selected_arr_date != null && selected_dep_date != null) {
-            //Clean up all error messages
-            error_label.setText("");
-            stadsetningLabel.setTextFill(Color.BLACK);
-            koma_label.setTextFill(Color.BLACK);
-            brottfor_label.setTextFill(Color.BLACK);
-
             master_list.add(get_hotels_by_location(selectedLocation));
 
             if (!numOfGuestsTextField.getText().equals("")) {
