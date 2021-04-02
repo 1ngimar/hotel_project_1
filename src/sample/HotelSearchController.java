@@ -20,7 +20,7 @@ public class HotelSearchController implements Initializable {
     @FXML
     private ChoiceBox afangastadir;
     @FXML
-    private ChoiceBox numOfGuestsCB;
+    private ChoiceBox numOfGuests;
     @FXML
     private CheckBox fimmStjornur;
     @FXML
@@ -47,13 +47,7 @@ public class HotelSearchController implements Initializable {
     private Label noResultsErrorMsg;
 
     private DataFactory dataFactory = new DataFactory();
-    private ObservableList<User> users = FXCollections.observableArrayList();
     private String selectedLocation;
-    private String selectedNoOfGuests = "";
-    //private ObservableList<Hotel> hotels = FXCollections.observableArrayList();
-
-    //private String selected_location = "";
-
     private LocalDate selected_arr_date;
     private LocalDate selected_dep_date;
     private int selectedNumOfGuests;
@@ -61,6 +55,11 @@ public class HotelSearchController implements Initializable {
     private ObservableList<Hotel> searchResults = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelNames = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelLocations = FXCollections.observableArrayList();
+
+    @Override
+    public String toString() {
+        return selectedLocation;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -72,194 +71,196 @@ public class HotelSearchController implements Initializable {
         for (int i = 1; i <= maxPeeps; i++) {
             maxlist.add(i);
         }
-        numOfGuestsCB.setItems(maxlist);
+        numOfGuests.setItems(maxlist);
     }
 
     public void resetLabels() {
         // Reset labels
         stadsetningLabel.setTextFill(Color.BLACK);
-        stadsetningLabel.setText("");
         koma_label.setTextFill(Color.BLACK);
-        koma_label.setText("");
         brottfor_label.setTextFill(Color.BLACK);
-        brottfor_label.setText("");
         error_label.setTextFill(Color.BLACK);
         error_label.setText("");
     }
 
     public void listSearchResults(MouseEvent mouseEvent) {
+        ArrayList<Hotel> hotels = dataFactory.getHotels();
+
         try {
+            // Clear list view for hotels
             hotelListView.getItems().clear();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //selectedNoOfGuests = Integer.parseInt(numOfGuestsTextField.getText());
-        //hotelListView.setItems(getNoOfGuests(selectedNoOfGuests));
-        //selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
-        //hotelListView.setItems(getSelectedHotels(selectedLocation));
-        ArrayList<ObservableList<Hotel>> master_list = new ArrayList<>();
-        error_label.setText("");
+            // Reset all labels
+            resetLabels();
+            // Validate user input
+            validateInputs();
 
-        try { //Get hotels by required search options
-            if (afangastadir.getSelectionModel().getSelectedItem() != null && arr_date_selector.getValue() != null && dep_date_selector.getValue() != null) {
-                resetLabels();
-                //Get hotels by location
-                selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
-                //Get hotels by arrival date
-                selected_arr_date = arr_date_selector.getValue();
-                //Get hotels by departure date
-                selected_dep_date = dep_date_selector.getValue();
-            } else {
-                throw new NullPointerException();
-            }
-        } catch (NullPointerException e) {
-            if (afangastadir.getSelectionModel().getSelectedItem() == null) {
-                stadsetningLabel.setTextFill(Color.RED);
-            }
-
-            if (arr_date_selector.getValue() == null) {
-                koma_label.setTextFill(Color.RED);
-            }
-
-            if (dep_date_selector.getValue() == null) {
-                brottfor_label.setTextFill(Color.RED);
-            }
-
-            error_label.setTextFill(Color.RED);
-            error_label.setText("Vinsamlegast fylltu rauða reiti");
-        }
-
-        if (fimmStjornur.isSelected() || fjorarStjornur.isSelected() || trjarStrjornur.isSelected()) {
-            boolean[] starRatingArray = new boolean[3];
-            if (fimmStjornur.isSelected()) {
-                starRatingArray[0] = true;
-            }
-            if (fjorarStjornur.isSelected()) {
-                starRatingArray[1] = true;
-            }
-            if (trjarStrjornur.isSelected()) {
-                starRatingArray[2] = true;
-            }
-
-            // Add all hotels that have chosen star rating by user
-            master_list.add(getHotelsByStarRating(starRatingArray));
-        }
-
-        /*
-        TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
-        */
-        //if (/* any amenity is selected */) {
-        int numberOfAmenities = Hotel.HotelAmenities.values().length;
-        boolean[] selectedHotelAmenities = new boolean[numberOfAmenities];
-        // }
-        // master_list.add(getHotelsByAmenities(selectedHotelAmenities))
-
-        if (selectedLocation != null && selected_arr_date != null && selected_dep_date != null) {
-            master_list.add(get_hotels_by_location(selectedLocation));
-
-            if (!numOfGuestsTextField.getText().equals("")) {
-                try {
-                    selectedNumOfGuests = Integer.parseInt(numOfGuestsTextField.getText());
-                } catch (Exception notIntExpection) {
-                    //deal with this later
-                    notIntExpection.printStackTrace();
-                }
-                master_list.add(getHotelsByNumOfGuestsAndDate(selectedNumOfGuests, selected_arr_date, selected_dep_date));
-            } else {
-                master_list.add(getHotelsByDate(selected_arr_date, selected_dep_date));
-            }
+            // Filter hotels
+            hotels = filterHotelsByLocation(hotels);
+            hotels = filterHotelsByDates(hotels);
+            hotels = filterHotelsByStarRating(hotels);
+            // TODO filter hotels by number of guests
+            // TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
 
 
-            // Get the final ("correct") search results by checking each list in master_list
-            searchResults = getCorrectHotels(master_list);
-            // call a function to show all the search results
+            searchResults = FXCollections.observableArrayList(hotels);
 
-            if (searchResults.isEmpty()) {
+            if (hotels.isEmpty()) {
                 noResultsErrorMsg.setVisible(true);
             } else {
-                for (Hotel sr : searchResults) {
-                    searchResultsHotelNames.add(sr.getHotel_name());
-                    searchResultsHotelLocations.add(sr.getHotel_location());
+                for (Hotel hotel : hotels) {
+                    searchResultsHotelNames.add(hotel.getHotel_name());
+                    searchResultsHotelLocations.add(hotel.getHotel_location());
                 }
                 noResultsErrorMsg.setVisible(false);
                 hotelListView.setItems(searchResultsHotelNames);
             }
-
-
-            // Show only the names of the hotels in the listView
-
-
-            // delete the search results so that if the user would like to search again
-            //searchResults.removeAll();
-            //searchResultsHotelNames.removeAll();
-            //searchResultsHotelLocations.removeAll();
-
-
-        } else {
-            //error_label.setText("Vinsamlegast fylltu rauða reiti");
+        } catch (Exception e) {
+            error_label.setTextFill(Color.RED);
+            error_label.setText(e.getMessage().toString());
         }
     }
 
-    @Override
-    public String toString() {
-        return selectedLocation;
-    }
+    // Validated user input interaction
+    private void validateInputs() {
+        boolean isValid = true;
 
-    private ObservableList<Hotel> get_hotels_by_location(String location) {
-        ObservableList<Hotel> hotelsByLocation = FXCollections.observableArrayList();
-        ArrayList<Hotel> hotel_list_from_df = dataFactory.getHotels();
-
-        if (location.equals("")) {
+        if (afangastadir.getSelectionModel().getSelectedItem() != null) {
+            //Get hotels by location
+            selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
+        } else {
+            isValid = false;
             stadsetningLabel.setTextFill(Color.RED);
-            stadsetningLabel.setText("Engin staðsetning valin");
+            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+            // stadsetningLabel.setText("Engin staðsetning valin");
         }
 
-        for (Hotel h : hotel_list_from_df) {
-            if (h.getHotel_location().equals(selectedLocation)) {
-                hotelsByLocation.add(h);
-            }
-        }
-        return hotelsByLocation;
-    }
-
-    private ObservableList<Hotel> getHotelsByDate(LocalDate arrDate, LocalDate depDate) {
-        ObservableList<Hotel> hotelsByDate = FXCollections.observableArrayList();
-        ArrayList<Hotel> hotels = dataFactory.getHotels();
-        int num_of_occupied_rooms = 0;
-        boolean room_occupied;
-
-        if (arrDate.isAfter(depDate)) {
-            throw new IllegalArgumentException();
-        }
-        if (arrDate.isBefore(LocalDate.now()) || depDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException();
+        if (arr_date_selector.getValue() != null) {
+            //Get hotels by arrival date
+            selected_arr_date = arr_date_selector.getValue();
         } else {
-
-            for (int i = 0; i < hotels.size(); i++) {
-                num_of_occupied_rooms = 0;
-                Hotel hotel = hotels.get(i);
-                ArrayList<Room> roomList = hotel.getHotel_room_list();
-                for (int j = 0; j < roomList.size(); j++) {
-                    room_occupied = false;
-                    Room room = roomList.get(j);
-                    ArrayList<LocalDate> room_occupancy = room.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k += 2) {
-                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                            room_occupied = true;
-                        }
-                    }
-                    if (room_occupied) {
-                        num_of_occupied_rooms++;
-                    }
-                }
-                if (num_of_occupied_rooms <= roomList.size()) {
-                    hotelsByDate.add(hotel);
-                }
-            }
+            koma_label.setTextFill(Color.RED);
+            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+            // koma_label.setText("Engin komu dagsetning valin");
+            isValid = false;
         }
-        return hotelsByDate;
+
+        if (dep_date_selector.getValue() != null) {
+            selected_dep_date = dep_date_selector.getValue();
+        } else {
+            brottfor_label.setTextFill(Color.RED);
+            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+            //brottfor_label.setText("Engin brottfarar dagsetning valin");
+            isValid = false;
+        }
+
+        if (arr_date_selector.getValue().isAfter(dep_date_selector.getValue())) {
+            koma_label.setTextFill(Color.RED);
+            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+            //koma_label.setText("Valin komudagsetning er á eftir valinni brottfarardagsetningu");
+            isValid = false;
+        }
+
+        if (arr_date_selector.getValue().isBefore(LocalDate.now())) {
+            koma_label.setTextFill(Color.RED);
+            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+            // koma_label.setText("Valin dagsetning eru liðinn");
+            isValid = false;
+        }
+
+        if (dep_date_selector.getValue().isBefore(LocalDate.now())) {
+            brottfor_label.setTextFill(Color.RED);
+            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+            // brottfor_label.setText("Valin dagsetning eru liðinn");
+            isValid = false;
+        }
+
+
+        if (!isValid) {
+            error_label.setTextFill(Color.RED);
+            error_label.setText("Vinsamlegast fylltu rauða reiti");
+        }
     }
 
+    private ArrayList<Hotel> filterHotelsByStarRating(ArrayList<Hotel> hotels) {
+        ArrayList<Hotel> starRatedHotels = new ArrayList<Hotel>();
+
+        if (fimmStjornur.isSelected() || fjorarStjornur.isSelected() || trjarStrjornur.isSelected()) {
+            for (Hotel hotel : hotels) {
+                if (fimmStjornur.isSelected() && hotel.getHotel_star_rating() == Hotel.StarRating.FIVE) {
+                    starRatedHotels.add(hotel);
+                }
+
+                if (fjorarStjornur.isSelected() && hotel.getHotel_star_rating() == Hotel.StarRating.FOUR) {
+                    starRatedHotels.add(hotel);
+                }
+
+                if (trjarStrjornur.isSelected() && hotel.getHotel_star_rating() == Hotel.StarRating.THREE) {
+                    starRatedHotels.add(hotel);
+                }
+            }
+
+            return starRatedHotels;
+        }
+
+        return hotels;
+    }
+
+    private ArrayList<Hotel> filterHotelsByLocation(ArrayList<Hotel> hotels) {
+        ArrayList<Hotel> hotelsByLocation = new ArrayList<Hotel>();
+
+        for (Hotel hotel : hotels) {
+            if (hotel.getHotel_location().equals(selectedLocation)) {
+                hotelsByLocation.add(hotel);
+            }
+        }
+
+        if (hotelsByLocation.size() > 0) {
+            return hotelsByLocation;
+        }
+
+        return hotels;
+    }
+
+    private ArrayList<Hotel> filterHotelsByDates(ArrayList<Hotel> hotels) {
+        ArrayList<Hotel> hotelsByDates = new ArrayList<Hotel>();
+
+        for (Hotel hotel : hotels) {
+            int numOfOccupiedRooms = 0;
+
+            for (Room room : hotel.getHotel_room_list()) {
+                boolean roomOccupied = false;
+
+                ArrayList<ArrayList<LocalDate>> roomOccupancy = room.getRoom_occupancy();
+
+                for (ArrayList<LocalDate> occupancyDates : roomOccupancy) {
+                    LocalDate arrivalDate = occupancyDates.get(0);
+                    LocalDate departureDate = occupancyDates.get(1);
+
+                    // TODO logic is incorrect. Fix it
+                    if ((selected_arr_date.equals(arrivalDate) || selected_arr_date.isAfter(arrivalDate)) && (selected_dep_date.equals(departureDate) || selected_dep_date.isBefore(departureDate))) {
+                        roomOccupied = true;
+                        break;
+                    }
+                }
+
+                if (roomOccupied) {
+                    numOfOccupiedRooms++;
+                }
+            }
+
+            if (numOfOccupiedRooms <= hotel.getHotel_room_list().size()) {
+                hotelsByDates.add(hotel);
+            }
+        }
+
+        if (hotelsByDates.size() > 0) {
+            return hotelsByDates;
+        }
+
+        return hotels;
+    }
+
+/*
     private ObservableList<Hotel> getHotelsByNumOfGuestsAndDate(int selectedNumOfGuests, LocalDate
             arrDate, LocalDate depDate) {
         ObservableList<Hotel> listByNumOfGuestsAndDate = FXCollections.observableArrayList();
@@ -270,200 +271,105 @@ public class HotelSearchController implements Initializable {
         int hotel_capacity;
         int num_of_occupied_rooms;
 
-        if (arrDate.isAfter(depDate)) {
-            throw new IllegalArgumentException();
-        }
-        if (arrDate.isBefore(LocalDate.now()) || depDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException();
-        } else {
 
-            //selectedNumOfGuests = numOfGuestsTextField.
-            for (Hotel h : hotelList) {
-                roomList = h.getHotel_room_list();
-                hotel_capacity = 0;
-                num_of_occupied_rooms = 0;
-                typeRoomList.clear();
-                // If selected number of guests is 1 then add all rooms w/SINGLE as roomtype to masterlist
-                if (selectedNumOfGuests == 1) {
-                    for (Room r : roomList) {
-                        if (r.getRoom_category() == Room.RoomCategory.SINGLE) {
-                            typeRoomList.add(r);
+        //selectedNumOfGuests = numOfGuestsTextField.
+        for (Hotel h : hotelList) {
+            roomList = h.getHotel_room_list();
+            hotel_capacity = 0;
+            num_of_occupied_rooms = 0;
+            typeRoomList.clear();
+            // If selected number of guests is 1 then add all rooms w/SINGLE as roomtype to masterlist
+            if (selectedNumOfGuests == 1) {
+                for (Room r : roomList) {
+                    if (r.getRoom_category() == Room.RoomCategory.SINGLE) {
+                        typeRoomList.add(r);
+                    }
+                }
+                for (Room t : typeRoomList) {
+                    room_occupancy = t.getRoom_occupancy();
+                    for (int k = 0; k < room_occupancy.size(); k += 2) {
+                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
+                            num_of_occupied_rooms++;
                         }
                     }
-                    for (Room t : typeRoomList) {
-                        room_occupancy = t.getRoom_occupancy();
-                        for (int k = 0; k < room_occupancy.size(); k += 2) {
-                            if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                                num_of_occupied_rooms++;
-                            }
+                }
+                if (num_of_occupied_rooms < typeRoomList.size()) {
+                    listByNumOfGuestsAndDate.add(h);
+                }
+            }
+
+            // If selected number of guests is 2 then add all rooms w/DOUBLE as roomtype to masterlist
+            if (selectedNumOfGuests == 2) {
+                for (Room r : roomList) {
+                    if (r.getRoom_category() == Room.RoomCategory.DOUBLE) {
+                        typeRoomList.add(r);
+                    }
+                }
+                for (Room t : typeRoomList) {
+                    room_occupancy = t.getRoom_occupancy();
+                    int ro = room_occupancy.size();
+                    for (int k = 0; k < ro; k++) {
+                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
+                            num_of_occupied_rooms++;
                         }
                     }
                     if (num_of_occupied_rooms < typeRoomList.size()) {
-                        listByNumOfGuestsAndDate.add(h);
-                    }
-                }
-
-                // If selected number of guests is 2 then add all rooms w/DOUBLE as roomtype to masterlist
-                if (selectedNumOfGuests == 2) {
-                    for (Room r : roomList) {
-                        if (r.getRoom_category() == Room.RoomCategory.DOUBLE) {
-                            typeRoomList.add(r);
-                        }
-                    }
-                    for (Room t : typeRoomList) {
-                        room_occupancy = t.getRoom_occupancy();
-                        int ro = room_occupancy.size();
-                        for (int k = 0; k < ro; k++) {
-                            if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                                num_of_occupied_rooms++;
-                            }
-                        }
-                        if (num_of_occupied_rooms < typeRoomList.size()) {
-                            listByNumOfGuestsAndDate.add(h);
-                        }
-                    }
-                }
-                // If selected number of guests is 3 to 4 then add all rooms w/FAMILY as roomtype to masterlist
-                if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
-                    for (Room r : roomList) {
-                        if (r.getRoom_category() == Room.RoomCategory.FAMILY) {
-                            typeRoomList.add(r);
-                        }
-                    }
-                    for (Room t : typeRoomList) {
-                        room_occupancy = t.getRoom_occupancy();
-                        for (int k = 0; k < room_occupancy.size(); k += 2) {
-                            if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                                num_of_occupied_rooms++;
-                            }
-                        }
-                    }
-                    if (num_of_occupied_rooms < typeRoomList.size()) {
-                        listByNumOfGuestsAndDate.add(h);
-                    }
-                }
-
-                // If selected number of guests is more than 4 then add all rooms w/any roomtype to masterlist
-                if (selectedNumOfGuests > 4) {
-                    for (Room t : roomList) {
-                        room_occupancy = t.getRoom_occupancy();
-                        if (room_occupancy.size() == 0) {
-                            hotel_capacity += t.getRoom_capacity();
-                        } else {
-                            for (int k = 0; k < room_occupancy.size(); k += 2) {
-                                if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
-                                    hotel_capacity += t.getRoom_capacity();
-                                }
-                            }
-                        }
-                    }
-                    if (selectedNumOfGuests <= hotel_capacity) {
                         listByNumOfGuestsAndDate.add(h);
                     }
                 }
             }
+            // If selected number of guests is 3 to 4 then add all rooms w/FAMILY as roomtype to masterlist
+            if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
+                for (Room r : roomList) {
+                    if (r.getRoom_category() == Room.RoomCategory.FAMILY) {
+                        typeRoomList.add(r);
+                    }
+                }
+                for (Room t : typeRoomList) {
+                    room_occupancy = t.getRoom_occupancy();
+                    for (int k = 0; k < room_occupancy.size(); k += 2) {
+                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
+                            num_of_occupied_rooms++;
+                        }
+                    }
+                }
+                if (num_of_occupied_rooms < typeRoomList.size()) {
+                    listByNumOfGuestsAndDate.add(h);
+                }
+            }
+
+            // If selected number of guests is more than 4 then add all rooms w/any roomtype to masterlist
+            if (selectedNumOfGuests > 4) {
+                for (Room t : roomList) {
+                    room_occupancy = t.getRoom_occupancy();
+                    if (room_occupancy.size() == 0) {
+                        hotel_capacity += t.getRoom_capacity();
+                    } else {
+                        for (int k = 0; k < room_occupancy.size(); k += 2) {
+                            if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
+                                hotel_capacity += t.getRoom_capacity();
+                            }
+                        }
+                    }
+                }
+                if (selectedNumOfGuests <= hotel_capacity) {
+                    listByNumOfGuestsAndDate.add(h);
+                }
+            }
         }
+
         return listByNumOfGuestsAndDate;
     }
 
-    private ObservableList<Hotel> getHotelsByStarRating(boolean[] starRatingArray) {
-        //private ArrayList<Hotel> getHotelsByStarRating(boolean[] starRatingArray) {
-        ObservableList<Hotel> listByStarRating = FXCollections.observableArrayList();
-        //Hotel h = new Hotel();
-        //ArrayList<Hotel> listOfStarHotels = new ArrayList<>();
-        ArrayList<Hotel> hotelListFromDF = dataFactory.getHotels();
+ */
 
-        if (starRatingArray[0]) {
-            for (Hotel hotel_a : hotelListFromDF) {
-                if (hotel_a.getHotel_star_rating() == 5) {
-                    listByStarRating.add(hotel_a);
-                    //listOfStarHotels.add(hotel_a);
-                }
-            }
-        }
-        if (starRatingArray[1]) {
-            for (Hotel hotel_a : hotelListFromDF) {
-                if (hotel_a.getHotel_star_rating() == 4) {
-                    listByStarRating.add(hotel_a);
-                    //listOfStarHotels.add(hotel_a);
-                }
-            }
-        }
-        if (starRatingArray[2]) {
-            for (Hotel hotel_a : hotelListFromDF) {
-                if (hotel_a.getHotel_star_rating() == 3) {
-                    listByStarRating.add(hotel_a);
-                    //listOfStarHotels.add(hotel_a);
-                }
-            }
-        }
-        return listByStarRating;
-        //return listOfStarHotels;
-    }
+// TODO taka inn gildi úr boolean fylki sem var sett upp fyrir ofan og skila hótelum sem hafa öll þau amenities í boði
+//private ObservableList<Hotel> getHotelsByAmenities(boolean[] selectedHotelAmenities) {
 
-
-    // TODO taka inn gildi úr boolean fylki sem var sett upp fyrir ofan og skila hótelum sem hafa öll þau amenities í boði
-    //private ObservableList<Hotel> getHotelsByAmenities(boolean[] selectedHotelAmenities) {
-
-    //}
-
-
-    private ObservableList<Hotel> getCorrectHotels(ArrayList<ObservableList<Hotel>> master_list) {
-        ObservableList<Hotel> correct_hotel_list = FXCollections.observableArrayList();
-        ObservableList<Hotel> list1 = FXCollections.observableArrayList();
-        ObservableList<Hotel> list2 = FXCollections.observableArrayList();
-
-        list1.addAll(master_list.get(0));
-        //System.out.println(list1);
-        int num_of_matches, hotel_i_id, hotel_j_id;
-
-        for (Hotel hotel_i : list1) {
-            num_of_matches = 1;
-            hotel_i_id = hotel_i.getHotel_id();
-            for (int j = 1; j < master_list.size(); j++) {
-                list2.clear();
-                list2.addAll(master_list.get(j));
-                for (Hotel hotel_j : list2) {
-                    hotel_j_id = hotel_j.getHotel_id();
-                    if (hotel_i_id == hotel_j_id) {
-                        num_of_matches++;
-                        break;
-                    }
-                }
-            }
-            if (num_of_matches == master_list.size()) {
-                correct_hotel_list.add(hotel_i);
-            }
-        }
-        System.out.println("Trying to return correct_hotel_list");
-        System.out.println("Stærð correct listans er " + correct_hotel_list.size());
-        return correct_hotel_list;
-    }
-
-    private ObservableList<Room> getRoomsByDate(LocalDate arrDate, LocalDate depDate, Hotel hotel) {
-        ObservableList<Room> roomsByDate = FXCollections.observableArrayList();
-        ArrayList<Room> roomList = hotel.getHotel_room_list();
-
-        if (arrDate.isAfter(depDate)) {
-            throw new IllegalArgumentException();
-        }
-        if (arrDate.isBefore(LocalDate.now()) || depDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException();
-        } else {
-            for (Room r : roomList) {
-                ArrayList<LocalDate> room_occupancy = r.getRoom_occupancy();
-                for (int k = 0; k < room_occupancy.size(); k += 2) {
-                    if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
-                        roomsByDate.add(r);
-                    }
-                }
-            }
-        }
-        return roomsByDate;
-    }
-
-
-    private ObservableList<Room> getRoomsByNumOfGuestsAndDate(int numOfGuests, LocalDate arrDate, LocalDate depDate, Hotel hotel) {
+//}
+    /*
+    private ObservableList<Room> getRoomsByNumOfGuestsAndDate(int numOfGuests, LocalDate arrDate, LocalDate
+            depDate, Hotel hotel) {
         ObservableList<Room> listByNumOfGuestsAndDate = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
         ArrayList<Room> typeRoomList = new ArrayList<>();
@@ -544,5 +450,7 @@ public class HotelSearchController implements Initializable {
         }
         return listByNumOfGuestsAndDate;
     }
+    */
+
 
 }

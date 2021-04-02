@@ -13,11 +13,17 @@ public class Hotel {
         HANDICAP_ACCESSIBLE
     }
 
+    enum StarRating {
+        THREE,
+        FOUR,
+        FIVE
+    }
+
     private int hotel_id;
     private String hotel_name;
     private String hotel_location;
     private int hotel_phone_number;
-    private int hotel_star_rating;
+    private StarRating hotel_star_rating;
 
     private HotelAmenities[] hotel_amenities;
     private ArrayList<Room> hotel_room_list;
@@ -33,7 +39,7 @@ public class Hotel {
     //public Hotel(int hotel_id, String hotel_name, String hotel_location, int hotel_phone_number, int hotel_star_rating, boolean[] hotel_amenities, ArrayList<Room> hotel_room_list, int hotel_type, int hotel_base_price) {
 
 
-    public Hotel(int hotel_id, String hotel_name, String hotel_location, int hotel_phone_number, int hotel_star_rating, HotelAmenities[] hotel_amenities, ArrayList<Room> hotel_room_list, int hotel_type, int hotel_base_price) {
+    public Hotel(int hotel_id, String hotel_name, String hotel_location, int hotel_phone_number, StarRating hotel_star_rating, HotelAmenities[] hotel_amenities, ArrayList<Room> hotel_room_list, int hotel_type, int hotel_base_price) {
 
         this.hotel_id = hotel_id; //Removed redundant null checks (ILG)
         this.hotel_name = Objects.requireNonNull(hotel_name, "hotel_name must not be null");
@@ -116,11 +122,11 @@ public class Hotel {
         this.hotel_phone_number = hotel_phone_number;
     }
 
-    public int getHotel_star_rating() {
+    public StarRating getHotel_star_rating() {
         return hotel_star_rating;
     }
 
-    public void setHotel_star_rating(int hotel_star_rating) {
+    public void setHotel_star_rating(StarRating hotel_star_rating) {
         this.hotel_star_rating = hotel_star_rating;
     }
 
