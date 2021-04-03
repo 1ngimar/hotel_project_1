@@ -12,6 +12,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 public class HotelSearchController implements Initializable {
@@ -108,7 +109,6 @@ public class HotelSearchController implements Initializable {
                 ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels);
                 filteredHotels = filterHotelsByDates(filteredHotels);
                 filteredHotels = filterHotelsByStarRating(filteredHotels);
-                // TODO filter hotels by number of guests
                 // TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
 
                 searchResults = FXCollections.observableArrayList(filteredHotels);
@@ -214,6 +214,12 @@ public class HotelSearchController implements Initializable {
             }
         }
 
+        // TODO útfæra skilyrði þannig að þú getir ekki leitað af herbergjum fyrir fleiri en herbergjafjöldinn rýmir
+        /*
+        if (selectedNumOfGuests > selectedNumOfRooms && (selectedNumOfGuests % 4 != selectedNumOfGuests)) {
+        }
+         */
+
         if (!isValid) {
             error_label.setTextFill(Color.RED);
             error_label.setText("Vinsamlegast fylltu rauða reiti");
@@ -266,9 +272,9 @@ public class HotelSearchController implements Initializable {
         ArrayList<Hotel> hotelsByDates = new ArrayList<Hotel>();
 
         for (Hotel hotel : hotels) {
-            ObservableList<Room> availableRooms = getRoomsByDate(hotel);
+            ObservableList<Room> availableRooms = filterRooms(hotel);
 
-            if (availableRooms.size() > 0) {
+            if (availableRooms != null && availableRooms.size() > 0) {
                 hotelsByDates.add(hotel);
             }
         }
@@ -276,10 +282,14 @@ public class HotelSearchController implements Initializable {
         return hotelsByDates;
     }
 
-    private ObservableList<Room> getRoomsByDate(Hotel hotel) {
+    private ObservableList<Room> filterRooms(Hotel hotel) {
         ObservableList<Room> availableRooms = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
+        int hotelCapacity = 0;
+        int selectedNumOfGuests = Integer.parseInt(numOfGuests.getSelectionModel().getSelectedItem().toString());
+        int selectedNumOfRooms = Integer.parseInt(numOfRooms.getSelectionModel().getSelectedItem().toString());
 
+        // Make a list of available rooms
         for (Room room : roomList) {
             ArrayList<ArrayList<LocalDate>> roomOccupancy = room.getRoom_occupancy();
 
@@ -287,208 +297,42 @@ public class HotelSearchController implements Initializable {
                 LocalDate arrivalDate = occupancyDates.get(0);
                 LocalDate departureDate = occupancyDates.get(1);
 
-                if ((selected_arr_date.isAfter(departureDate) && selected_dep_date.isAfter(departureDate)) ||
-                        (selected_arr_date.isBefore(arrivalDate) && selected_dep_date.isBefore(arrivalDate))) {
+                if (((selected_arr_date.isAfter(departureDate) && selected_dep_date.isAfter(departureDate)) ||
+                        (selected_arr_date.isBefore(arrivalDate) && selected_dep_date.isBefore(arrivalDate)))) {
                     availableRooms.add(room);
                 }
             }
         }
 
+        for (Room room : availableRooms) {
+            hotelCapacity += room.getRoom_capacity();
+        }
+
+        // Check if total room capacity of available rooms is enough for selected number of guests
+        // and if number of available rooms is enough for selected number of rooms
+        if (hotelCapacity < selectedNumOfGuests || availableRooms.size() < selectedNumOfRooms) {
+            return null;
+        }
+
+        // Filter list of available rooms to list of available rooms of SINGLE category
+        if (selectedNumOfGuests == selectedNumOfRooms) {
+            availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.SINGLE);
+            // Filter list of available rooms to list of available rooms of DOUBLE category
+        } else if (selectedNumOfGuests / selectedNumOfRooms == 2) {
+            availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.DOUBLE);
+            // Filter list of available rooms to list of available rooms of FAMILY category
+        } else if (selectedNumOfGuests / selectedNumOfRooms == 4) {
+            availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.FAMILY);
+        }
+
         return availableRooms;
     }
 
-
-/*
-    private ObservableList<Hotel> getHotelsByNumOfGuestsAndDate(int selectedNumOfGuests, LocalDate
-            arrDate, LocalDate depDate) {
-        ObservableList<Hotel> listByNumOfGuestsAndDate = FXCollections.observableArrayList();
-        ArrayList<Room> roomList;
-        ArrayList<Room> typeRoomList = new ArrayList<>();
-        ArrayList<Hotel> hotelList = dataFactory.getHotels();
-        ArrayList<LocalDate> room_occupancy;
-        int hotel_capacity;
-        int num_of_occupied_rooms;
-
-
-        //selectedNumOfGuests = numOfGuestsTextField.
-        for (Hotel h : hotelList) {
-            roomList = h.getHotel_room_list();
-            hotel_capacity = 0;
-            num_of_occupied_rooms = 0;
-            typeRoomList.clear();
-            // If selected number of guests is 1 then add all rooms w/SINGLE as roomtype to masterlist
-            if (selectedNumOfGuests == 1) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.SINGLE) {
-                        typeRoomList.add(r);
-                    }
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k += 2) {
-                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                            num_of_occupied_rooms++;
-                        }
-                    }
-                }
-                if (num_of_occupied_rooms < typeRoomList.size()) {
-                    listByNumOfGuestsAndDate.add(h);
-                }
-            }
-
-            // If selected number of guests is 2 then add all rooms w/DOUBLE as roomtype to masterlist
-            if (selectedNumOfGuests == 2) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.DOUBLE) {
-                        typeRoomList.add(r);
-                    }
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    int ro = room_occupancy.size();
-                    for (int k = 0; k < ro; k++) {
-                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                            num_of_occupied_rooms++;
-                        }
-                    }
-                    if (num_of_occupied_rooms < typeRoomList.size()) {
-                        listByNumOfGuestsAndDate.add(h);
-                    }
-                }
-            }
-            // If selected number of guests is 3 to 4 then add all rooms w/FAMILY as roomtype to masterlist
-            if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.FAMILY) {
-                        typeRoomList.add(r);
-                    }
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k += 2) {
-                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                            num_of_occupied_rooms++;
-                        }
-                    }
-                }
-                if (num_of_occupied_rooms < typeRoomList.size()) {
-                    listByNumOfGuestsAndDate.add(h);
-                }
-            }
-
-            // If selected number of guests is more than 4 then add all rooms w/any roomtype to masterlist
-            if (selectedNumOfGuests > 4) {
-                for (Room t : roomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    if (room_occupancy.size() == 0) {
-                        hotel_capacity += t.getRoom_capacity();
-                    } else {
-                        for (int k = 0; k < room_occupancy.size(); k += 2) {
-                            if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
-                                hotel_capacity += t.getRoom_capacity();
-                            }
-                        }
-                    }
-                }
-                if (selectedNumOfGuests <= hotel_capacity) {
-                    listByNumOfGuestsAndDate.add(h);
-                }
-            }
-        }
-
-        return listByNumOfGuestsAndDate;
+    private ObservableList<Room> filterRoomsByCategory(ObservableList<Room> rooms, Room.RoomCategory category) {
+        return rooms.stream()
+                // Filter rooms by category type (SINGLE, DOUBLE or FAMILY)
+                .filter((room -> room.getRoom_category() == category))
+                // Convert Stream to ObservableList
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
-
- */
-
-// TODO taka inn gildi úr boolean fylki sem var sett upp fyrir ofan og skila hótelum sem hafa öll þau amenities í boði
-//private ObservableList<Hotel> getHotelsByAmenities(boolean[] selectedHotelAmenities) {
-
-//}
-    /*
-    private ObservableList<Room> getRoomsByNumOfGuestsAndDate(int numOfGuests, LocalDate arrDate, LocalDate
-            depDate, Hotel hotel) {
-        ObservableList<Room> listByNumOfGuestsAndDate = FXCollections.observableArrayList();
-        ArrayList<Room> roomList = hotel.getHotel_room_list();
-        ArrayList<Room> typeRoomList = new ArrayList<>();
-        ArrayList<LocalDate> room_occupancy;
-        int num_of_occupied_rooms = 0;
-
-
-        if (arrDate.isAfter(depDate)) {
-            throw new IllegalArgumentException();
-        }
-        if (arrDate.isBefore(LocalDate.now()) || depDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException();
-        } else {
-
-            //selectedNumOfGuests = numOfGuestsTextField.
-            // If selected number of guests is 1 then add all rooms w/SINGLE as roomtype to masterlist
-            if (selectedNumOfGuests == 1) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.SINGLE) {
-                        typeRoomList.add(r);
-                    }
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k++) {
-                        if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
-                            listByNumOfGuestsAndDate.add(t);
-                        }
-                    }
-                }
-            }
-
-            // If selected number of guests is 2 then add all rooms w/DOUBLE as roomtype to masterlist
-            if (selectedNumOfGuests == 2) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.DOUBLE) {
-                        typeRoomList.add(r);
-                    }
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    int ro = room_occupancy.size();
-                    for (int k = 0; k < ro; k++) {
-                        if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
-                            listByNumOfGuestsAndDate.add(t);
-                        }
-                    }
-                }
-            }
-            // If selected number of guests is 3 to 4 then add all rooms w/FAMILY as roomtype to masterlist
-            if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.FAMILY) {
-                        typeRoomList.add(r);
-                    }
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k++) {
-                        if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
-                            listByNumOfGuestsAndDate.add(t);
-                        }
-                    }
-                }
-            }
-
-            // If selected number of guests is more than 4 then add all rooms w/any roomtype to masterlist
-            if (selectedNumOfGuests > 4) {
-                for (Room t : roomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k++) {
-                        if (!(arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1)))) {
-                            listByNumOfGuestsAndDate.add(t);
-                        }
-                    }
-                }
-            }
-        }
-        return listByNumOfGuestsAndDate;
-    }
-    */
-
-
 }
