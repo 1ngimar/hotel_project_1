@@ -42,11 +42,12 @@ public class HotelSearchController implements Initializable {
     @FXML
     private Label stadsetningLabel;
     @FXML
-    private TextField numOfGuestsTextField;
-    @FXML
     private Label noResultsErrorMsg;
+    @FXML
+    private Label numOfGuestsLabel;
 
     private DataFactory dataFactory = new DataFactory();
+    private ArrayList<Hotel> hotels = dataFactory.getHotels();
     private String selectedLocation;
     private LocalDate selected_arr_date;
     private LocalDate selected_dep_date;
@@ -68,14 +69,16 @@ public class HotelSearchController implements Initializable {
         afangastadir.setItems(locations);
         int maxPeeps = 30;
         ObservableList<Integer> maxlist = FXCollections.observableArrayList();
+
         for (int i = 1; i <= maxPeeps; i++) {
             maxlist.add(i);
         }
+
         numOfGuests.setItems(maxlist);
     }
 
-    public void resetLabels() {
-        // Reset labels
+    // Resets labels colours and error messages
+    public void resetErrorsAndLabels() {
         stadsetningLabel.setTextFill(Color.BLACK);
         koma_label.setTextFill(Color.BLACK);
         brottfor_label.setTextFill(Color.BLACK);
@@ -84,46 +87,47 @@ public class HotelSearchController implements Initializable {
     }
 
     public void listSearchResults(MouseEvent mouseEvent) {
-        ArrayList<Hotel> hotels = dataFactory.getHotels();
-
         try {
             // Clear list view for hotels
             hotelListView.getItems().clear();
             // Reset all labels
-            resetLabels();
+            resetErrorsAndLabels();
+
             // Validate user input
-            validateInputs();
+            if (validateInputs()) {
+                // Filter hotels
+                hotels = filterHotelsByLocation(hotels);
+                hotels = filterHotelsByDates(hotels);
+                hotels = filterHotelsByStarRating(hotels);
+                // TODO filter hotels by number of guests
+                // TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
 
-            // Filter hotels
-            hotels = filterHotelsByLocation(hotels);
-            hotels = filterHotelsByDates(hotels);
-            hotels = filterHotelsByStarRating(hotels);
-            // TODO filter hotels by number of guests
-            // TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
+                searchResults = FXCollections.observableArrayList(hotels);
 
-
-            searchResults = FXCollections.observableArrayList(hotels);
-
-            if (hotels.isEmpty()) {
-                noResultsErrorMsg.setVisible(true);
-            } else {
-                for (Hotel hotel : hotels) {
-                    searchResultsHotelNames.add(hotel.getHotel_name());
-                    searchResultsHotelLocations.add(hotel.getHotel_location());
+                if (hotels.isEmpty()) {
+                    noResultsErrorMsg.setVisible(true);
+                } else {
+                    for (Hotel hotel : hotels) {
+                        searchResultsHotelNames.add(hotel.getHotel_name());
+                        searchResultsHotelLocations.add(hotel.getHotel_location());
+                    }
+                    noResultsErrorMsg.setVisible(false);
+                    hotelListView.setItems(searchResultsHotelNames);
                 }
-                noResultsErrorMsg.setVisible(false);
-                hotelListView.setItems(searchResultsHotelNames);
             }
         } catch (Exception e) {
+            // Global error handler.
+            e.printStackTrace();
             error_label.setTextFill(Color.RED);
-            error_label.setText(e.getMessage().toString());
+            error_label.setText("INTERNAL SYSTEM ERROR");
         }
     }
 
     // Validated user input interaction
-    private void validateInputs() {
+    private boolean validateInputs() {
         boolean isValid = true;
 
+        // Validate location checkbox
         if (afangastadir.getSelectionModel().getSelectedItem() != null) {
             //Get hotels by location
             selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
@@ -132,6 +136,13 @@ public class HotelSearchController implements Initializable {
             stadsetningLabel.setTextFill(Color.RED);
             // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
             // stadsetningLabel.setText("Engin staðsetning valin");
+        }
+
+        if (numOfGuests.getSelectionModel().getSelectedItem() != null) {
+            selectedNumOfGuests = Integer.parseInt(numOfGuests.getSelectionModel().getSelectedItem().toString());
+        } else {
+            numOfGuestsLabel.setTextFill(Color.RED);
+            isValid = false;
         }
 
         if (arr_date_selector.getValue() != null) {
@@ -144,7 +155,7 @@ public class HotelSearchController implements Initializable {
             isValid = false;
         }
 
-        if (dep_date_selector.getValue() != null) {
+        if (dep_date_selector != null && dep_date_selector.getValue() != null) {
             selected_dep_date = dep_date_selector.getValue();
         } else {
             brottfor_label.setTextFill(Color.RED);
@@ -153,21 +164,21 @@ public class HotelSearchController implements Initializable {
             isValid = false;
         }
 
-        if (arr_date_selector.getValue().isAfter(dep_date_selector.getValue())) {
+        if (arr_date_selector == null || arr_date_selector.getValue().isAfter(dep_date_selector.getValue())) {
             koma_label.setTextFill(Color.RED);
             // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
             //koma_label.setText("Valin komudagsetning er á eftir valinni brottfarardagsetningu");
             isValid = false;
         }
 
-        if (arr_date_selector.getValue().isBefore(LocalDate.now())) {
+        if (arr_date_selector == null || arr_date_selector.getValue().isBefore(LocalDate.now())) {
             koma_label.setTextFill(Color.RED);
             // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
             // koma_label.setText("Valin dagsetning eru liðinn");
             isValid = false;
         }
 
-        if (dep_date_selector.getValue().isBefore(LocalDate.now())) {
+        if (dep_date_selector == null || dep_date_selector.getValue().isBefore(LocalDate.now())) {
             brottfor_label.setTextFill(Color.RED);
             // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
             // brottfor_label.setText("Valin dagsetning eru liðinn");
@@ -179,6 +190,8 @@ public class HotelSearchController implements Initializable {
             error_label.setTextFill(Color.RED);
             error_label.setText("Vinsamlegast fylltu rauða reiti");
         }
+
+        return isValid;
     }
 
     private ArrayList<Hotel> filterHotelsByStarRating(ArrayList<Hotel> hotels) {
