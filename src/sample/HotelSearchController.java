@@ -164,27 +164,39 @@ public class HotelSearchController implements Initializable {
             isValid = false;
         }
 
-        if (arr_date_selector == null || arr_date_selector.getValue().isAfter(dep_date_selector.getValue())) {
+        LocalDate arrivalDate = arr_date_selector.getValue();
+        LocalDate departureDate = dep_date_selector.getValue();
+
+        if (arrivalDate == null) {
             koma_label.setTextFill(Color.RED);
-            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-            //koma_label.setText("Valin komudagsetning er á eftir valinni brottfarardagsetningu");
-            isValid = false;
         }
 
-        if (arr_date_selector == null || arr_date_selector.getValue().isBefore(LocalDate.now())) {
-            koma_label.setTextFill(Color.RED);
-            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-            // koma_label.setText("Valin dagsetning eru liðinn");
-            isValid = false;
-        }
-
-        if (dep_date_selector == null || dep_date_selector.getValue().isBefore(LocalDate.now())) {
+        if (departureDate == null) {
             brottfor_label.setTextFill(Color.RED);
-            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-            // brottfor_label.setText("Valin dagsetning eru liðinn");
-            isValid = false;
         }
 
+        if (arrivalDate != null && departureDate != null) {
+            if (arrivalDate.isAfter(departureDate)) {
+                koma_label.setTextFill(Color.RED);
+                // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+                //koma_label.setText("Valin komudagsetning er á eftir valinni brottfarardagsetningu");
+                isValid = false;
+            }
+
+            if (arrivalDate.isBefore(LocalDate.now())) {
+                koma_label.setTextFill(Color.RED);
+                // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+                // koma_label.setText("Valin dagsetning eru liðinn");
+                isValid = false;
+            }
+
+            if (departureDate.isBefore(LocalDate.now())) {
+                brottfor_label.setTextFill(Color.RED);
+                // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
+                // brottfor_label.setText("Valin dagsetning eru liðinn");
+                isValid = false;
+            }
+        }
 
         if (!isValid) {
             error_label.setTextFill(Color.RED);
