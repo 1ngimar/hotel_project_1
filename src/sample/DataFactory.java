@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import static sample.Hotel.HotelAmenities.*;
@@ -116,8 +117,10 @@ public class DataFactory {
         ArrayList<LocalDate> room_occupancy_setup = new ArrayList<>();
         ArrayList<ArrayList<LocalDate>> room_occupancy = new ArrayList<>();
         ArrayList<LocalDate> room_occupancy_user_one = new ArrayList<>();
-        room_occupancy_user_one.add(LocalDate.of(2021, 4, 2));
-        room_occupancy_user_one.add(LocalDate.of(2021, 4, 3));
+        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);
+        room_occupancy_user_one.add(today);
+        room_occupancy_user_one.add(tomorrow);
         room_occupancy.add(room_occupancy_user_one);
 
         // Economy Hotel Reykjavík

@@ -45,6 +45,10 @@ public class HotelSearchController implements Initializable {
     private Label noResultsErrorMsg;
     @FXML
     private Label numOfGuestsLabel;
+    @FXML
+    private ChoiceBox numOfRooms;
+    @FXML
+    private Label numOfRoomsLabel;
 
     private DataFactory dataFactory = new DataFactory();
     private ArrayList<Hotel> hotels = dataFactory.getHotels();
@@ -52,6 +56,7 @@ public class HotelSearchController implements Initializable {
     private LocalDate selected_arr_date;
     private LocalDate selected_dep_date;
     private int selectedNumOfGuests;
+    private int selectedNumOfRooms;
     private ObservableList<String> locations = FXCollections.observableArrayList();
     private ObservableList<Hotel> searchResults = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelNames = FXCollections.observableArrayList();
@@ -67,14 +72,17 @@ public class HotelSearchController implements Initializable {
         noResultsErrorMsg.setVisible(false);
         locations = dataFactory.getLocation();
         afangastadir.setItems(locations);
-        int maxPeeps = 30;
-        ObservableList<Integer> maxlist = FXCollections.observableArrayList();
+        int max = 30;
+        ObservableList<Integer> maxGuestsList = FXCollections.observableArrayList();
+        ObservableList<Integer> maxRoomList = FXCollections.observableArrayList();
 
-        for (int i = 1; i <= maxPeeps; i++) {
-            maxlist.add(i);
+        for (int i = 1; i <= max; i++) {
+            maxGuestsList.add(i);
+            maxRoomList.add(i);
         }
 
-        numOfGuests.setItems(maxlist);
+        numOfGuests.setItems(maxGuestsList);
+        numOfRooms.setItems(maxRoomList);
     }
 
     // Resets labels colours and error messages
@@ -84,6 +92,7 @@ public class HotelSearchController implements Initializable {
         brottfor_label.setTextFill(Color.BLACK);
         error_label.setTextFill(Color.BLACK);
         error_label.setText("");
+        noResultsErrorMsg.setVisible(false);
     }
 
     public void listSearchResults(MouseEvent mouseEvent) {
@@ -96,22 +105,22 @@ public class HotelSearchController implements Initializable {
             // Validate user input
             if (validateInputs()) {
                 // Filter hotels
-                hotels = filterHotelsByLocation(hotels);
-                hotels = filterHotelsByDates(hotels);
-                hotels = filterHotelsByStarRating(hotels);
+                ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels);
+                filteredHotels = filterHotelsByDates(filteredHotels);
+                filteredHotels = filterHotelsByStarRating(filteredHotels);
                 // TODO filter hotels by number of guests
                 // TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
 
-                searchResults = FXCollections.observableArrayList(hotels);
+                searchResults = FXCollections.observableArrayList(filteredHotels);
 
-                if (hotels.isEmpty()) {
+                if (searchResults.isEmpty()) {
                     noResultsErrorMsg.setVisible(true);
                 } else {
-                    for (Hotel hotel : hotels) {
+                    for (Hotel hotel : searchResults) {
                         searchResultsHotelNames.add(hotel.getHotel_name());
                         searchResultsHotelLocations.add(hotel.getHotel_location());
                     }
-                    noResultsErrorMsg.setVisible(false);
+
                     hotelListView.setItems(searchResultsHotelNames);
                 }
             }
@@ -142,6 +151,13 @@ public class HotelSearchController implements Initializable {
             selectedNumOfGuests = Integer.parseInt(numOfGuests.getSelectionModel().getSelectedItem().toString());
         } else {
             numOfGuestsLabel.setTextFill(Color.RED);
+            isValid = false;
+        }
+
+        if (numOfRooms.getSelectionModel().getSelectedItem() != null) {
+            selectedNumOfRooms = Integer.parseInt(numOfRooms.getSelectionModel().getSelectedItem().toString());
+        } else {
+            numOfRoomsLabel.setTextFill(Color.RED);
             isValid = false;
         }
 
@@ -250,40 +266,37 @@ public class HotelSearchController implements Initializable {
         ArrayList<Hotel> hotelsByDates = new ArrayList<Hotel>();
 
         for (Hotel hotel : hotels) {
-            int numOfOccupiedRooms = 0;
+            ObservableList<Room> availableRooms = getRoomsByDate(hotel);
 
-            for (Room room : hotel.getHotel_room_list()) {
-                boolean roomOccupied = false;
-
-                ArrayList<ArrayList<LocalDate>> roomOccupancy = room.getRoom_occupancy();
-
-                for (ArrayList<LocalDate> occupancyDates : roomOccupancy) {
-                    LocalDate arrivalDate = occupancyDates.get(0);
-                    LocalDate departureDate = occupancyDates.get(1);
-
-                    // TODO logic is incorrect. Fix it
-                    if ((selected_arr_date.equals(arrivalDate) || selected_arr_date.isAfter(arrivalDate)) && (selected_dep_date.equals(departureDate) || selected_dep_date.isBefore(departureDate))) {
-                        roomOccupied = true;
-                        break;
-                    }
-                }
-
-                if (roomOccupied) {
-                    numOfOccupiedRooms++;
-                }
-            }
-
-            if (numOfOccupiedRooms <= hotel.getHotel_room_list().size()) {
+            if (availableRooms.size() > 0) {
                 hotelsByDates.add(hotel);
             }
         }
 
-        if (hotelsByDates.size() > 0) {
-            return hotelsByDates;
+        return hotelsByDates;
+    }
+
+    private ObservableList<Room> getRoomsByDate(Hotel hotel) {
+        ObservableList<Room> availableRooms = FXCollections.observableArrayList();
+        ArrayList<Room> roomList = hotel.getHotel_room_list();
+
+        for (Room room : roomList) {
+            ArrayList<ArrayList<LocalDate>> roomOccupancy = room.getRoom_occupancy();
+
+            for (ArrayList<LocalDate> occupancyDates : roomOccupancy) {
+                LocalDate arrivalDate = occupancyDates.get(0);
+                LocalDate departureDate = occupancyDates.get(1);
+
+                if ((selected_arr_date.isAfter(departureDate) && selected_dep_date.isAfter(departureDate)) ||
+                        (selected_arr_date.isBefore(arrivalDate) && selected_dep_date.isBefore(arrivalDate))) {
+                    availableRooms.add(room);
+                }
+            }
         }
 
-        return hotels;
+        return availableRooms;
     }
+
 
 /*
     private ObservableList<Hotel> getHotelsByNumOfGuestsAndDate(int selectedNumOfGuests, LocalDate
