@@ -102,6 +102,7 @@ public class Hotel {
         return hotel_name;
     }
 
+
     public void setHotel_name(String hotel_name) {
         this.hotel_name = hotel_name;
     }

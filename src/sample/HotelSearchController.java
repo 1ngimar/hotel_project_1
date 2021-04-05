@@ -3,11 +3,17 @@ package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -62,6 +68,7 @@ public class HotelSearchController implements Initializable {
     private ObservableList<Hotel> searchResults = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelNames = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelLocations = FXCollections.observableArrayList();
+    public Hotel selectedHotel;
 
     @Override
     public String toString() {
@@ -337,5 +344,34 @@ public class HotelSearchController implements Initializable {
                 .filter((room -> room.getRoom_category() == category))
                 // Convert Stream to ObservableList
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
+    }
+
+    public Hotel getHotelByName(String hotelName, ObservableList<Hotel> hotelList) {
+        for (Hotel h : hotelList) {
+            if (hotelName.equals(h.getHotel_name())) {
+                return h;
+            }
+        }
+        return null;
+    }
+
+    @FXML
+    public void getSelectedHotel(MouseEvent clickOnHotel) {
+        String selectedHotelName = (String) hotelListView.getSelectionModel().getSelectedItem();
+        Hotel selectedHotel = getHotelByName(selectedHotelName, searchResults);
+        Node node = (Node) clickOnHotel.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        stage.close();
+        try {
+            //FXMLLoader loader = FXMLLoader.load(getClass().getClassLoader().getResource("RoomSearch.fxml"));
+            //RoomSearchController roomSearchController = new RoomSearchController();
+            //loader.setController(roomSearchController);
+            Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
