@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    Stage window;
+    public Stage window;
     Scene hotelSearchScene, roomSearchScene;
 
     @Override

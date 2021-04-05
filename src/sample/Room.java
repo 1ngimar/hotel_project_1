@@ -25,9 +25,11 @@ public class Room {
     private int hotel_id;
     private RoomCategory room_category; // SINGLE, DOUBLE or FAMILY
     private double room_price_multiplier;
+    private double room_price;
     private RoomAmenities[] room_amenities;
     private ArrayList<ArrayList<LocalDate>> room_occupancy;
     private int room_capacity;
+
 
     public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities, ArrayList<ArrayList<LocalDate>> room_occupancy, int hotel_id, RoomCategory room_capacity) {
         this.room_id = room_id;
@@ -36,6 +38,7 @@ public class Room {
         this.room_price_multiplier = room_price_multiplier;
         this.room_amenities = room_amenities;
         this.room_occupancy = room_occupancy;
+
 
         if (room_capacity == RoomCategory.SINGLE) {
             this.room_capacity = 1;
@@ -106,5 +109,10 @@ public class Room {
         } else {
             this.room_capacity = 4;
         }
+    }
+
+    public void setRoom_price(double hotel_base_price, double room_price_multiplier) {
+
+        this.room_price = hotel_base_price * room_price_multiplier;
     }
 }

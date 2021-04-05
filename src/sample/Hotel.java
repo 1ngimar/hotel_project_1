@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -29,7 +31,7 @@ public class Hotel {
     private HotelAmenities[] hotel_amenities;
     private ArrayList<Room> hotel_room_list;
     private int hotel_type;
-    private int hotel_base_price;
+    public int hotel_base_price;
     private String hotel_city;
     private Hotel hotel;
 
@@ -167,5 +169,14 @@ public class Hotel {
 
     public void setHotel_base_price(int hotel_base_price) {
         this.hotel_base_price = hotel_base_price;
+    }
+
+    public Hotel getHotelByID(int hotel_id, ObservableList<Hotel> hotelList) {
+        for (Hotel h : hotelList) {
+            if (hotel_id == h.getHotel_id()) {
+                return h;
+            }
+        }
+        return null;
     }
 }
