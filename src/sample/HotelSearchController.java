@@ -91,6 +91,8 @@ public class HotelSearchController implements Initializable {
         stadsetningLabel.setTextFill(Color.BLACK);
         koma_label.setTextFill(Color.BLACK);
         brottfor_label.setTextFill(Color.BLACK);
+        numOfGuestsLabel.setTextFill(Color.BLACK);
+        numOfRoomsLabel.setTextFill(Color.BLACK);
         error_label.setTextFill(Color.BLACK);
         error_label.setText("");
         noResultsErrorMsg.setVisible(false);
@@ -215,10 +217,11 @@ public class HotelSearchController implements Initializable {
         }
 
         // TODO útfæra skilyrði þannig að þú getir ekki leitað af herbergjum fyrir fleiri en herbergjafjöldinn rýmir
-        /*
-        if (selectedNumOfGuests > selectedNumOfRooms && (selectedNumOfGuests % 4 != selectedNumOfGuests)) {
+
+        if (selectedNumOfGuests > selectedNumOfRooms && ((selectedNumOfGuests % selectedNumOfRooms > 0) || (selectedNumOfRooms == 1))) {
+            System.out.println();
         }
-         */
+
 
         if (!isValid) {
             error_label.setTextFill(Color.RED);
