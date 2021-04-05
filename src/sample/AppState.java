@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 
 public class AppState {
     private ObservableList<Hotel> searchResult;
+    private Hotel selectedHotel;
     private final static AppState INSTANCE = new AppState();
 
     private AppState() {
@@ -19,5 +20,13 @@ public class AppState {
 
     public ObservableList<Hotel> getSearchResult() {
         return this.searchResult;
+    }
+
+    public void setSelectedHotel(Hotel selectedHotel){
+        this.selectedHotel = selectedHotel;
+    }
+
+    public Hotel getSelectedHotel() {
+        return this.selectedHotel;
     }
 }
