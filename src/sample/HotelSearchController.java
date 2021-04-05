@@ -367,10 +367,13 @@ public class HotelSearchController implements Initializable {
             //FXMLLoader loader = FXMLLoader.load(getClass().getClassLoader().getResource("RoomSearch.fxml"));
             //RoomSearchController roomSearchController = new RoomSearchController();
             //loader.setController(roomSearchController);
-            Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
             AppState state = AppState.getInstance();
-            // Step 3
             state.setSearchResult(searchResults);
+            AppState state2 = AppState.getInstance();
+            state2.setSelectedHotel(selectedHotel);
+
+            Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
+
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
