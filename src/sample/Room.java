@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Room {
-    public Room() {}
+    public Room() {
+    }
 
     enum RoomCategory {
         SINGLE,
@@ -25,17 +26,24 @@ public class Room {
     private RoomCategory room_category; // SINGLE, DOUBLE or FAMILY
     private double room_price_multiplier;
     private RoomAmenities[] room_amenities;
-    private ArrayList<LocalDate> room_occupancy;
+    private ArrayList<ArrayList<LocalDate>> room_occupancy;
     private int room_capacity;
 
-    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities, ArrayList<LocalDate> room_occupancy, int hotel_id, int room_capacity) {
+    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities, ArrayList<ArrayList<LocalDate>> room_occupancy, int hotel_id, RoomCategory room_capacity) {
         this.room_id = room_id;
         this.hotel_id = hotel_id;
         this.room_category = room_category;
         this.room_price_multiplier = room_price_multiplier;
         this.room_amenities = room_amenities;
         this.room_occupancy = room_occupancy;
-        this.room_capacity = room_capacity;
+
+        if (room_capacity == RoomCategory.SINGLE) {
+            this.room_capacity = 1;
+        } else if (room_capacity == RoomCategory.DOUBLE) {
+            this.room_capacity = 2;
+        } else {
+            this.room_capacity = 4;
+        }
     }
 
     public int getHotel_id() {
@@ -78,11 +86,11 @@ public class Room {
         this.room_amenities = room_amenities;
     }
 
-    public ArrayList<LocalDate> getRoom_occupancy() {
+    public ArrayList<ArrayList<LocalDate>> getRoom_occupancy() {
         return room_occupancy;
     }
 
-    public void setRoom_occupancy(ArrayList<LocalDate> room_occupancy) {
+    public void setRoom_occupancy(ArrayList<ArrayList<LocalDate>> room_occupancy) {
         this.room_occupancy = room_occupancy;
     }
 
@@ -90,7 +98,13 @@ public class Room {
         return room_capacity;
     }
 
-    public void setRoom_capacity() {
-        this.room_capacity = room_capacity;
+    public void setRoom_capacity(RoomCategory room_capacity) {
+        if (room_capacity == RoomCategory.SINGLE) {
+            this.room_capacity = 1;
+        } else if (room_capacity == RoomCategory.DOUBLE) {
+            this.room_capacity = 2;
+        } else {
+            this.room_capacity = 4;
+        }
     }
 }
