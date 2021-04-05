@@ -12,7 +12,7 @@ public class Room {
         FAMILY
     }
 
-    enum RoomAmmenities {
+    enum RoomAmenities {
         TV,
         OCEAN_VIEW,
         BALCONY,
@@ -24,11 +24,11 @@ public class Room {
     private int hotel_id;
     private RoomCategory room_category; // SINGLE, DOUBLE or FAMILY
     private double room_price_multiplier;
-    private RoomAmmenities[] room_amenities;
+    private RoomAmenities[] room_amenities;
     private ArrayList<LocalDate> room_occupancy;
     private int room_capacity;
 
-    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmmenities[] room_amenities, ArrayList<LocalDate> room_occupancy, int hotel_id, int room_capacity) {
+    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities, ArrayList<LocalDate> room_occupancy, int hotel_id, int room_capacity) {
         this.room_id = room_id;
         this.hotel_id = hotel_id;
         this.room_category = room_category;
@@ -70,11 +70,11 @@ public class Room {
         this.room_price_multiplier = room_price_multiplier;
     }
 
-    public RoomAmmenities[] getRoom_amenities() {
+    public RoomAmenities[] getRoom_amenities() {
         return room_amenities;
     }
 
-    public void setRoom_amenities(RoomAmmenities[] room_amenities) {
+    public void setRoom_amenities(RoomAmenities[] room_amenities) {
         this.room_amenities = room_amenities;
     }
 

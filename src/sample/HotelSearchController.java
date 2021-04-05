@@ -43,16 +43,19 @@ public class HotelSearchController implements Initializable {
     private Label stadsetningLabel;
     @FXML
     private TextField numOfGuestsTextField;
+
     private DataFactory dataFactory = new DataFactory();
     private ObservableList<User> users = FXCollections.observableArrayList();
     private String selectedLocation;
     private String selectedNoOfGuests = "";
     //private ObservableList<Hotel> hotels = FXCollections.observableArrayList();
+
     //private String selected_location = "";
+
     private LocalDate selected_arr_date;
     private LocalDate selected_dep_date;
     private int selectedNumOfGuests;
-    private ObservableList<Hotel> locations = FXCollections.observableArrayList();
+    private ObservableList<String> locations = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -119,7 +122,6 @@ public class HotelSearchController implements Initializable {
             //ArrayList<Hotel> startListToAddToMaster = new ArrayList<Hotel>(getHotelsByStarRating(starRatingArray));
         }
 
-        // // Add required search options (hotels to master_list)
         if (selectedLocation != null && selected_arr_date != null && selected_dep_date != null) {
             //Clean up all error messages
             error_label.setText("");
@@ -128,6 +130,7 @@ public class HotelSearchController implements Initializable {
             brottfor_label.setTextFill(Color.BLACK);
 
             master_list.add(get_hotels_by_location(selectedLocation));
+
             if (!numOfGuestsTextField.getText().equals("")) {
                 try {
                     selectedNumOfGuests = Integer.parseInt(numOfGuestsTextField.getText());
@@ -228,25 +231,33 @@ public class HotelSearchController implements Initializable {
         int num_of_occupied_rooms = 0;
         Boolean room_occupied = false;
 
-        for (int i = 0; i < hotels.size(); i++) {
-            num_of_occupied_rooms = 0;
-            Hotel hotel = hotels.get(i);
-            ArrayList<Room> roomList = hotel.getHotel_room_list();
-            for (int j = 0; j < roomList.size(); j++) {
-                room_occupied = false;
-                Room room = roomList.get(j);
-                ArrayList<LocalDate> room_occupancy = room.getRoom_occupancy();
-                for (int k = 0; k < room_occupancy.size(); k += 2) {
-                    if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                        room_occupied = true;
+        if (arrDate.isAfter(depDate)) {
+            throw new IllegalArgumentException();
+        }
+        if (arrDate.isBefore(LocalDate.now()) || depDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        } else {
+
+            for (int i = 0; i < hotels.size(); i++) {
+                num_of_occupied_rooms = 0;
+                Hotel hotel = hotels.get(i);
+                ArrayList<Room> roomList = hotel.getHotel_room_list();
+                for (int j = 0; j < roomList.size(); j++) {
+                    room_occupied = false;
+                    Room room = roomList.get(j);
+                    ArrayList<LocalDate> room_occupancy = room.getRoom_occupancy();
+                    for (int k = 0; k < room_occupancy.size(); k += 2) {
+                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
+                            room_occupied = true;
+                        }
+                    }
+                    if (room_occupied) {
+                        num_of_occupied_rooms++;
                     }
                 }
-                if (room_occupied) {
-                    num_of_occupied_rooms++;
+                if (num_of_occupied_rooms < roomList.size()) {
+                    hotelsByDate.add(hotel);
                 }
-            }
-            if (num_of_occupied_rooms < roomList.size()) {
-                hotelsByDate.add(hotel);
             }
         }
         return hotelsByDate;
@@ -263,35 +274,44 @@ public class HotelSearchController implements Initializable {
         Boolean room_occupied = false;
         int num_of_occupied_rooms = 0;
 
-        //selectedNumOfGuests = numOfGuestsTextField.
-        for (Hotel h : hotelList) {
-            roomList = h.getHotel_room_list();
-            if (selectedNumOfGuests == 1) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.SINGLE) {
-                        typeRoomList.add(r);
-                    }
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k++) {
-                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                            room_occupied = true;
+        if (arrDate.isAfter(depDate)) {
+            throw new IllegalArgumentException();
+        }
+        if (arrDate.isBefore(LocalDate.now()) || depDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException();
+        } else {
+
+            //selectedNumOfGuests = numOfGuestsTextField.
+            for (Hotel h : hotelList) {
+                roomList = h.getHotel_room_list();
+                if (selectedNumOfGuests == 1) {
+                    for (Room r : roomList) {
+                        if (r.getRoom_category() == Room.RoomCategory.SINGLE) {
+                            typeRoomList.add(r);
                         }
                     }
-                    if (room_occupied) {
-                        num_of_occupied_rooms++;
+                    for (Room t : typeRoomList) {
+                        room_occupancy = t.getRoom_occupancy();
+                        for (int k = 0; k < room_occupancy.size(); k++) {
+                            if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
+                                room_occupied = true;
+                            }
+                        }
+                        if (room_occupied) {
+                            num_of_occupied_rooms++;
+                        }
+                    }
+                    if (num_of_occupied_rooms < typeRoomList.size()) {
+                        listByNumOfGuestsAndDate.add(h);
                     }
                 }
-                if (num_of_occupied_rooms < typeRoomList.size()) {
-                    listByNumOfGuestsAndDate.add(h);
-                }
-            }
-            if (selectedNumOfGuests == 2) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.DOUBLE) {
-                        typeRoomList.add(r);
+                if (selectedNumOfGuests == 2) {
+                    for (Room r : roomList) {
+                        if (r.getRoom_category() == Room.RoomCategory.DOUBLE) {
+                            typeRoomList.add(r);
+                        }
                     }
+
                 }
                 for (Room t : typeRoomList) {
                     room_occupancy = t.getRoom_occupancy();
@@ -301,33 +321,30 @@ public class HotelSearchController implements Initializable {
                             room_occupied = true;
                         }
                     }
-                    if (room_occupied) {
-                        num_of_occupied_rooms++;
+                    if (num_of_occupied_rooms < typeRoomList.size()) {
+                        listByNumOfGuestsAndDate.add(h);
                     }
                 }
-                if (num_of_occupied_rooms < typeRoomList.size()) {
-                    listByNumOfGuestsAndDate.add(h);
-                }
-            }
-            if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
-                for (Room r : roomList) {
-                    if (r.getRoom_category() == Room.RoomCategory.FAMILY) {
-                        typeRoomList.add(r);
-                    }
-                }
-                for (Room t : typeRoomList) {
-                    room_occupancy = t.getRoom_occupancy();
-                    for (int k = 0; k < room_occupancy.size(); k++) {
-                        if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
-                            room_occupied = true;
+                if (selectedNumOfGuests == 3 || selectedNumOfGuests == 4) {
+                    for (Room r : roomList) {
+                        if (r.getRoom_category() == Room.RoomCategory.FAMILY) {
+                            typeRoomList.add(r);
                         }
                     }
-                    if (room_occupied) {
-                        num_of_occupied_rooms++;
+                    for (Room t : typeRoomList) {
+                        room_occupancy = t.getRoom_occupancy();
+                        for (int k = 0; k < room_occupancy.size(); k++) {
+                            if (arrDate.isAfter(room_occupancy.get(k)) || arrDate.isBefore(room_occupancy.get(k + 1)) || depDate.isAfter(room_occupancy.get(k)) || depDate.isBefore(room_occupancy.get(k + 1))) {
+                                room_occupied = true;
+                            }
+                        }
+                        if (room_occupied) {
+                            num_of_occupied_rooms++;
+                        }
                     }
-                }
-                if (num_of_occupied_rooms < typeRoomList.size()) {
-                    listByNumOfGuestsAndDate.add(h);
+                    if (num_of_occupied_rooms < typeRoomList.size()) {
+                        listByNumOfGuestsAndDate.add(h);
+                    }
                 }
             }
             if (selectedNumOfGuests > 4) {
