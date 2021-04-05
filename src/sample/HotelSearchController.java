@@ -57,6 +57,7 @@ public class HotelSearchController implements Initializable {
     @FXML
     private Label numOfRoomsLabel;
 
+
     private DataFactory dataFactory = new DataFactory();
     private ArrayList<Hotel> hotels = dataFactory.getHotels();
     private String selectedLocation;
@@ -367,6 +368,9 @@ public class HotelSearchController implements Initializable {
             //RoomSearchController roomSearchController = new RoomSearchController();
             //loader.setController(roomSearchController);
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
+            AppState state = AppState.getInstance();
+            // Step 3
+            state.setSearchResult(searchResults);
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
