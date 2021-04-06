@@ -32,7 +32,7 @@ public class RoomSearchController implements Initializable {
     private TableColumn verdColumn;
     @FXML
     private TableColumn amenColumn;
-    private ObservableList<Room> availableRooms = FXCollections.observableArrayList();
+    private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
     private ObservableList<Hotel> searchResult = FXCollections.observableArrayList();
     private Hotel selectedHotel;
 
@@ -45,10 +45,10 @@ public class RoomSearchController implements Initializable {
         //hotelListView.setAccessibleRole(AccessibleRole.TABLE_VIEW);
         AppState state = AppState.getInstance();
         searchResult = state.getSearchResult(); //Getting the observable list of hotels in searchResult
-        AppState state2 = AppState.getInstance();
-        selectedHotel = state2.getSelectedHotel(); //Getting
-        AppState state3 = AppState.getInstance();
-        availableRooms = state3.getAvailableRooms();
+        //AppState state2 = AppState.getInstance();
+        selectedHotel = state.getSelectedHotel(); //Getting the selected hotel
+        //AppState state3 = AppState.getInstance();
+        availableRoomsForSelectedHotel = state.getAvailableRoomsForSelectedHotel(); // getting the available rooms for the selected hotel
 
         // Fill all labels in the scene
         hotelNameLabel.setText(selectedHotel.getHotel_name());
@@ -68,7 +68,8 @@ public class RoomSearchController implements Initializable {
     }
     private ObservableList<Room> getNewRoomList() {
         ObservableList<Room> newRoomList = FXCollections.observableArrayList();
-        for(Room r: availableRooms) {
+        String roomAmenityString = "";
+        for(Room r: availableRoomsForSelectedHotel) {
             for(int i = 0; i < r.getRoom_amenities().length; i++) {
                 Room.RoomAmenities[] amen = r.getRoom_amenities();
                 System.out.println(amen[i]);

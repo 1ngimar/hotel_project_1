@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 public class AppState {
     private ObservableList<Hotel> searchResult;
     private Hotel selectedHotel;
-    private ObservableList<Room> availableRooms;
+    private ObservableList<Room> availableRoomsForSelectedHotel;
     private final static AppState INSTANCE = new AppState();
 
     private AppState() {
@@ -31,11 +31,11 @@ public class AppState {
         return this.selectedHotel;
     }
 
-    public ObservableList<Room> getAvailableRooms() {
-        return this.availableRooms;
+    public void setAvailableRoomsForSelectedHotel(ObservableList<Room> availableRoomsForSelectedHotel) {
+        this.availableRoomsForSelectedHotel = availableRoomsForSelectedHotel;
     }
 
-    public void setAvailableRooms(ObservableList<Room> availableRooms) {
-        this.availableRooms = availableRooms;
+    public ObservableList<Room> getAvailableRoomsForSelectedHotel() {
+        return this.availableRoomsForSelectedHotel;
     }
 }

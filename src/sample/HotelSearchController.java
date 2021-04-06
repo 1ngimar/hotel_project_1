@@ -69,8 +69,9 @@ public class HotelSearchController implements Initializable {
     private ObservableList<Hotel> searchResults = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelNames = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelLocations = FXCollections.observableArrayList();
-    public Hotel selectedHotel;
+    private Hotel selectedHotel;
     private ObservableList<Room> availableRooms = FXCollections.observableArrayList();
+    private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
 
     @Override
     public String toString() {
@@ -316,7 +317,8 @@ public class HotelSearchController implements Initializable {
         ArrayList<Hotel> hotelsByDates = new ArrayList<Hotel>();
 
         for (Hotel hotel : hotels) {
-            ObservableList<Room> availableRooms = filterRooms(hotel);
+            //ObservableList<Room> availableRooms = filterRooms(hotel);
+            filterRooms(hotel);
 
             if (availableRooms != null && availableRooms.size() > 0) {
                 hotelsByDates.add(hotel);
@@ -326,8 +328,8 @@ public class HotelSearchController implements Initializable {
         return hotelsByDates;
     }
 
-    private ObservableList<Room> filterRooms(Hotel hotel) {
-        //ObservableList<Room> availableRooms = FXCollections.observableArrayList();
+    private void filterRooms(Hotel hotel) {
+        //availableRooms = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
         int hotelCapacity = 0;
         int selectedNumOfGuests = Integer.parseInt(numOfGuests.getSelectionModel().getSelectedItem().toString());
@@ -355,7 +357,8 @@ public class HotelSearchController implements Initializable {
         // Check if total room capacity of available rooms is enough for selected number of guests
         // and if number of available rooms is enough for selected number of rooms
         if (hotelCapacity < selectedNumOfGuests || availableRooms.size() < selectedNumOfRooms) {
-            return null;
+            //return null;
+            return;
         }
 
         // Filter list of available rooms to list of available rooms of SINGLE category
@@ -369,7 +372,6 @@ public class HotelSearchController implements Initializable {
             availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.FAMILY);
         }
 
-        return availableRooms;
     }
 
     private ObservableList<Room> filterRoomsByCategory(ObservableList<Room> rooms, Room.RoomCategory category) {
@@ -392,20 +394,32 @@ public class HotelSearchController implements Initializable {
     @FXML
     public void getSelectedHotel(MouseEvent clickOnHotel) {
         String selectedHotelName = (String) hotelListView.getSelectionModel().getSelectedItem();
-        Hotel selectedHotel = getHotelByName(selectedHotelName, searchResults);
+        selectedHotel = getHotelByName(selectedHotelName, searchResults);
+        //ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
+
         Node node = (Node) clickOnHotel.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
         stage.close();
+
         try {
             //FXMLLoader loader = FXMLLoader.load(getClass().getClassLoader().getResource("RoomSearch.fxml"));
             //RoomSearchController roomSearchController = new RoomSearchController();
             //loader.setController(roomSearchController);
+
+            // only transfer the available rooms for the selected hotel
+            int tempHotelID = selectedHotel.getHotel_id();
+            for (Room r : availableRooms) {
+                if (r.getHotel_id() == tempHotelID){
+                    availableRoomsForSelectedHotel.add(r);
+                }
+            }
+
             AppState state = AppState.getInstance();
             state.setSearchResult(searchResults);
-            AppState state2 = AppState.getInstance();
-            state2.setSelectedHotel(selectedHotel);
-            AppState state3 = AppState.getInstance();
-            state3.setAvailableRooms(availableRooms);
+            //AppState state2 = AppState.getInstance();
+            state.setSelectedHotel(selectedHotel);
+            //AppState state3 = AppState.getInstance();
+            state.setAvailableRoomsForSelectedHotel(availableRoomsForSelectedHotel);
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
 
             Scene scene = new Scene(root);
