@@ -1,10 +1,15 @@
 package sample;
 
+import javafx.scene.control.CheckBox;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Room {
     public Room() {
+    }
+
+    public Room(String rCatagory, String rCapacity, String rPrice, String[] rAmen) {
     }
 
     enum RoomCategory {
@@ -29,7 +34,7 @@ public class Room {
     private RoomAmenities[] room_amenities;
     private ArrayList<ArrayList<LocalDate>> room_occupancy;
     private int room_capacity;
-
+    private CheckBox checkBox;
 
     public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities, ArrayList<ArrayList<LocalDate>> room_occupancy, int hotel_id, RoomCategory room_capacity) {
         this.room_id = room_id;
@@ -47,6 +52,12 @@ public class Room {
         } else {
             this.room_capacity = 4;
         }
+    }
+    public Room(RoomCategory roomCategory, int room_capacity, double room_price_multiplier, RoomAmenities[] room_amenities) {
+        this.room_category = roomCategory;
+        this.room_price_multiplier = room_price_multiplier;
+        this.room_capacity = room_capacity;
+        this.room_amenities = room_amenities;
     }
 
     public int getHotel_id() {

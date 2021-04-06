@@ -70,6 +70,7 @@ public class HotelSearchController implements Initializable {
     private ObservableList<String> searchResultsHotelNames = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelLocations = FXCollections.observableArrayList();
     public Hotel selectedHotel;
+    private ObservableList<Room> availableRooms = FXCollections.observableArrayList();
 
     @Override
     public String toString() {
@@ -326,7 +327,7 @@ public class HotelSearchController implements Initializable {
     }
 
     private ObservableList<Room> filterRooms(Hotel hotel) {
-        ObservableList<Room> availableRooms = FXCollections.observableArrayList();
+        //ObservableList<Room> availableRooms = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
         int hotelCapacity = 0;
         int selectedNumOfGuests = Integer.parseInt(numOfGuests.getSelectionModel().getSelectedItem().toString());
@@ -403,7 +404,8 @@ public class HotelSearchController implements Initializable {
             state.setSearchResult(searchResults);
             AppState state2 = AppState.getInstance();
             state2.setSelectedHotel(selectedHotel);
-
+            AppState state3 = AppState.getInstance();
+            state3.setAvailableRooms(availableRooms);
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
 
             Scene scene = new Scene(root);
