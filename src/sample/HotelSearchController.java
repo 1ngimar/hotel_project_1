@@ -70,6 +70,7 @@ public class HotelSearchController implements Initializable {
     private ObservableList<String> searchResultsHotelNames = FXCollections.observableArrayList();
     private ObservableList<String> searchResultsHotelLocations = FXCollections.observableArrayList();
     public Hotel selectedHotel;
+    private ObservableList<Room> availableRooms = FXCollections.observableArrayList();
 
     @Override
     public String toString() {
@@ -103,8 +104,40 @@ public class HotelSearchController implements Initializable {
         numOfRoomsLabel.setTextFill(Color.BLACK);
         error_label.setTextFill(Color.BLACK);
         error_label.setText("");
+
+        try { //Get hotels by required search options
+            //Get hotels by location
+            if(afangastadir.getSelectionModel().getSelectedItem() != null && arr_date_selector.getValue() != null && dep_date_selector.getValue() != null) {
+                selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
+                //Get hotels by arrival date
+                selected_arr_date = arr_date_selector.getValue();
+                //Get hotels by departure date
+                selected_dep_date = dep_date_selector.getValue();
+            } else {
+                throw new NullPointerException();
+            }
+        } catch (NullPointerException e) {
+            if(afangastadir.getSelectionModel().getSelectedItem() != null) {
+                stadsetningLabel.setTextFill(Color.BLACK);
+            } else {
+                stadsetningLabel.setTextFill(Color.RED);
+            }
+            if(arr_date_selector.getValue() != null) {
+                koma_label.setTextFill(Color.BLACK);
+            } else {
+                koma_label.setTextFill(Color.RED);
+            }
+            if(dep_date_selector.getValue() != null) {
+                brottfor_label.setTextFill(Color.BLACK);
+            } else {
+                brottfor_label.setTextFill(Color.RED);
+            }
+            error_label.setText("Vinsamlegast fylltu rauða reiti");
+        }
+
         noResultsErrorMsg.setVisible(false);
     }
+
 
     public void listSearchResults(MouseEvent mouseEvent) {
         try {
@@ -294,7 +327,7 @@ public class HotelSearchController implements Initializable {
     }
 
     private ObservableList<Room> filterRooms(Hotel hotel) {
-        ObservableList<Room> availableRooms = FXCollections.observableArrayList();
+        //ObservableList<Room> availableRooms = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
         int hotelCapacity = 0;
         int selectedNumOfGuests = Integer.parseInt(numOfGuests.getSelectionModel().getSelectedItem().toString());
@@ -371,7 +404,8 @@ public class HotelSearchController implements Initializable {
             state.setSearchResult(searchResults);
             AppState state2 = AppState.getInstance();
             state2.setSelectedHotel(selectedHotel);
-
+            AppState state3 = AppState.getInstance();
+            state3.setAvailableRooms(availableRooms);
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
 
             Scene scene = new Scene(root);
