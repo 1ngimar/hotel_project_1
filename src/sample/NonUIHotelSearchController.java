@@ -15,10 +15,9 @@ public class NonUIHotelSearchController {
     private DataFactory dataFactory = new DataFactory();
     private ArrayList<Hotel> hotels = dataFactory.getHotels();
 
-    private ObservableList<Room> availableRooms = FXCollections.observableArrayList();
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
 
-    public ObservableList<Hotel> getHotelSearchResults(ArrayList<Hotel> hotels, String location,
+    public static ObservableList<Hotel> getHotelSearchResults(ArrayList<Hotel> hotels, String location,
                                                        LocalDate selectedArrDate, LocalDate selectedDepDate,
                                                        int selectedNumOfGuests, int selectedNumOfRooms,
                                                        boolean threeStar, boolean fourStar, boolean fiveStar) {
@@ -46,7 +45,7 @@ public class NonUIHotelSearchController {
         return searchResults;
     }
 
-    private ArrayList<Hotel> filterHotelsByLocation(ArrayList<Hotel> hotels, String location) {
+    private static ArrayList<Hotel> filterHotelsByLocation(ArrayList<Hotel> hotels, String location) {
         ArrayList<Hotel> hotelsByLocation = new ArrayList<Hotel>();
 
         for (Hotel hotel : hotels) {
@@ -62,8 +61,8 @@ public class NonUIHotelSearchController {
         return hotels;
     }
 
-    private ArrayList<Hotel> filterHotelsByStarRating(ArrayList<Hotel> hotels, boolean threeStar, boolean fourStar,
-                                                      boolean fiveStar) {
+    private static ArrayList<Hotel> filterHotelsByStarRating(ArrayList<Hotel> hotels, boolean threeStar, boolean fourStar,
+                                                             boolean fiveStar) {
         ArrayList<Hotel> starRatedHotels = new ArrayList<Hotel>();
 
         if (fiveStar || fourStar || threeStar) {
@@ -85,9 +84,9 @@ public class NonUIHotelSearchController {
         return hotels;
     }
 
-    private ArrayList<Hotel> filterHotelsByDatesGuestsRooms(ArrayList<Hotel> hotels, LocalDate selectedArrDate,
-                                                            LocalDate selectedDepDate, int selectedNumOfGuests,
-                                                            int selectedNumOfRooms) {
+    private static ArrayList<Hotel> filterHotelsByDatesGuestsRooms(ArrayList<Hotel> hotels, LocalDate selectedArrDate,
+                                                                   LocalDate selectedDepDate, int selectedNumOfGuests,
+                                                                   int selectedNumOfRooms) {
         ArrayList<Hotel> hotelsByDates = new ArrayList<Hotel>();
 
         for (Hotel hotel : hotels) {
@@ -102,9 +101,9 @@ public class NonUIHotelSearchController {
         return hotelsByDates;
     }
 
-    private ObservableList<Room> filterRooms(Hotel hotel, int selectedNumOfGuests, int selectedNumOfRooms,
-                                             LocalDate selectedArrDate, LocalDate selectedDepDate) {
-        //availableRooms = FXCollections.observableArrayList();
+    public static ObservableList<Room> filterRooms(Hotel hotel, int selectedNumOfGuests, int selectedNumOfRooms,
+                                                   LocalDate selectedArrDate, LocalDate selectedDepDate) {
+        ObservableList<Room> availableRooms = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
         int hotelCapacity = 0;
 
@@ -147,7 +146,7 @@ public class NonUIHotelSearchController {
         return availableRooms;
     }
 
-    private ObservableList<Room> filterRoomsByCategory(ObservableList<Room> rooms, Room.RoomCategory category) {
+    private static ObservableList<Room> filterRoomsByCategory(ObservableList<Room> rooms, Room.RoomCategory category) {
         return rooms.stream()
                 // Filter rooms by category type (SINGLE, DOUBLE or FAMILY)
                 .filter((room -> room.getRoom_category() == category))

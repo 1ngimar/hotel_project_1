@@ -72,6 +72,7 @@ public class HotelSearchController implements Initializable {
     private Hotel selectedHotel;
     private ObservableList<Room> availableRooms = FXCollections.observableArrayList();
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
+    private boolean fiveStar, fourStar, threeStar;
 
     @Override
     public String toString() {
@@ -149,6 +150,7 @@ public class HotelSearchController implements Initializable {
             // Validate user input
             if (validateInputs()) {
                 // Filter hotels
+
                 ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels);
                 filteredHotels = filterHotelsByDates(filteredHotels);
                 filteredHotels = filterHotelsByStarRating(filteredHotels);
@@ -166,6 +168,32 @@ public class HotelSearchController implements Initializable {
 
                     hotelListView.setItems(searchResultsHotelNames);
                 }
+                /*********************************************************************/
+
+                /*
+                Test for NonUIHotelSearchController
+
+                if (fimmStjornur.isSelected()){
+                    fiveStar = true;
+                }
+                if (fjorarStjornur.isSelected()){
+                    fourStar = true;
+                }
+                if (trjarStrjornur.isSelected()){
+                    threeStar = true;
+                }
+
+                searchResults = NonUIHotelSearchController.getHotelSearchResults(
+                    hotels, selectedLocation, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms,
+                        threeStar, fourStar, fiveStar);
+
+                for (Hotel hotel : searchResults) {
+                    searchResultsHotelNames.add(hotel.getHotel_name());
+                    searchResultsHotelLocations.add(hotel.getHotel_location());
+                }
+                hotelListView.setItems(searchResultsHotelNames);
+                 */
+
             }
         } catch (Exception e) {
             // Global error handler.
