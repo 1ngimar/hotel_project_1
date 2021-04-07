@@ -327,6 +327,7 @@ public class HotelSearchController implements Initializable {
         return hotelsByDates;
     }
 
+    // Do not use this function directly!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private ObservableList<Room> filterRooms(Hotel hotel) {
         //availableRooms = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
@@ -357,7 +358,6 @@ public class HotelSearchController implements Initializable {
         // and if number of available rooms is enough for selected number of rooms
         if (hotelCapacity < selectedNumOfGuests || availableRooms.size() < selectedNumOfRooms) {
             return null;
-            //return;
         }
 
         // Filter list of available rooms to list of available rooms of SINGLE category
@@ -390,6 +390,7 @@ public class HotelSearchController implements Initializable {
         return null;
     }
 
+    // This is a pure UI function DO NOT USE DIRECTLY
     @FXML
     public void getSelectedHotel(MouseEvent clickOnHotel) {
         String selectedHotelName = (String) hotelListView.getSelectionModel().getSelectedItem();
@@ -415,9 +416,7 @@ public class HotelSearchController implements Initializable {
 
             AppState state = AppState.getInstance();
             state.setSearchResult(searchResults);
-            //AppState state2 = AppState.getInstance();
             state.setSelectedHotel(selectedHotel);
-            //AppState state3 = AppState.getInstance();
             state.setAvailableRoomsForSelectedHotel(availableRoomsForSelectedHotel);
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
 
