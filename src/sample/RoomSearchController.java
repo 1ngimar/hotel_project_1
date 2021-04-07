@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class RoomSearchController implements Initializable {
@@ -41,9 +39,6 @@ public class RoomSearchController implements Initializable {
     private ObservableList<Room> newRoomList = FXCollections.observableArrayList();
 
 
-
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //hotelListView.setAccessibleRole(AccessibleRole.TABLE_VIEW);
@@ -71,8 +66,9 @@ public class RoomSearchController implements Initializable {
         initializeRoomListForSelectedHotel();
 
         //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
-        //DataFactory dataFactory = new DataFactory();
-        //loggedInUser = dataFactory.getUsers().get(0);
+        DataFactory dataFactory = new DataFactory();
+        ObservableList<User> allUsers = dataFactory.getUsers();
+        loggedInUser = allUsers.get(0);
         //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
 
         //ObservableList<String> newRoomListAsStrings = getNewRoomList();
@@ -80,13 +76,14 @@ public class RoomSearchController implements Initializable {
         //ObservableList<Room> newRoomList = getNewRoomList();
         //roomTableView.setItems(newRoomList);
     }
+
     private void initializeRoomListForSelectedHotel() {
         //ObservableList<ArrayList<String>> newRoomListAsStrings = FXCollections.observableArrayList();
 
-        for(Room r: availableRoomsForSelectedHotel) {
+        for (Room r : availableRoomsForSelectedHotel) {
 
             String roomAmenityString = createRoomAmenityString(r);
-            Room newRoom = new Room(r.getRoom_category(),r.getRoom_capacity(),r.getRoom_price_multiplier(), roomAmenityString);
+            Room newRoom = new Room(r.getRoom_category(), r.getRoom_capacity(), r.getRoom_price_multiplier(), roomAmenityString);
             newRoomList.add(newRoom);
         }
         roomTableView.setItems(newRoomList);
@@ -97,16 +94,15 @@ public class RoomSearchController implements Initializable {
         String roomAmenityString = "";
         int n = r.getRoom_amenities().length;
         // for loop to create a string out of the amenities that the room has.
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             Room.RoomAmenities[] amen = r.getRoom_amenities();
             roomAmenityString += amen[i];
-            if (i+1 != n){
+            if (i + 1 != n) {
                 roomAmenityString += ", ";
             }
         }
         return roomAmenityString;
     }
-
 
 
 }

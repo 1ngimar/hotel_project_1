@@ -2,8 +2,6 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.converter.LadderConverter;
-import javafx.scene.paint.Color;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,18 +16,18 @@ public class NonUIHotelSearchController {
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
 
     public static ObservableList<Hotel> getHotelSearchResults(ArrayList<Hotel> hotels, String location,
-                                                       LocalDate selectedArrDate, LocalDate selectedDepDate,
-                                                       int selectedNumOfGuests, int selectedNumOfRooms,
-                                                       boolean threeStar, boolean fourStar, boolean fiveStar) {
+                                                              LocalDate selectedArrDate, LocalDate selectedDepDate,
+                                                              int selectedNumOfGuests, int selectedNumOfRooms,
+                                                              boolean threeStar, boolean fourStar, boolean fiveStar) {
         try {
-            if (hotels.isEmpty() || location.equals("")){
+            if (hotels.isEmpty() || location.equals("")) {
                 throw new NullPointerException();
             } else if (selectedArrDate.isAfter(selectedDepDate)) {
                 throw new IllegalArgumentException();
-            } else if(selectedArrDate.isBefore(LocalDate.now()) || selectedDepDate.isBefore(LocalDate.now())){
+            } else if (selectedArrDate.isBefore(LocalDate.now()) || selectedDepDate.isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -37,7 +35,7 @@ public class NonUIHotelSearchController {
         ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels, location);
 
         filteredHotels = filterHotelsByDatesGuestsRooms(filteredHotels, selectedArrDate, selectedDepDate,
-                    selectedNumOfGuests, selectedNumOfRooms);
+                selectedNumOfGuests, selectedNumOfRooms);
 
         filteredHotels = filterHotelsByStarRating(filteredHotels, threeStar, fourStar, fiveStar);
 

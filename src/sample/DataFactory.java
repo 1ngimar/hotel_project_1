@@ -52,7 +52,7 @@ public class DataFactory {
         booking1.add(new Booking(1, hotels.get(0), user1, LocalDate.of(2021, 4, 2),
                 LocalDate.of(2021, 4, 3), booking_room_list1, 2, false));
         // end of booking for user1
-
+        users.addAll(user1, user2, user3, user4, user5, user6);
         return users;
     }
 
@@ -75,7 +75,7 @@ public class DataFactory {
         ArrayList<Hotel> hotels = new ArrayList();
 
         // Hotel Reykjavik
-        hotels.add(new Hotel(1, "Economy Hotel Reykjavik", "Reykjavík", "Þórunnartún 1",105, 5550000,
+        hotels.add(new Hotel(1, "Economy Hotel Reykjavik", "Reykjavík", "Þórunnartún 1", 105, 5550000,
                 THREE, new Hotel.HotelAmenities[]{BREAKFAST_INCLUDED, PARKING}, getRoomsByHotelId(1), 1, 10000));
 
         // Hotel Reykjavik
@@ -83,27 +83,27 @@ public class DataFactory {
                 FOUR, new Hotel.HotelAmenities[]{SPA, FREE_WIFI}, getRoomsByHotelId(2), 2, 10000));
 
         // Hotel Egilstaðir
-        hotels.add(new Hotel(3, "Economy Hotel Egilstadir", "Egilsstaðir", "Lyngás 5-7",700, 4550000,
+        hotels.add(new Hotel(3, "Economy Hotel Egilstadir", "Egilsstaðir", "Lyngás 5-7", 700, 4550000,
                 THREE, new Hotel.HotelAmenities[]{BREAKFAST_INCLUDED, HANDICAP_ACCESSIBLE}, getRoomsByHotelId(3), 1, 10000));
 
         // Hotel Egilstaðir
-        hotels.add(new Hotel(4, "Comfort Hotel Egilstadir", "Egilsstaðir","Kaupvangur 17",700 , 4550001,
+        hotels.add(new Hotel(4, "Comfort Hotel Egilstadir", "Egilsstaðir", "Kaupvangur 17", 700, 4550001,
                 FIVE, new Hotel.HotelAmenities[]{RESTAURANT, SPA, PARKING}, getRoomsByHotelId(4), 2, 10000));
 
         // Hotel Akureyri
-        hotels.add(new Hotel(5, "Economy Hotel Akureyri", "Akureyri","Þingvallastræti 23",600, 4560000,
+        hotels.add(new Hotel(5, "Economy Hotel Akureyri", "Akureyri", "Þingvallastræti 23", 600, 4560000,
                 THREE, new Hotel.HotelAmenities[]{FREE_WIFI}, getRoomsByHotelId(5), 1, 10000));
 
         // Hotel Akureyri
-        hotels.add(new Hotel(6, "Comfort Hotel Akureyri", "Akureyri","Hafnarstræti 67",600, 4560001,
+        hotels.add(new Hotel(6, "Comfort Hotel Akureyri", "Akureyri", "Hafnarstræti 67", 600, 4560001,
                 FOUR, new Hotel.HotelAmenities[]{RESTAURANT, PARKING, FREE_WIFI}, getRoomsByHotelId(6), 2, 10000));
 
         // Hotel Ísafjörður
-        hotels.add(new Hotel(7, "Economy Hotel Isafjordur", "Ísafjörður","Silfurtorgi 2",400, 4500000,
+        hotels.add(new Hotel(7, "Economy Hotel Isafjordur", "Ísafjörður", "Silfurtorgi 2", 400, 4500000,
                 THREE, new Hotel.HotelAmenities[]{BREAKFAST_INCLUDED, PARKING}, getRoomsByHotelId(7), 1, 10000));
 
         // Hotel Ísafjörður
-        hotels.add(new Hotel(8, "Comfort Hotel Isafjordur", "Ísafjörður","Mánagata 3",400, 4500001,
+        hotels.add(new Hotel(8, "Comfort Hotel Isafjordur", "Ísafjörður", "Mánagata 3", 400, 4500001,
                 FIVE, new Hotel.HotelAmenities[]{SPA, PARKING, HANDICAP_ACCESSIBLE, FREE_WIFI}, getRoomsByHotelId(8), 2, 10000));
 
         return hotels;

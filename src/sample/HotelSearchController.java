@@ -18,7 +18,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 
 public class HotelSearchController implements Initializable {
@@ -109,7 +108,7 @@ public class HotelSearchController implements Initializable {
 
         try { //Get hotels by required search options
             //Get hotels by location
-            if(afangastadir.getSelectionModel().getSelectedItem() != null && arr_date_selector.getValue() != null && dep_date_selector.getValue() != null) {
+            if (afangastadir.getSelectionModel().getSelectedItem() != null && arr_date_selector.getValue() != null && dep_date_selector.getValue() != null) {
                 selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
                 //Get hotels by arrival date
                 selected_arr_date = arr_date_selector.getValue();
@@ -119,17 +118,17 @@ public class HotelSearchController implements Initializable {
                 throw new NullPointerException();
             }
         } catch (NullPointerException e) {
-            if(afangastadir.getSelectionModel().getSelectedItem() != null) {
+            if (afangastadir.getSelectionModel().getSelectedItem() != null) {
                 stadsetningLabel.setTextFill(Color.BLACK);
             } else {
                 stadsetningLabel.setTextFill(Color.RED);
             }
-            if(arr_date_selector.getValue() != null) {
+            if (arr_date_selector.getValue() != null) {
                 koma_label.setTextFill(Color.BLACK);
             } else {
                 koma_label.setTextFill(Color.RED);
             }
-            if(dep_date_selector.getValue() != null) {
+            if (dep_date_selector.getValue() != null) {
                 brottfor_label.setTextFill(Color.BLACK);
             } else {
                 brottfor_label.setTextFill(Color.RED);
@@ -150,10 +149,11 @@ public class HotelSearchController implements Initializable {
             // Validate user input
             if (validateInputs()) {
                 // Filter hotels
-
+                /*
                 ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels);
                 filteredHotels = filterHotelsByDates(filteredHotels);
                 filteredHotels = filterHotelsByStarRating(filteredHotels);
+
                 // TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
 
                 searchResults = FXCollections.observableArrayList(filteredHotels);
@@ -168,23 +168,25 @@ public class HotelSearchController implements Initializable {
 
                     hotelListView.setItems(searchResultsHotelNames);
                 }
+
+                */
                 /*********************************************************************/
 
-                /*
-                Test for NonUIHotelSearchController
 
-                if (fimmStjornur.isSelected()){
+                //Test for NonUIHotelSearchController
+
+                if (fimmStjornur.isSelected()) {
                     fiveStar = true;
                 }
-                if (fjorarStjornur.isSelected()){
+                if (fjorarStjornur.isSelected()) {
                     fourStar = true;
                 }
-                if (trjarStrjornur.isSelected()){
+                if (trjarStrjornur.isSelected()) {
                     threeStar = true;
                 }
 
                 searchResults = NonUIHotelSearchController.getHotelSearchResults(
-                    hotels, selectedLocation, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms,
+                        hotels, selectedLocation, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms,
                         threeStar, fourStar, fiveStar);
 
                 for (Hotel hotel : searchResults) {
@@ -192,7 +194,7 @@ public class HotelSearchController implements Initializable {
                     searchResultsHotelLocations.add(hotel.getHotel_location());
                 }
                 hotelListView.setItems(searchResultsHotelNames);
-                 */
+
 
             }
         } catch (Exception e) {
@@ -299,7 +301,7 @@ public class HotelSearchController implements Initializable {
 
         return isValid;
     }
-
+    /*
     private ArrayList<Hotel> filterHotelsByStarRating(ArrayList<Hotel> hotels) {
         ArrayList<Hotel> starRatedHotels = new ArrayList<Hotel>();
 
@@ -408,6 +410,8 @@ public class HotelSearchController implements Initializable {
                 // Convert Stream to ObservableList
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
+    */
+
 
     public Hotel getHotelByName(String hotelName, ObservableList<Hotel> hotelList) {
         for (Hotel h : hotelList) {
@@ -436,8 +440,12 @@ public class HotelSearchController implements Initializable {
 
             // only transfer the available rooms for the selected hotel
             int tempHotelID = selectedHotel.getHotel_id();
+
+            // Þetta er test
+            availableRooms = NonUIHotelSearchController.filterRooms(selectedHotel, selectedNumOfGuests, selectedNumOfRooms, selected_arr_date, selected_dep_date);
+
             for (Room r : availableRooms) {
-                if (r.getHotel_id() == tempHotelID){
+                if (r.getHotel_id() == tempHotelID) {
                     availableRoomsForSelectedHotel.add(r);
                 }
             }
