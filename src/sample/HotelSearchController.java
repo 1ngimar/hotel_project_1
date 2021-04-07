@@ -139,7 +139,6 @@ public class HotelSearchController implements Initializable {
         noResultsErrorMsg.setVisible(false);
     }
 
-
     public void listSearchResults(MouseEvent mouseEvent) {
         try {
             // Clear list view for hotels
@@ -317,8 +316,8 @@ public class HotelSearchController implements Initializable {
         ArrayList<Hotel> hotelsByDates = new ArrayList<Hotel>();
 
         for (Hotel hotel : hotels) {
-            //ObservableList<Room> availableRooms = filterRooms(hotel);
-            filterRooms(hotel);
+            ObservableList<Room> availableRooms = filterRooms(hotel);
+            //filterRooms(hotel);
 
             if (availableRooms != null && availableRooms.size() > 0) {
                 hotelsByDates.add(hotel);
@@ -328,7 +327,7 @@ public class HotelSearchController implements Initializable {
         return hotelsByDates;
     }
 
-    private void filterRooms(Hotel hotel) {
+    private ObservableList<Room> filterRooms(Hotel hotel) {
         //availableRooms = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
         int hotelCapacity = 0;
@@ -357,8 +356,8 @@ public class HotelSearchController implements Initializable {
         // Check if total room capacity of available rooms is enough for selected number of guests
         // and if number of available rooms is enough for selected number of rooms
         if (hotelCapacity < selectedNumOfGuests || availableRooms.size() < selectedNumOfRooms) {
-            //return null;
-            return;
+            return null;
+            //return;
         }
 
         // Filter list of available rooms to list of available rooms of SINGLE category
@@ -371,7 +370,7 @@ public class HotelSearchController implements Initializable {
         } else if (selectedNumOfGuests / selectedNumOfRooms == 4) {
             availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.FAMILY);
         }
-
+        return availableRooms;
     }
 
     private ObservableList<Room> filterRoomsByCategory(ObservableList<Room> rooms, Room.RoomCategory category) {

@@ -1,19 +1,19 @@
 package sample;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class RoomSearchController implements Initializable {
+    private User loggedInUser;
     @FXML
     private Label hotelNameLabel;
     @FXML
@@ -32,9 +32,13 @@ public class RoomSearchController implements Initializable {
     private TableColumn verdColumn;
     @FXML
     private TableColumn amenColumn;
+    @FXML
+    private Button bookingButton;
+
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
     private ObservableList<Hotel> searchResult = FXCollections.observableArrayList();
     private Hotel selectedHotel;
+    private ObservableList<Room> newRoomList = FXCollections.observableArrayList();
 
 
 
@@ -62,23 +66,47 @@ public class RoomSearchController implements Initializable {
         tegundColumn.setCellValueFactory(new PropertyValueFactory<>("room_category"));//return gildið í Room.java fyrir getRoom_category
         rumarColumn.setCellValueFactory(new PropertyValueFactory<>("room_capacity"));
         verdColumn.setCellValueFactory(new PropertyValueFactory<>("room_price_multiplier"));
-        amenColumn.setCellValueFactory(new PropertyValueFactory<>("room_amenities"));
-        ObservableList<Room> newRoomList = getNewRoomList();
-        roomTableView.setItems(newRoomList);
+        amenColumn.setCellValueFactory(new PropertyValueFactory<>("roomAmenityString"));
+        //checkBoxColumn.setCellValueFactory(new PropertyValueFactory<>("checkBoxColumn"));
+        initializeRoomListForSelectedHotel();
+
+        //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
+        //DataFactory dataFactory = new DataFactory();
+        //loggedInUser = dataFactory.getUsers().get(0);
+        //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
+
+        //ObservableList<String> newRoomListAsStrings = getNewRoomList();
+
+        //ObservableList<Room> newRoomList = getNewRoomList();
+        //roomTableView.setItems(newRoomList);
     }
-    private ObservableList<Room> getNewRoomList() {
-        ObservableList<Room> newRoomList = FXCollections.observableArrayList();
-        String roomAmenityString = "";
+    private void initializeRoomListForSelectedHotel() {
+        //ObservableList<ArrayList<String>> newRoomListAsStrings = FXCollections.observableArrayList();
+
         for(Room r: availableRoomsForSelectedHotel) {
-            for(int i = 0; i < r.getRoom_amenities().length; i++) {
-                Room.RoomAmenities[] amen = r.getRoom_amenities();
-                System.out.println(amen[i]);
-            }
-            Room newRoom = new Room(r.getRoom_category(),r.getRoom_capacity(),r.getRoom_price_multiplier(), r.getRoom_amenities());
+
+            String roomAmenityString = createRoomAmenityString(r);
+            Room newRoom = new Room(r.getRoom_category(),r.getRoom_capacity(),r.getRoom_price_multiplier(), roomAmenityString);
             newRoomList.add(newRoom);
         }
-        return newRoomList;
+        roomTableView.setItems(newRoomList);
+        //return newRoomList;
     }
+
+    private String createRoomAmenityString(Room r) {
+        String roomAmenityString = "";
+        int n = r.getRoom_amenities().length;
+        // for loop to create a string out of the amenities that the room has.
+        for(int i = 0; i < n; i++) {
+            Room.RoomAmenities[] amen = r.getRoom_amenities();
+            roomAmenityString += amen[i];
+            if (i+1 != n){
+                roomAmenityString += ", ";
+            }
+        }
+        return roomAmenityString;
+    }
+
 
 
 }

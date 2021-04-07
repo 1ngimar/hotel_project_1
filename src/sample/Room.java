@@ -9,8 +9,8 @@ public class Room {
     public Room() {
     }
 
-    public Room(String rCatagory, String rCapacity, String rPrice, String[] rAmen) {
-    }
+    //public Room(String rCatagory, String rCapacity, String rPrice, String[] rAmen) {
+    //}
 
     enum RoomCategory {
         SINGLE,
@@ -35,6 +35,7 @@ public class Room {
     private ArrayList<ArrayList<LocalDate>> room_occupancy;
     private int room_capacity;
     private CheckBox checkBox;
+    private String roomAmenityString;
 
     public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities, ArrayList<ArrayList<LocalDate>> room_occupancy, int hotel_id, RoomCategory room_capacity) {
         this.room_id = room_id;
@@ -53,12 +54,31 @@ public class Room {
             this.room_capacity = 4;
         }
     }
-    public Room(RoomCategory roomCategory, int room_capacity, double room_price_multiplier, RoomAmenities[] room_amenities) {
+
+    public Room(RoomCategory room_category, int room_capacity, double room_price_multiplier, String roomAmenityString) {
+        this.room_category = room_category;
+        this.room_capacity = room_capacity;
+        this.room_price_multiplier = room_price_multiplier;
+        this.roomAmenityString = roomAmenityString;
+    }
+
+    public String getRoomAmenityString() {
+        return roomAmenityString;
+    }
+
+    public void setRoomAmenityString(String roomAmenityString) {
+        this.roomAmenityString = roomAmenityString;
+    }
+    /*
+    // Constructor for the table view in RoomSearch.fxml
+    public Room(RoomCategory roomCategory, int room_capacity, double room_price_multiplier, String roomAmenityString) {
         this.room_category = roomCategory;
         this.room_price_multiplier = room_price_multiplier;
         this.room_capacity = room_capacity;
-        this.room_amenities = room_amenities;
+        this.roomAmenityString = roomAmenityString;
     }
+    
+     */
 
     public int getHotel_id() {
         return hotel_id;
