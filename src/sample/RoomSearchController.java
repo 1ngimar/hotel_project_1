@@ -2,11 +2,18 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -32,6 +39,8 @@ public class RoomSearchController implements Initializable {
     private TableColumn amenColumn;
     @FXML
     private Button bookingButton;
+    @FXML
+    private Button goBackButton;
 
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
     private ObservableList<Hotel> searchResult = FXCollections.observableArrayList();
@@ -71,10 +80,28 @@ public class RoomSearchController implements Initializable {
         loggedInUser = allUsers.get(0);
         //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
 
+
+        goBackButton.setOnAction(e -> goBack(e));
         //ObservableList<String> newRoomListAsStrings = getNewRoomList();
 
         //ObservableList<Room> newRoomList = getNewRoomList();
         //roomTableView.setItems(newRoomList);
+    }
+
+    @FXML
+    private void goBack(ActionEvent e) {
+        Node node = (Node) e.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+        stage.close();
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
     }
 
     private void initializeRoomListForSelectedHotel() {
@@ -103,6 +130,5 @@ public class RoomSearchController implements Initializable {
         }
         return roomAmenityString;
     }
-
 
 }

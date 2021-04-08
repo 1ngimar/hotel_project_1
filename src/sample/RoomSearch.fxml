@@ -15,24 +15,24 @@
          <center>
             <Pane prefHeight="486.0" prefWidth="692.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="14.0" layoutY="127.0" prefHeight="29.0" prefWidth="196.0" text="Símanúmer:">
+                  <Label layoutX="14.0" layoutY="159.0" prefHeight="29.0" prefWidth="196.0" text="Símanúmer:">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label layoutX="14.0" layoutY="18.0" prefHeight="29.0" prefWidth="196.0" text="Nafn hótels:">
+                  <Label layoutX="14.0" layoutY="50.0" prefHeight="29.0" prefWidth="196.0" text="Nafn hótels:">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label layoutX="14.0" layoutY="69.0" prefHeight="29.0" prefWidth="196.0" text="Heimilisfang:">
+                  <Label layoutX="14.0" layoutY="101.0" prefHeight="29.0" prefWidth="196.0" text="Heimilisfang:">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="hotelPhoneNumberLabel" layoutX="14.0" layoutY="144.0" prefHeight="29.0" prefWidth="196.0" text="hotelPhoneNumberLabel" />
-                  <Label fx:id="hotelAddressLabel" layoutX="14.0" layoutY="87.0" prefHeight="29.0" prefWidth="196.0" text="hotelAddressLabel" />
-                  <Label fx:id="hotelNameLabel" layoutX="14.0" layoutY="36.0" prefHeight="29.0" prefWidth="196.0" text="hotelNameLabel" />
+                  <Label fx:id="hotelPhoneNumberLabel" layoutX="14.0" layoutY="176.0" prefHeight="29.0" prefWidth="196.0" text="hotelPhoneNumberLabel" />
+                  <Label fx:id="hotelAddressLabel" layoutX="14.0" layoutY="119.0" prefHeight="29.0" prefWidth="196.0" text="hotelAddressLabel" />
+                  <Label fx:id="hotelNameLabel" layoutX="14.0" layoutY="68.0" prefHeight="29.0" prefWidth="196.0" text="hotelNameLabel" />
                   <TableView fx:id="roomTableView" layoutX="197.0" layoutY="14.0" prefHeight="401.0" prefWidth="541.0">
                     <columns>
                       <TableColumn fx:id="tegundColumn" prefWidth="111.0" resizable="false" text="Herbergistegund" />
@@ -43,6 +43,7 @@
                     </columns>
                   </TableView>
                   <Button fx:id="bookingButton" layoutX="197.0" layoutY="431.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="130.0" text="Bóka valin herbergi" />
+                  <Button fx:id="goBackButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Til baka" />
                </children>
             </Pane>
          </center>
