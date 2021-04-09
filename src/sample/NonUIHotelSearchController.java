@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 public class NonUIHotelSearchController {
 
     //Mock object of hotels
@@ -57,8 +59,6 @@ public class NonUIHotelSearchController {
             e.printStackTrace();
         }
 
-        System.out.println("GetHotelSearchResults");
-
         ObservableList<Hotel> searchResults = FXCollections.observableArrayList();
         ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels, selectedLocation);
 
@@ -92,6 +92,8 @@ public class NonUIHotelSearchController {
 
         return hotels;
     }
+
+
 
     /**
      * Returns an ArrayList of hotels filtered by star-rating
@@ -165,6 +167,7 @@ public class NonUIHotelSearchController {
         ArrayList<Room> roomList = hotel.getHotel_room_list();
         int hotelCapacity = 0;
 
+
         // Make a list of available rooms
         for (Room room : roomList) {
             ArrayList<ArrayList<LocalDate>> roomOccupancy = room.getRoom_occupancy();
@@ -191,18 +194,49 @@ public class NonUIHotelSearchController {
             //return;
         }
 
+
+        /*
+        // TODO útfæra skilyrði þannig að þú getir ekki leitað af herbergjum fyrir fleiri en herbergjafjöldinn rýmir
+        //if ((selectedNumOfGuests > selectedNumOfRooms) || (selectedNumOfGuests % selectedNumOfRooms) )
+        int tempCapacity;
         // Filter list of available rooms to list of available rooms of SINGLE category
         if (selectedNumOfGuests == selectedNumOfRooms) {
             availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.SINGLE);
+            tempCapacity = 0;
+            for (Room r: availableRooms) {
+                tempCapacity += r.getRoom_capacity();
+            }
+            if (tempCapacity < selectedNumOfGuests){
+                return null;
+            }
             // Filter list of available rooms to list of available rooms of DOUBLE category
         } else if (selectedNumOfGuests / selectedNumOfRooms == 2) {
             availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.DOUBLE);
+            tempCapacity = 0;
+            //for (Room r:availableRooms) {
+
+            //}
+
             // Filter list of available rooms to list of available rooms of FAMILY category
-        } else if (selectedNumOfGuests / selectedNumOfRooms == 4) {
+        } else if ((selectedNumOfGuests / selectedNumOfRooms == 4) || (selectedNumOfGuests / selectedNumOfRooms == 3)) {
             availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.FAMILY);
+        }
+
+         */
+
+        // update the prices for the rooms
+        int hotel_base_price = hotel.hotel_base_price;
+        if (hotel_base_price == 0){
+            //handle this later
+        }
+        for (Room r: availableRooms) {
+            int tempPrice = (int) (r.getRoom_price_multiplier() * hotel_base_price);
+            int daysBetween = (int) (DAYS.between(selectedArrDate,selectedDepDate));
+            r.setRoom_price(tempPrice * daysBetween);
         }
         return availableRooms;
     }
+
 
     /**
      * Return an ObservableList of rooms
@@ -210,6 +244,7 @@ public class NonUIHotelSearchController {
      * @param category  Room.RoomCategory enum-objects that hold the rooms' category
      * @return ObservableList of rooms
      */
+    /*
     private static ObservableList<Room> filterRoomsByCategory(ObservableList<Room> rooms, Room.RoomCategory category) {
         return rooms.stream()
                 // Filter rooms by category type (SINGLE, DOUBLE or FAMILY)
@@ -217,6 +252,6 @@ public class NonUIHotelSearchController {
                 // Convert Stream to ObservableList
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
-
+    */
 
 }

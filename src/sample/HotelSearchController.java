@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 
 public class HotelSearchController implements Initializable {
     @FXML
@@ -437,7 +439,7 @@ public class HotelSearchController implements Initializable {
 
         try {
             //FXMLLoader loader = FXMLLoader.load(getClass().getClassLoader().getResource("RoomSearch.fxml"));
-            //RoomSearchController roomSearchController = new RoomSearchController();
+            //HotelBookingController roomSearchController = new HotelBookingController();
             //loader.setController(roomSearchController);
 
             // only transfer the available rooms for the selected hotel
@@ -446,16 +448,11 @@ public class HotelSearchController implements Initializable {
             // Þetta er test
             availableRooms = NonUIHotelSearchController.filterRooms(selectedHotel,selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms);
 
-            for (Room r : availableRooms) {
-                if (r.getHotel_id() == tempHotelID) {
-                    availableRoomsForSelectedHotel.add(r);
-                }
-            }
-
             AppState state = AppState.getInstance();
             state.setSearchResult(searchResults);
             state.setSelectedHotel(selectedHotel);
-            state.setAvailableRoomsForSelectedHotel(availableRoomsForSelectedHotel);
+            state.setAvailableRoomsForSelectedHotel(availableRooms);
+
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
 
             Scene scene = new Scene(root);

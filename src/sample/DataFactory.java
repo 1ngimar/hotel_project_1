@@ -32,11 +32,6 @@ public class DataFactory {
         // Test filter
         ArrayList<Room> hotel_one_rooms = getRoomsByHotelId(1);
 
-        for (Room room : hotel_one_rooms) {
-            System.out.println(room.getRoom_id());
-        }
-
-
         // Get all hotels
         ArrayList<Hotel> hotels = getHotels();
 
@@ -80,7 +75,7 @@ public class DataFactory {
 
         // Hotel Reykjavik
         hotels.add(new Hotel(2, "Comfort Hotel Reykjavik", "Reykjavík", "Mýrargata 2", 102, 5550001,
-                FOUR, new Hotel.HotelAmenities[]{SPA, FREE_WIFI}, getRoomsByHotelId(2), 2, 10000));
+                FOUR, new Hotel.HotelAmenities[]{SPA, FREE_WIFI}, getRoomsByHotelId(2), 2, 14000));
 
         // Hotel Egilstaðir
         hotels.add(new Hotel(3, "Economy Hotel Egilstadir", "Egilsstaðir", "Lyngás 5-7", 700, 4550000,
@@ -88,7 +83,7 @@ public class DataFactory {
 
         // Hotel Egilstaðir
         hotels.add(new Hotel(4, "Comfort Hotel Egilstadir", "Egilsstaðir", "Kaupvangur 17", 700, 4550001,
-                FIVE, new Hotel.HotelAmenities[]{RESTAURANT, SPA, PARKING}, getRoomsByHotelId(4), 2, 10000));
+                FIVE, new Hotel.HotelAmenities[]{RESTAURANT, SPA, PARKING}, getRoomsByHotelId(4), 2, 14000));
 
         // Hotel Akureyri
         hotels.add(new Hotel(5, "Economy Hotel Akureyri", "Akureyri", "Þingvallastræti 23", 600, 4560000,
@@ -96,7 +91,7 @@ public class DataFactory {
 
         // Hotel Akureyri
         hotels.add(new Hotel(6, "Comfort Hotel Akureyri", "Akureyri", "Hafnarstræti 67", 600, 4560001,
-                FOUR, new Hotel.HotelAmenities[]{RESTAURANT, PARKING, FREE_WIFI}, getRoomsByHotelId(6), 2, 10000));
+                FOUR, new Hotel.HotelAmenities[]{RESTAURANT, PARKING, FREE_WIFI}, getRoomsByHotelId(6), 2, 14000));
 
         // Hotel Ísafjörður
         hotels.add(new Hotel(7, "Economy Hotel Isafjordur", "Ísafjörður", "Silfurtorgi 2", 400, 4500000,
@@ -104,7 +99,7 @@ public class DataFactory {
 
         // Hotel Ísafjörður
         hotels.add(new Hotel(8, "Comfort Hotel Isafjordur", "Ísafjörður", "Mánagata 3", 400, 4500001,
-                FIVE, new Hotel.HotelAmenities[]{SPA, PARKING, HANDICAP_ACCESSIBLE, FREE_WIFI}, getRoomsByHotelId(8), 2, 10000));
+                FIVE, new Hotel.HotelAmenities[]{SPA, PARKING, HANDICAP_ACCESSIBLE, FREE_WIFI}, getRoomsByHotelId(8), 2, 23000));
 
         return hotels;
 
@@ -124,44 +119,44 @@ public class DataFactory {
         room_occupancy.add(room_occupancy_user_one);
 
         // Economy Hotel Reykjavík
-        all_rooms.add(new Room(1, SINGLE, 1.5, new Room.RoomAmenities[]{TV}, room_occupancy, 1, SINGLE));
+        all_rooms.add(new Room(1, SINGLE, 1, new Room.RoomAmenities[]{TV}, room_occupancy, 1, SINGLE));
         all_rooms.add(new Room(2, DOUBLE, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR}, room_occupancy, 1, DOUBLE));
-        all_rooms.add(new Room(3, FAMILY, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR, BALCONY}, room_occupancy, 1, FAMILY));
+        all_rooms.add(new Room(3, FAMILY, 2, new Room.RoomAmenities[]{TV, REFRIGERATOR, BALCONY}, room_occupancy, 1, FAMILY));
 
         // Comfort Hotel Reykjavík
-        all_rooms.add(new Room(4, SINGLE, 1.5, new Room.RoomAmenities[]{TV, BALCONY, ROOM_SERVICE}, room_occupancy, 2, SINGLE));
+        all_rooms.add(new Room(4, SINGLE, 1, new Room.RoomAmenities[]{TV, BALCONY, ROOM_SERVICE}, room_occupancy, 2, SINGLE));
         all_rooms.add(new Room(5, DOUBLE, 1.5, new Room.RoomAmenities[]{TV, OCEAN_VIEW, ROOM_SERVICE}, room_occupancy, 2, DOUBLE));
-        all_rooms.add(new Room(6, FAMILY, 1.5, new Room.RoomAmenities[]{TV, OCEAN_VIEW, ROOM_SERVICE}, room_occupancy, 2, FAMILY));
+        all_rooms.add(new Room(6, FAMILY, 2, new Room.RoomAmenities[]{TV, OCEAN_VIEW, ROOM_SERVICE}, room_occupancy, 2, FAMILY));
 
         // Economy Hotel Egilstaðir
-        all_rooms.add(new Room(7, SINGLE, 1.5, new Room.RoomAmenities[]{ROOM_SERVICE}, room_occupancy, 3, SINGLE));
+        all_rooms.add(new Room(7, SINGLE, 1, new Room.RoomAmenities[]{ROOM_SERVICE}, room_occupancy, 3, SINGLE));
         all_rooms.add(new Room(8, DOUBLE, 1.5, new Room.RoomAmenities[]{BALCONY, ROOM_SERVICE}, room_occupancy, 3, DOUBLE));
-        all_rooms.add(new Room(9, FAMILY, 1.5, new Room.RoomAmenities[]{BALCONY, ROOM_SERVICE}, room_occupancy, 3, FAMILY));
+        all_rooms.add(new Room(9, FAMILY, 2, new Room.RoomAmenities[]{BALCONY, ROOM_SERVICE}, room_occupancy, 3, FAMILY));
 
         // Comfort Hotel Egilstaðir
-        all_rooms.add(new Room(10, SINGLE, 1.5, new Room.RoomAmenities[]{ROOM_SERVICE, OCEAN_VIEW}, room_occupancy, 4, SINGLE));
+        all_rooms.add(new Room(10, SINGLE, 1, new Room.RoomAmenities[]{ROOM_SERVICE, OCEAN_VIEW}, room_occupancy, 4, SINGLE));
         all_rooms.add(new Room(11, DOUBLE, 1.5, new Room.RoomAmenities[]{BALCONY, OCEAN_VIEW, ROOM_SERVICE, TV}, room_occupancy, 4, DOUBLE));
-        all_rooms.add(new Room(12, FAMILY, 1.5, new Room.RoomAmenities[]{BALCONY, OCEAN_VIEW, ROOM_SERVICE, TV}, room_occupancy, 4, FAMILY));
+        all_rooms.add(new Room(12, FAMILY, 2, new Room.RoomAmenities[]{BALCONY, OCEAN_VIEW, ROOM_SERVICE, TV}, room_occupancy, 4, FAMILY));
 
         // Economy Hotel Akureyri
-        all_rooms.add(new Room(13, SINGLE, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR}, room_occupancy, 5, SINGLE));
+        all_rooms.add(new Room(13, SINGLE, 1, new Room.RoomAmenities[]{TV, REFRIGERATOR}, room_occupancy, 5, SINGLE));
         all_rooms.add(new Room(14, DOUBLE, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR, BALCONY}, room_occupancy, 5, DOUBLE));
-        all_rooms.add(new Room(15, FAMILY, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR, BALCONY}, room_occupancy, 5, FAMILY));
+        all_rooms.add(new Room(15, FAMILY, 2, new Room.RoomAmenities[]{TV, REFRIGERATOR, BALCONY}, room_occupancy, 5, FAMILY));
 
         // Comfort Hotel Akureyri
-        all_rooms.add(new Room(16, SINGLE, 1.5, new Room.RoomAmenities[]{TV, ROOM_SERVICE, BALCONY, REFRIGERATOR}, room_occupancy, 6, SINGLE));
+        all_rooms.add(new Room(16, SINGLE, 1, new Room.RoomAmenities[]{TV, ROOM_SERVICE, BALCONY, REFRIGERATOR}, room_occupancy, 6, SINGLE));
         all_rooms.add(new Room(17, DOUBLE, 1.5, new Room.RoomAmenities[]{TV, ROOM_SERVICE, BALCONY, REFRIGERATOR}, room_occupancy, 6, DOUBLE));
-        all_rooms.add(new Room(18, FAMILY, 1.5, new Room.RoomAmenities[]{TV, ROOM_SERVICE, BALCONY, REFRIGERATOR}, room_occupancy, 6, FAMILY));
+        all_rooms.add(new Room(18, FAMILY, 2, new Room.RoomAmenities[]{TV, ROOM_SERVICE, BALCONY, REFRIGERATOR}, room_occupancy, 6, FAMILY));
 
         // Economy Hotel Ísafjörður
-        all_rooms.add(new Room(19, SINGLE, 1.5, new Room.RoomAmenities[]{TV, OCEAN_VIEW}, room_occupancy, 7, SINGLE));
+        all_rooms.add(new Room(19, SINGLE, 1, new Room.RoomAmenities[]{TV, OCEAN_VIEW}, room_occupancy, 7, SINGLE));
         all_rooms.add(new Room(20, DOUBLE, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR, OCEAN_VIEW}, room_occupancy, 7, DOUBLE));
-        all_rooms.add(new Room(21, FAMILY, 1.5, new Room.RoomAmenities[]{TV, REFRIGERATOR, OCEAN_VIEW}, room_occupancy, 7, FAMILY));
+        all_rooms.add(new Room(21, FAMILY, 2, new Room.RoomAmenities[]{TV, REFRIGERATOR, OCEAN_VIEW}, room_occupancy, 7, FAMILY));
 
         // Comfort Hotel Ísafjörður
-        all_rooms.add(new Room(22, SINGLE, 1.5, new Room.RoomAmenities[]{TV, OCEAN_VIEW, ROOM_SERVICE, REFRIGERATOR}, room_occupancy, 8, SINGLE));
+        all_rooms.add(new Room(22, SINGLE, 1, new Room.RoomAmenities[]{TV, OCEAN_VIEW, ROOM_SERVICE, REFRIGERATOR}, room_occupancy, 8, SINGLE));
         all_rooms.add(new Room(23, DOUBLE, 1.5, new Room.RoomAmenities[]{TV, OCEAN_VIEW, ROOM_SERVICE, REFRIGERATOR}, room_occupancy, 8, DOUBLE));
-        all_rooms.add(new Room(24, FAMILY, 1.5, new Room.RoomAmenities[]{TV, OCEAN_VIEW, ROOM_SERVICE, REFRIGERATOR}, room_occupancy, 8, FAMILY));
+        all_rooms.add(new Room(24, FAMILY, 2, new Room.RoomAmenities[]{TV, OCEAN_VIEW, ROOM_SERVICE, REFRIGERATOR}, room_occupancy, 8, FAMILY));
 
         return all_rooms;
     }

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class RoomSearchController implements Initializable {
+public class HotelBookingController implements Initializable {
     private User loggedInUser;
     @FXML
     private Label hotelNameLabel;
@@ -69,7 +69,7 @@ public class RoomSearchController implements Initializable {
         roomTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         tegundColumn.setCellValueFactory(new PropertyValueFactory<>("room_category"));//return gildið í Room.java fyrir getRoom_category
         rumarColumn.setCellValueFactory(new PropertyValueFactory<>("room_capacity"));
-        verdColumn.setCellValueFactory(new PropertyValueFactory<>("room_price_multiplier"));
+        verdColumn.setCellValueFactory(new PropertyValueFactory<>("room_price"));
         amenColumn.setCellValueFactory(new PropertyValueFactory<>("roomAmenityString"));
         //checkBoxColumn.setCellValueFactory(new PropertyValueFactory<>("checkBoxColumn"));
         initializeRoomListForSelectedHotel();
@@ -110,7 +110,7 @@ public class RoomSearchController implements Initializable {
         for (Room r : availableRoomsForSelectedHotel) {
 
             String roomAmenityString = createRoomAmenityString(r);
-            Room newRoom = new Room(r.getRoom_category(), r.getRoom_capacity(), r.getRoom_price_multiplier(), roomAmenityString);
+            Room newRoom = new Room(r.getRoom_category(), r.getRoom_capacity(), r.getRoom_price(), roomAmenityString);
             newRoomList.add(newRoom);
         }
         roomTableView.setItems(newRoomList);

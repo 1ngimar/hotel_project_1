@@ -30,20 +30,22 @@ public class Room {
     private int hotel_id;
     private RoomCategory room_category; // SINGLE, DOUBLE or FAMILY
     private double room_price_multiplier;
-    private double room_price;
+    private int room_price;
     private RoomAmenities[] room_amenities;
     private ArrayList<ArrayList<LocalDate>> room_occupancy;
     private int room_capacity;
     private CheckBox checkBox;
     private String roomAmenityString;
 
-    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities, ArrayList<ArrayList<LocalDate>> room_occupancy, int hotel_id, RoomCategory room_capacity) {
+    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities,
+                ArrayList<ArrayList<LocalDate>> room_occupancy, int hotel_id, RoomCategory room_capacity) {
         this.room_id = room_id;
         this.hotel_id = hotel_id;
         this.room_category = room_category;
         this.room_price_multiplier = room_price_multiplier;
         this.room_amenities = room_amenities;
         this.room_occupancy = room_occupancy;
+        this.room_price = -1;
 
 
         if (room_capacity == RoomCategory.SINGLE) {
@@ -55,11 +57,19 @@ public class Room {
         }
     }
 
-    public Room(RoomCategory room_category, int room_capacity, double room_price_multiplier, String roomAmenityString) {
+    public Room(RoomCategory room_category, int room_capacity, int room_price, String roomAmenityString) {
         this.room_category = room_category;
         this.room_capacity = room_capacity;
-        this.room_price_multiplier = room_price_multiplier;
+        this.room_price = room_price;
         this.roomAmenityString = roomAmenityString;
+    }
+
+    public int getRoom_price() {
+        return room_price;
+    }
+
+    public void setRoom_price(int room_price) {
+        this.room_price = room_price;
     }
 
     public String getRoomAmenityString() {
@@ -141,9 +151,11 @@ public class Room {
             this.room_capacity = 4;
         }
     }
-
+/*
     public void setRoom_price(double hotel_base_price, double room_price_multiplier) {
 
         this.room_price = hotel_base_price * room_price_multiplier;
     }
+
+ */
 }
