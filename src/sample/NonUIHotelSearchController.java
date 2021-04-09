@@ -20,11 +20,13 @@ public class NonUIHotelSearchController {
      * No parameters.
      * @return  all hotels in database
      */
-    //private ArrayList<Hotel> getAllHotelsFromDB(){
-    //    DataBase db = new DataBase();
-    //    ArrayList<Hotel> AllHotels = db.getHotels();
-    //    return AllHotels;
-    //}
+    /*
+    public ArrayList<Hotel> getAllHotelsFromDB(){
+        DataBase db = new DataBase();
+        ArrayList<Hotel> AllHotels = db.getHotels();
+        return AllHotels;
+    }
+     */
 
     /**
      * Return an ObservableList of hotels filtered by the parameters.
@@ -54,6 +56,8 @@ public class NonUIHotelSearchController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("GetHotelSearchResults");
 
         ObservableList<Hotel> searchResults = FXCollections.observableArrayList();
         ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels, selectedLocation);

@@ -2,19 +2,13 @@ package sample;
 
 public class User {
     private int user_id;
-    private String user_name;
-    private String user_password;
-    private int user_mobile;
-    private String user_email;
-    private String user_address;
+    private String userName;
+    private String email;
 
-    public User(int user_id, String user_name, String user_password, int user_mobile, String user_email, String user_address) {
+    public User(int user_id, String userName, String email) {
         this.user_id = user_id;
-        this.user_name = user_name;
-        this.user_password = user_password;
-        this.user_mobile = user_mobile;
-        this.user_email = user_email;
-        this.user_address = user_address;
+        this.userName = userName;
+        this.email = email;
     }
 
     public int getUser_id() {
@@ -25,43 +19,20 @@ public class User {
         this.user_id = user_id;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getUser_password() {
-        return user_password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUser_password(String user_password) {
-        this.user_password = user_password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public int getUser_mobile() {
-        return user_mobile;
-    }
-
-    public void setUser_mobile(int user_mobile) {
-        this.user_mobile = user_mobile;
-    }
-
-    public String getUser_email() {
-        return user_email;
-    }
-
-    public void setUser_email(String user_email) {
-        this.user_email = user_email;
-    }
-
-    public String getUser_address() {
-        return user_address;
-    }
-
-    public void setUser_address(String user_address) {
-        this.user_address = user_address;
-    }
 }

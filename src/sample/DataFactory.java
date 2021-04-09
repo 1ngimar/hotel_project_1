@@ -21,12 +21,12 @@ public class DataFactory {
 
     public ObservableList<User> getUsers() {
         ObservableList<User> users = FXCollections.observableArrayList();
-        User user1 = new User(1, "KalliBjarna", "password", 8889999, "kb@hi.is", "kallastræti 7");
-        User user2 = new User(2, "Veddi", "myPasswrd", 9990000, "vsg@hi.is", "Háalind 24");
-        User user3 = new User(3, "SollaSæta", "12345", 1009999, "solla@hi.is", "Hástræti 94");
-        User user4 = new User(4, "Helga Björk", "egerhelga", 4443333, "helga@hotmail.com", "Reynimel 4");
-        User user5 = new User(5, "Stjáni Blái", "PWmitt", 5665665, "stjanarinn@yahoo.com", "Laugateig 67");
-        User user6 = new User(6, "Gísli Súrsson", "utlaginn", 8965665, "gislisursson@gmail.com", "Sæból 1");
+        User user1 = new User(1, "KalliBjarna",  "kb@hi.is");
+        User user2 = new User(2, "Veddi", "vsg@hi.is");
+        User user3 = new User(3, "SollaSæta","solla@hi.is");
+        User user4 = new User(4, "Helga Björk", "helga@hotmail.com");
+        User user5 = new User(5, "Stjáni Blái",  "stjanarinn@yahoo.com");
+        User user6 = new User(6, "Gísli Súrsson", "gislisursson@gmail.com");
 
 
         // Test filter
@@ -43,13 +43,13 @@ public class DataFactory {
         // Get all rooms
         ArrayList<Room> rooms = getRooms();
 
-        // Booking for user1
-        ArrayList<Booking> booking1 = new ArrayList<>();
+        // HotelBooking for user1
+        ArrayList<HotelBooking> hotelBooking1 = new ArrayList<>();
 
         ArrayList<Room> booking_room_list1 = new ArrayList<>();
         // Get the rooms for this user and add them to a list for that one user
         booking_room_list1.add(rooms.get(0));
-        booking1.add(new Booking(1, hotels.get(0), user1, LocalDate.of(2021, 4, 2),
+        hotelBooking1.add(new HotelBooking(1, hotels.get(0), user1, LocalDate.of(2021, 4, 2),
                 LocalDate.of(2021, 4, 3), booking_room_list1, 2, false));
         // end of booking for user1
         users.addAll(user1, user2, user3, user4, user5, user6);

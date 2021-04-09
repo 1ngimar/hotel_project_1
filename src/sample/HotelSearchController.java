@@ -141,6 +141,7 @@ public class HotelSearchController implements Initializable {
 
     public void listSearchResults(MouseEvent mouseEvent) {
         try {
+
             // Clear list view for hotels
             hotelListView.getItems().clear();
             // Reset all labels
@@ -171,8 +172,6 @@ public class HotelSearchController implements Initializable {
 
                 */
                 /*********************************************************************/
-
-
                 //Test for NonUIHotelSearchController
 
                 if (fimmStjornur.isSelected()) {
@@ -188,6 +187,9 @@ public class HotelSearchController implements Initializable {
                 searchResults = NonUIHotelSearchController.getHotelSearchResults(
                         hotels, selectedLocation, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms,
                         threeStar, fourStar, fiveStar);
+                fiveStar = false;
+                fourStar = false;
+                threeStar = false;
 
                 for (Hotel hotel : searchResults) {
                     searchResultsHotelNames.add(hotel.getHotel_name());

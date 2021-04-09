@@ -3,7 +3,7 @@ package sample;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Booking {
+public class HotelBooking {
     private int booking_id = -1;
     private Hotel booking_hotel;
     private User booking_user;
@@ -13,7 +13,7 @@ public class Booking {
     private int booking_num_of_guests;
     private boolean booking_payment_finalized;
 
-    public Booking(int booking_id, Hotel booking_hotel, User booking_user, LocalDate booking_arr_date, LocalDate booking_dep_date, ArrayList<Room> booking_rooms, int booking_num_of_guests, boolean booking_payment_finalized) {
+    public HotelBooking(int booking_id, Hotel booking_hotel, User booking_user, LocalDate booking_arr_date, LocalDate booking_dep_date, ArrayList<Room> booking_rooms, int booking_num_of_guests, boolean booking_payment_finalized) {
         this.booking_id = booking_id;
         this.booking_hotel = booking_hotel;
         this.booking_user = booking_user;
@@ -88,6 +88,6 @@ public class Booking {
         this.booking_payment_finalized = booking_payment_finalized;
     }
 
-    public Booking() {
+    public HotelBooking() {
     }
 }
