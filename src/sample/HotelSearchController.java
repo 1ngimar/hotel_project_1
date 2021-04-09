@@ -442,7 +442,7 @@ public class HotelSearchController implements Initializable {
             int tempHotelID = selectedHotel.getHotel_id();
 
             // Þetta er test
-            availableRooms = NonUIHotelSearchController.filterRooms(selectedHotel, selectedNumOfGuests, selectedNumOfRooms, selected_arr_date, selected_dep_date);
+            availableRooms = NonUIHotelSearchController.filterRooms(selectedHotel,selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms);
 
             for (Room r : availableRooms) {
                 if (r.getHotel_id() == tempHotelID) {

@@ -15,12 +15,36 @@ public class NonUIHotelSearchController {
 
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
 
-    public static ObservableList<Hotel> getHotelSearchResults(ArrayList<Hotel> hotels, String location,
+    /**
+     * Returns all hotels that are in database.
+     * No parameters.
+     * @return  all hotels in database
+     */
+    //private ArrayList<Hotel> getAllHotelsFromDB(){
+    //    DataBase db = new DataBase();
+    //    ArrayList<Hotel> AllHotels = db.getHotels();
+    //    return AllHotels;
+    //}
+
+    /**
+     * Return an ObservableList of hotels filtered by the parameters.
+     * @param hotels                An ArrayList of hotels that will be filtered.
+     * @param selectedLocation      String that has to be relative to the available hotel locations
+     * @param selectedArrDate       LocalDate of the arrival date (When a user will arrive to the hotel)
+     * @param selectedDepDate       LocalDate of the departure date (When a user will leave the hotel)
+     * @param selectedNumOfGuests   Integer of the number of guests
+     * @param selectedNumOfRooms    Integer of the number of rooms
+     * @param threeStar             boolean, true if the hotel should have three stars, otherwise false
+     * @param fourStar              boolean, true if the hotel should have four stars, otherwise false
+     * @param fiveStar              boolean, true if the hotel should have five stars, otherwise false
+     * @return the filtered list of hotels according to the parameters
+     */
+    public static ObservableList<Hotel> getHotelSearchResults(ArrayList<Hotel> hotels, String selectedLocation,
                                                               LocalDate selectedArrDate, LocalDate selectedDepDate,
                                                               int selectedNumOfGuests, int selectedNumOfRooms,
                                                               boolean threeStar, boolean fourStar, boolean fiveStar) {
         try {
-            if (hotels.isEmpty() || location.equals("")) {
+            if (hotels.isEmpty() || selectedLocation.equals("")) {
                 throw new NullPointerException();
             } else if (selectedArrDate.isAfter(selectedDepDate)) {
                 throw new IllegalArgumentException();
@@ -32,7 +56,7 @@ public class NonUIHotelSearchController {
         }
 
         ObservableList<Hotel> searchResults = FXCollections.observableArrayList();
-        ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels, location);
+        ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels, selectedLocation);
 
         filteredHotels = filterHotelsByDatesGuestsRooms(filteredHotels, selectedArrDate, selectedDepDate,
                 selectedNumOfGuests, selectedNumOfRooms);
@@ -43,6 +67,12 @@ public class NonUIHotelSearchController {
         return searchResults;
     }
 
+    /**
+     * Returns an ArrayList of hotels filtered by location
+     * @param hotels    An ArrayList of hotels that will be filtered.
+     * @param location  String that has to be relative to the available hotel locations
+     * @return ArrayList of hotels filtered by location
+     */
     private static ArrayList<Hotel> filterHotelsByLocation(ArrayList<Hotel> hotels, String location) {
         ArrayList<Hotel> hotelsByLocation = new ArrayList<Hotel>();
 
@@ -59,8 +89,16 @@ public class NonUIHotelSearchController {
         return hotels;
     }
 
-    private static ArrayList<Hotel> filterHotelsByStarRating(ArrayList<Hotel> hotels, boolean threeStar, boolean fourStar,
-                                                             boolean fiveStar) {
+    /**
+     * Returns an ArrayList of hotels filtered by star-rating
+     * @param hotels    An ArrayList of hotels that will be filtered.
+     * @param threeStar boolean, true if the hotel should have three stars, otherwise false
+     * @param fourStar  boolean, true if the hotel should have four stars, otherwise false
+     * @param fiveStar  boolean, true if the hotel should have five stars, otherwise false
+     * @return ArrayList of hotels filtered by star-rating
+     */
+    private static ArrayList<Hotel> filterHotelsByStarRating(ArrayList<Hotel> hotels, boolean threeStar,
+                                                             boolean fourStar, boolean fiveStar) {
         ArrayList<Hotel> starRatedHotels = new ArrayList<Hotel>();
 
         if (fiveStar || fourStar || threeStar) {
@@ -82,14 +120,23 @@ public class NonUIHotelSearchController {
         return hotels;
     }
 
+    /**
+     * Returns an ArrayList of hotels filtered by dates, number of guests and number of rooms
+     * @param hotels                An ArrayList of hotels that will be filtered.
+     * @param selectedArrDate       LocalDate of the arrival date (When a user will arrive to the hotel)
+     * @param selectedDepDate       LocalDate of the departure date (When a user will leave the hotel)
+     * @param selectedNumOfGuests   Integer of the number of guests
+     * @param selectedNumOfRooms    Integer of the number of rooms
+     * @return ArrayList of hotels filtered by dates, number of guests and number of rooms
+     */
     private static ArrayList<Hotel> filterHotelsByDatesGuestsRooms(ArrayList<Hotel> hotels, LocalDate selectedArrDate,
                                                                    LocalDate selectedDepDate, int selectedNumOfGuests,
                                                                    int selectedNumOfRooms) {
         ArrayList<Hotel> hotelsByDates = new ArrayList<Hotel>();
 
         for (Hotel hotel : hotels) {
-            ObservableList<Room> availableRooms = filterRooms(hotel, selectedNumOfGuests, selectedNumOfRooms,
-                    selectedArrDate, selectedDepDate);
+            ObservableList<Room> availableRooms = filterRooms(hotel, selectedArrDate, selectedDepDate,
+                    selectedNumOfGuests, selectedNumOfRooms);
 
             if (availableRooms != null && availableRooms.size() > 0) {
                 hotelsByDates.add(hotel);
@@ -99,8 +146,17 @@ public class NonUIHotelSearchController {
         return hotelsByDates;
     }
 
-    public static ObservableList<Room> filterRooms(Hotel hotel, int selectedNumOfGuests, int selectedNumOfRooms,
-                                                   LocalDate selectedArrDate, LocalDate selectedDepDate) {
+    /**
+     * Returns an ObservableList of available rooms in the hotel according to the parameters
+     * @param hotel                 Hotel that holds the rooms
+     * @param selectedArrDate       LocalDate of the arrival date (When a user will arrive to the hotel)
+     * @param selectedDepDate       LocalDate of the departure date (When a user will leave the hotel)
+     * @param selectedNumOfGuests   Integer of the number of guests
+     * @param selectedNumOfRooms    Integer of the number of rooms
+     * @return ObservableList of available rooms in the hotel
+     */
+    public static ObservableList<Room> filterRooms(Hotel hotel, LocalDate selectedArrDate, LocalDate selectedDepDate,
+                                                   int selectedNumOfGuests, int selectedNumOfRooms) {
         ObservableList<Room> availableRooms = FXCollections.observableArrayList();
         ArrayList<Room> roomList = hotel.getHotel_room_list();
         int hotelCapacity = 0;
@@ -144,6 +200,12 @@ public class NonUIHotelSearchController {
         return availableRooms;
     }
 
+    /**
+     * Return an ObservableList of rooms
+     * @param rooms     An ObservableList of rooms
+     * @param category  Room.RoomCategory enum-objects that hold the rooms' category
+     * @return ObservableList of rooms
+     */
     private static ObservableList<Room> filterRoomsByCategory(ObservableList<Room> rooms, Room.RoomCategory category) {
         return rooms.stream()
                 // Filter rooms by category type (SINGLE, DOUBLE or FAMILY)
