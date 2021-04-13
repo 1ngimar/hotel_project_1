@@ -19,8 +19,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 
 public class HotelSearchController implements Initializable {
     @FXML
@@ -446,12 +444,14 @@ public class HotelSearchController implements Initializable {
             int tempHotelID = selectedHotel.getHotel_id();
 
             // Þetta er test
-            availableRooms = NonUIHotelSearchController.filterRooms(selectedHotel,selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms);
+            availableRooms = NonUIHotelSearchController.filterRooms(selectedHotel, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms);
 
             AppState state = AppState.getInstance();
             state.setSearchResult(searchResults);
             state.setSelectedHotel(selectedHotel);
             state.setAvailableRoomsForSelectedHotel(availableRooms);
+            state.setArrDate(selected_arr_date);
+            state.setDepDate(selected_dep_date);
 
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
 

@@ -2,10 +2,13 @@ package sample;
 
 import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
+
 public class AppState {
     private ObservableList<Hotel> searchResult;
     private Hotel selectedHotel;
     private ObservableList<Room> availableRoomsForSelectedHotel;
+    private LocalDate arrDate, depDate;
     private final static AppState INSTANCE = new AppState();
 
     private AppState() {
@@ -23,7 +26,7 @@ public class AppState {
         return this.searchResult;
     }
 
-    public void setSelectedHotel(Hotel selectedHotel){
+    public void setSelectedHotel(Hotel selectedHotel) {
         this.selectedHotel = selectedHotel;
     }
 
@@ -37,5 +40,21 @@ public class AppState {
 
     public ObservableList<Room> getAvailableRoomsForSelectedHotel() {
         return this.availableRoomsForSelectedHotel;
+    }
+
+    public LocalDate getArrDate() {
+        return arrDate;
+    }
+
+    public void setArrDate(LocalDate arrDate) {
+        this.arrDate = arrDate;
+    }
+
+    public LocalDate getDepDate() {
+        return depDate;
+    }
+
+    public void setDepDate(LocalDate depDate) {
+        this.depDate = depDate;
     }
 }

@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class HotelBookingController implements Initializable {
@@ -46,6 +47,8 @@ public class HotelBookingController implements Initializable {
     private ObservableList<Hotel> searchResult = FXCollections.observableArrayList();
     private Hotel selectedHotel;
     private ObservableList<Room> newRoomList = FXCollections.observableArrayList();
+    private LocalDate arrDate;
+    private LocalDate depDate;
 
 
     @Override
@@ -131,4 +134,16 @@ public class HotelBookingController implements Initializable {
         return roomAmenityString;
     }
 
+    /*
+    public HotelBooking createBooking(Hotel hotel, User user, int[] roomIDs, LocalDate arrDate, LocalDate depDate,) {
+        int newBookingID = createBookingID();
+
+    }
+
+
+    public int createBookingID() {
+        // TODO: Implement JDBC solution
+        return 0;
+    }
+    */
 }

@@ -8,7 +8,7 @@ CREATE TABLE HOTEL
 , HotelStarRating INT
 , HotelAmenities VARCHAR(30)
 , HotelType INT
-, HotelBasePrice INT   
+, HotelBasePrice INT
 );
 
 CREATE TABLE ROOM
@@ -16,6 +16,7 @@ CREATE TABLE ROOM
 , RoomCategory INT
 , RoomCapacity INT
 , RoomPriceMultiplier REAL
+, RoomPrice INT
 , RoomAmenities VARCHAR(30)
 , RoomOccupancy VARCHAR(30)
 , RoomHotelID INT
@@ -31,6 +32,11 @@ CREATE TABLE BOOKING
 , BookingNumOfGuests INT
 , BookingPaymentFinalized BOOLEAN
 );
+
+CREATE TABLE BOOKING_ROOM
+( BookingID INT
+, RoomID INT
+)
 
 CREATE TABLE USER
 ( UserID INT
