@@ -62,4 +62,4 @@ VALUES
                   (5, "Economy Hotel Akureyri", "Akureyri", "Þingvallastræti 23", 600, 4560000, 3, "FREE_WIFI", 1, 10000)
                   (6, "Comfort Hotel Akureyri", "Akureyri", "Hafnarstræti 67", 600, 4560001, 4, "RESTAURANT, PARKING, FREE_WIFI", 2, 14000)
                   (7, "Economy Hotel Ísafjörður", "Ísafjörður",  "Silfurtorgi 2", 400, 4500000, 3, "BREAKFAST_INCLUDED, PARKING", 1, 10000)
-                  (8, "Comfort Hotel Ísafjörður", "Ísafjörður", "Mánagata 3", 400, 4500001, 5, "SPA, PARKING, HANDICAP_ACCESSIBLE, FREE_WIFI", 2, 23000))
+                  (8, "Comfort Hotel Ísafjörður", "Ísafjörður", "Mánagata 3", 400, 4500001, 5, "SPA, PARKING, HANDICAP_ACCESSIBLE, FREE_WIFI", 2, 23000)
