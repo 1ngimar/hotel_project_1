@@ -16,7 +16,6 @@ CREATE TABLE ROOM
 , RoomCategory INT
 , RoomCapacity INT
 , RoomPriceMultiplier REAL
-, RoomPrice INT
 , RoomAmenities VARCHAR(30)
 , RoomOccupancy VARCHAR(30)
 , RoomHotelID INT
@@ -26,16 +25,15 @@ CREATE TABLE BOOKING
 ( BookingID INT
 , BookingHotelID INT
 , BookingUser VARCHAR(30)
-, BookingArrDate VARCHAR(30)
-, BookingDepDate VARCHAR(30)
-, BookingRooms VARCHAR(30)
 , BookingNumOfGuests INT
 , BookingPaymentFinalized BOOLEAN
 );
 
 CREATE TABLE BOOKING_ROOM
 ( BookingID INT
-, RoomID INT
+, BookingRoomID INT
+, BookingArrDate VARCHAR(30)
+, BookingDepDate VARCHAR(30)
 )
 
 CREATE TABLE USER
