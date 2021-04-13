@@ -1,40 +1,31 @@
 package sample;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class HotelDatabaseManager {
+    private ArrayList<Hotel> allHotels;
+    private User dummyUser;
+    private ArrayList<HotelBooking> allBookings;
+    private ArrayList<Room> allRoomsForHotel;
+    Connection conn = new DBFactory().connect();
 
     public HotelDatabaseManager() {
 
     }
 
-    private Connection connect() {
-        String url = "jdbc:sqlite:sample/hotelDataBase.db"; // maybe fix later
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return conn;
-    }
-
-    private ArrayList<Hotel> allHotels;
-    private User dummyUser;
-    private ArrayList<HotelBooking> allBookings;
-    private ArrayList<Room> allRoomsForHotel;
-    Connection connection = null;
-
     public ArrayList<Hotel> getAllHotels() {
         allHotels.clear();
         String sqlAllHotels = "SELECT * FROM HOTEL";
 
-        try
-                (Connection conn = this.connect();
-                 Statement stmtHotels = conn.createStatement();
-                 ResultSet rsHotels = stmtHotels.executeQuery(sqlAllHotels);) {
+        try {
+            Statement stmtHotels = conn.createStatement();
+            ResultSet rsHotels = stmtHotels.executeQuery(sqlAllHotels);
+
             while (rsHotels.next()) {
                 allRoomsForHotel.clear();
                 Hotel h = new Hotel();
@@ -82,7 +73,7 @@ public class HotelDatabaseManager {
 
                 // Set hotel amenities into the hotel object
                 String hotelAmenityString = rsHotels.getString("HotelAmenities");
-                String[] hotelAmenityStringSplitted = hotelAmenityString.split(", ",0);
+                String[] hotelAmenityStringSplitted = hotelAmenityString.split(", ", 0);
                 Hotel.HotelAmenities[] resultHA = new Hotel.HotelAmenities[hotelAmenityStringSplitted.length];
                 String singleHotelAmenity;
                 for (int i = 0; i < hotelAmenityStringSplitted.length; i++) {
@@ -141,7 +132,7 @@ public class HotelDatabaseManager {
 
                     // Set room amenities into the room object
                     String roomAmenityString = rsRooms.getString("RoomAmenities");
-                    String[] roomAmenityStringSplitted = roomAmenityString.split(", ",0);
+                    String[] roomAmenityStringSplitted = roomAmenityString.split(", ", 0);
                     Room.RoomAmenities[] resultRA = new Room.RoomAmenities[roomAmenityStringSplitted.length];
                     String singleRoomAmenity;
                     for (int i = 0; i < roomAmenityStringSplitted.length; i++) {
@@ -161,7 +152,7 @@ public class HotelDatabaseManager {
                     String arrDateString, depDateString;
                     LocalDate arrDate, depDate;
                     ArrayList<ArrayList<LocalDate>> roomOccupancy = new ArrayList<>();
-                    while (rsBookingRoom.next()){
+                    while (rsBookingRoom.next()) {
                         arrDateString = rsBookingRoom.getString("BookingArrDate");
                         depDateString = rsBookingRoom.getString("BookingDepDate");
                         arrDate = LocalDate.parse(arrDateString);
