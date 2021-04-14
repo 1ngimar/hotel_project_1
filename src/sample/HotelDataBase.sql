@@ -24,7 +24,7 @@ create table ROOM
 create table BOOKING
 ( BookingID int
 , BookingHotelID int
-, BookingUser varchar(30)
+, BookingUserID int
 , BookingNumOfGuests int
 , BookingPaymentFinalized boolean
 );

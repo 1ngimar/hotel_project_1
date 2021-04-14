@@ -12,6 +12,8 @@ public class HotelDatabaseManager {
     private User dummyUser;
     private ArrayList<HotelBooking> allBookings;
     private ArrayList<Room> allRoomsForHotel;
+    private HotelBooking booking;
+    private Hotel hotel;
     Connection conn = new DBFactory().connect();
 
     public HotelDatabaseManager() {
@@ -170,6 +172,7 @@ public class HotelDatabaseManager {
 
                 allHotels.add(h);
             }
+            conn.close(); // Held að þetta vanti hér (ILG)
         } catch (SQLException e) {
             System.out.println("Error in SQL Selectall()");
             System.out.println(e.getMessage());
@@ -177,8 +180,47 @@ public class HotelDatabaseManager {
         return allHotels;
     }
 
-    //TODO klára að búa þetta fall til
-    //public void addNewBooking(HotelBooking hb){
+    public void addNewBooking(HotelBooking hb){
+        this.booking = hb;
+        int bookingID = booking.getBooking_id();
+        this.hotel = hb.getBooking_hotel();
+        int hotelID = hotel.getHotel_id();
+        User user = booking.getBooking_user();
+        int userID = user.getUser_id();
+        int numOfGuests = booking.getBooking_num_of_guests();
+        boolean paymentFinalized = booking.isBooking_payment_finalized();
 
-    //}
+        String bookingInsertString = ("INSERT into BOOKING(BookingID, BookingHotelID, BookingUserID, "
+                + "BookingNumOfGuests, BookingPaymentFinalized) " + "VALUES (" + bookingID + ", " + hotelID + ", "
+                + userID + ", " + numOfGuests + ", " + paymentFinalized + ")");
+
+        String bookingArrDate = booking.getBooking_arr_date().toString();
+        String bookingDepDate = booking.getBooking_dep_date().toString();
+        ArrayList<Room> bookingRooms = booking.getBooking_rooms();
+        int bookingRoomID;
+        for (Room room_i : bookingRooms) {
+            bookingRoomID = room_i.getRoom_id();
+            String bookingRoomInsertString = ("INSERT into BOOKING_ROOM(BookingID, BookingRoomID, BookingArrDate, " +
+                    "BookingDepDate) " + "VALUES ( " + bookingID + ", " + bookingRoomID + ", " + bookingArrDate + ", "
+                    + bookingDepDate + ")");
+            try {
+                Connection conn = new DBFactory().connect();
+                Statement stmtHotels = conn.createStatement();
+                ResultSet rsBookingRoom = stmtHotels.executeQuery(bookingRoomInsertString);
+                conn.close();
+            }catch (SQLException e){
+                System.out.println("Error in SQL addNewBooking() in BOOKING_ROOM");
+                System.out.println(e.getMessage());
+            }
+        }
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtHotels = conn.createStatement();
+            ResultSet rsBooking = stmtHotels.executeQuery(bookingInsertString);
+            conn.close();
+        }catch (SQLException e){
+            System.out.println("Error in SQL addNewBooking() in BOOKING");
+            System.out.println(e.getMessage());
+        }
+    }
 }
