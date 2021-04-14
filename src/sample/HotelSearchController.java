@@ -58,7 +58,8 @@ public class HotelSearchController implements Initializable {
 
 
     private DataFactory dataFactory = new DataFactory();
-    private ArrayList<Hotel> hotels = dataFactory.getHotels();
+    private HotelDatabaseManager databaseManager = new HotelDatabaseManager();
+    private ArrayList<Hotel> hotels = databaseManager.getAllHotels();
     private String selectedLocation;
     private LocalDate selected_arr_date;
     private LocalDate selected_dep_date;

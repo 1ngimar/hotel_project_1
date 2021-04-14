@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class HotelDatabaseManager {
-    private ArrayList<Hotel> allHotels;
+    private ArrayList<Hotel> allHotels = new ArrayList<>();
     private User dummyUser;
     private ArrayList<HotelBooking> allBookings;
-    private ArrayList<Room> allRoomsForHotel;
+    private ArrayList<Room> allRoomsForHotel = new ArrayList<>();
     private HotelBooking booking;
     private Hotel hotel;
     Connection conn = new DBFactory().connect();
