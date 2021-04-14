@@ -180,7 +180,7 @@ public class HotelDatabaseManager {
         return allHotels;
     }
 
-    public void addNewBooking(HotelBooking hb){
+    public void addNewBooking(HotelBooking hb) {
         this.booking = hb;
         int bookingID = booking.getBooking_id();
         this.hotel = hb.getBooking_hotel();
@@ -208,7 +208,7 @@ public class HotelDatabaseManager {
                 Statement stmtBookingRoom = conn.createStatement();
                 ResultSet rsBookingRoom = stmtBookingRoom.executeQuery(bookingRoomInsertString);
                 conn.close();
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 System.out.println("Error in SQL addNewBooking() in BOOKING_ROOM");
                 System.out.println(e.getMessage());
             }
@@ -218,7 +218,7 @@ public class HotelDatabaseManager {
             Statement stmtBooking = conn.createStatement();
             ResultSet rsBooking = stmtBooking.executeQuery(bookingInsertString);
             conn.close();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error in SQL addNewBooking() in BOOKING");
             System.out.println(e.getMessage());
         }
