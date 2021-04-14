@@ -205,8 +205,8 @@ public class HotelDatabaseManager {
                     + bookingDepDate + ")");
             try {
                 Connection conn = new DBFactory().connect();
-                Statement stmtHotels = conn.createStatement();
-                ResultSet rsBookingRoom = stmtHotels.executeQuery(bookingRoomInsertString);
+                Statement stmtBookingRoom = conn.createStatement();
+                ResultSet rsBookingRoom = stmtBookingRoom.executeQuery(bookingRoomInsertString);
                 conn.close();
             }catch (SQLException e){
                 System.out.println("Error in SQL addNewBooking() in BOOKING_ROOM");
@@ -215,8 +215,8 @@ public class HotelDatabaseManager {
         }
         try {
             Connection conn = new DBFactory().connect();
-            Statement stmtHotels = conn.createStatement();
-            ResultSet rsBooking = stmtHotels.executeQuery(bookingInsertString);
+            Statement stmtBooking = conn.createStatement();
+            ResultSet rsBooking = stmtBooking.executeQuery(bookingInsertString);
             conn.close();
         }catch (SQLException e){
             System.out.println("Error in SQL addNewBooking() in BOOKING");
