@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBFactory {
     // Ykkur vantar að setja upp .jar file fyrir jdbc sqlite
-    private final static String DATABASE_URL = "jdbc:sqlite:hotelDataBase.db";
+    private final static String DATABASE_URL = "jdbc:sqlite:sample/hotelDataBase.db";
     Connection connection = null;
 
     public DBFactory() {
@@ -17,8 +17,10 @@ public class DBFactory {
         Connection conn = null;
 
         try {
+            Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection(DATABASE_URL);
-        } catch (SQLException e) {
+            System.out.println("Connected!");
+        } catch (ClassNotFoundException | SQLException e) {
             System.out.println(e.getMessage());
         }
 

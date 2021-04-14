@@ -16,6 +16,7 @@ public class HotelDatabaseManager {
     private Hotel hotel;
     Connection conn = new DBFactory().connect();
 
+
     public HotelDatabaseManager() {
 
     }
@@ -182,17 +183,29 @@ public class HotelDatabaseManager {
 
     public void addNewBooking(HotelBooking hb) {
         this.booking = hb;
-        int bookingID = booking.getBooking_id();
         this.hotel = hb.getBooking_hotel();
         int hotelID = hotel.getHotel_id();
         User user = booking.getBooking_user();
         int userID = user.getUser_id();
         int numOfGuests = booking.getBooking_num_of_guests();
         boolean paymentFinalized = booking.isBooking_payment_finalized();
+        int bookingID = 0;
 
-        String bookingInsertString = ("INSERT into BOOKING(BookingID, BookingHotelID, BookingUserID, "
-                + "BookingNumOfGuests, BookingPaymentFinalized) " + "VALUES (" + bookingID + ", " + hotelID + ", "
+        String bookingInsertString = ("INSERT into BOOKING(BookingHotelID, BookingUserID, "
+                + "BookingNumOfGuests, BookingPaymentFinalized) " + "VALUES (" + hotelID + ", "
                 + userID + ", " + numOfGuests + ", " + paymentFinalized + ")");
+
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtBooking = conn.createStatement();
+            ResultSet rsBooking = stmtBooking.executeQuery(bookingInsertString);
+            bookingID = rsBooking.getInt("BookingID");
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL addNewBooking() in BOOKING");
+            System.out.println(e.getMessage());
+        }
+
 
         String bookingArrDate = booking.getBooking_arr_date().toString();
         String bookingDepDate = booking.getBooking_dep_date().toString();
@@ -213,14 +226,7 @@ public class HotelDatabaseManager {
                 System.out.println(e.getMessage());
             }
         }
-        try {
-            Connection conn = new DBFactory().connect();
-            Statement stmtBooking = conn.createStatement();
-            ResultSet rsBooking = stmtBooking.executeQuery(bookingInsertString);
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println("Error in SQL addNewBooking() in BOOKING");
-            System.out.println(e.getMessage());
-        }
+
     }
+
 }

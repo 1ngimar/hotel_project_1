@@ -233,3 +233,5 @@ Contrib/**/
 =======
 .idea
 out
+
+sqlite3.exe

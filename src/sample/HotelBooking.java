@@ -13,8 +13,7 @@ public class HotelBooking {
     private int booking_num_of_guests;
     private boolean booking_payment_finalized;
 
-    public HotelBooking(int booking_id, Hotel booking_hotel, User booking_user, LocalDate booking_arr_date, LocalDate booking_dep_date, ArrayList<Room> booking_rooms, int booking_num_of_guests, boolean booking_payment_finalized) {
-        this.booking_id = booking_id;
+    public HotelBooking(Hotel booking_hotel, User booking_user, LocalDate booking_arr_date, LocalDate booking_dep_date, ArrayList<Room> booking_rooms, int booking_num_of_guests, boolean booking_payment_finalized) {
         this.booking_hotel = booking_hotel;
         this.booking_user = booking_user;
         this.booking_arr_date = booking_arr_date;
