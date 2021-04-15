@@ -17,7 +17,7 @@ public class HotelDatabaseManager {
     private ArrayList<Room> allRoomsForHotel = new ArrayList<>();
     private HotelBooking booking;
     private Hotel hotel;
-    Connection conn = new DBFactory().connect();
+    //Connection conn = new DBFactory().connect(); Færði þetta inn í try inni í getAllHotels()
 
 
     public HotelDatabaseManager() {
@@ -29,6 +29,7 @@ public class HotelDatabaseManager {
         String sqlAllHotels = "SELECT * FROM HOTEL";
 
         try {
+            Connection conn = new DBFactory().connect();
             Statement stmtHotels = conn.createStatement();
             ResultSet rsHotels = stmtHotels.executeQuery(sqlAllHotels);
 
@@ -264,6 +265,7 @@ public class HotelDatabaseManager {
                 u.setEmail(rsUsers.getString("UserEmail"));
                 userList.add(u);
             }
+            conn.close();
         } catch (SQLException e) {
             System.out.println("Error in SQL getUsers in USER");
             System.out.println(e.getMessage());
