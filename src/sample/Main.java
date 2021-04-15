@@ -19,7 +19,7 @@ public class Main extends Application {
         hotelSearchScene = new Scene(root, 600, 400);
         window.setTitle("Hótel leitarvél");
         window.setScene(hotelSearchScene);
-        window.setResizable(false);
+        window.setResizable(true);
         window.show();
     }
 

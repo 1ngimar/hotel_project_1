@@ -1,6 +1,7 @@
 package sample;
 
-import javafx.scene.control.CheckBox;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,8 +35,9 @@ public class Room {
     private RoomAmenities[] room_amenities;
     private ArrayList<ArrayList<LocalDate>> room_occupancy;
     private int room_capacity;
-    private CheckBox checkBox;
+    private ObservableValue<Boolean> isChecked;
     private String roomAmenityString;
+
 
     public Room(int room_id, RoomCategory room_category, double room_price_multiplier, RoomAmenities[] room_amenities,
                 ArrayList<ArrayList<LocalDate>> room_occupancy, int hotel_id, RoomCategory room_capacity) {
@@ -46,6 +48,7 @@ public class Room {
         this.room_amenities = room_amenities;
         this.room_occupancy = room_occupancy;
         this.room_price = -1;
+        this.isChecked = new SimpleBooleanProperty(false);
 
 
         if (room_capacity == RoomCategory.SINGLE) {
@@ -87,7 +90,7 @@ public class Room {
         this.room_capacity = room_capacity;
         this.roomAmenityString = roomAmenityString;
     }
-    
+
      */
 
     public int getHotel_id() {
@@ -151,7 +154,16 @@ public class Room {
             this.room_capacity = 4;
         }
     }
-/*
+
+    public ObservableValue<Boolean> getIsChecked() {
+        return isChecked;
+    }
+
+    public void setIsChecked(ObservableValue<Boolean> isChecked) {
+        this.isChecked = isChecked;
+    }
+
+    /*
     public void setRoom_price(double hotel_base_price, double room_price_multiplier) {
 
         this.room_price = hotel_base_price * room_price_multiplier;

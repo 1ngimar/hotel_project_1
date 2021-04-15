@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,8 +13,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -53,12 +58,11 @@ public class HotelBookingController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //hotelListView.setAccessibleRole(AccessibleRole.TABLE_VIEW);
+        // Allow user to go back to previous scene
+        goBackButton.setOnAction(e -> goBack(e));
         AppState state = AppState.getInstance();
         searchResult = state.getSearchResult(); //Getting the observable list of hotels in searchResult
-        //AppState state2 = AppState.getInstance();
         selectedHotel = state.getSelectedHotel(); //Getting the selected hotel
-        //AppState state3 = AppState.getInstance();
         availableRoomsForSelectedHotel = state.getAvailableRoomsForSelectedHotel(); // getting the available rooms for the selected hotel
 
         // Fill all labels in the scene
@@ -70,12 +74,40 @@ public class HotelBookingController implements Initializable {
         String hotelPhoneNumberString = String.valueOf(selectedHotel.getHotel_phone_number());
         hotelPhoneNumberLabel.setText(hotelPhoneNumberString);
         roomTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tegundColumn.setCellValueFactory(new PropertyValueFactory<>("room_category"));//return gildið í Room.java fyrir getRoom_category
-        rumarColumn.setCellValueFactory(new PropertyValueFactory<>("room_capacity"));
-        verdColumn.setCellValueFactory(new PropertyValueFactory<>("room_price"));
-        amenColumn.setCellValueFactory(new PropertyValueFactory<>("roomAmenityString"));
-        //checkBoxColumn.setCellValueFactory(new PropertyValueFactory<>("checkBoxColumn"));
+        roomTableView.setEditable(true);
+        tegundColumn.setCellValueFactory(new PropertyValueFactory("room_category"));//return gildið í Room.java fyrir getRoom_category
+        rumarColumn.setCellValueFactory(new PropertyValueFactory("room_capacity"));
+        verdColumn.setCellValueFactory(new PropertyValueFactory("room_price"));
+        amenColumn.setCellValueFactory(new PropertyValueFactory("roomAmenityString"));
+        // Checkbox column
+        checkBoxColumn.setCellValueFactory(new PropertyValueFactory<Room, Boolean>("isChecked"));
+        checkBoxColumn.setEditable(true);
+        // Populate newRoomList with available rooms
         initializeRoomListForSelectedHotel();
+
+        checkBoxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(new Callback<Integer, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(Integer itemIndex) {
+                BooleanProperty observable = new SimpleBooleanProperty();
+
+                observable.addListener((obs, wasSelected, isNowSelected) -> {
+                    Room currentRoom = newRoomList.get(itemIndex);
+                    currentRoom.setIsChecked(new SimpleBooleanProperty(isNowSelected));
+                    System.out.println("Checkbox for " + itemIndex + " changed from " + wasSelected + "  to " + isNowSelected);
+                    System.out.println(currentRoom.getIsChecked().getValue());
+                });
+
+                return observable;
+            }
+        }));
+
+        bookingButton.setOnAction(event -> {
+            for (Room room : newRoomList) {
+                // TODO store in database
+                System.out.println(room.getIsChecked().getValue());
+            }
+        });
+
 
         //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
         //DataFactory dataFactory = new DataFactory();
@@ -83,13 +115,6 @@ public class HotelBookingController implements Initializable {
         ObservableList<User> allUsers = databaseManager.getUsers();
         loggedInUser = allUsers.get(0);
         //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
-
-
-        goBackButton.setOnAction(e -> goBack(e));
-        //ObservableList<String> newRoomListAsStrings = getNewRoomList();
-
-        //ObservableList<Room> newRoomList = getNewRoomList();
-        //roomTableView.setItems(newRoomList);
     }
 
     @FXML
@@ -109,16 +134,14 @@ public class HotelBookingController implements Initializable {
     }
 
     private void initializeRoomListForSelectedHotel() {
-        //ObservableList<ArrayList<String>> newRoomListAsStrings = FXCollections.observableArrayList();
-
         for (Room r : availableRoomsForSelectedHotel) {
 
             String roomAmenityString = createRoomAmenityString(r);
             Room newRoom = new Room(r.getRoom_category(), r.getRoom_capacity(), r.getRoom_price(), roomAmenityString);
             newRoomList.add(newRoom);
         }
+
         roomTableView.setItems(newRoomList);
-        //return newRoomList;
     }
 
     private String createRoomAmenityString(Room r) {
@@ -134,17 +157,4 @@ public class HotelBookingController implements Initializable {
         }
         return roomAmenityString;
     }
-
-    /*
-    public HotelBooking createBooking(Hotel hotel, User user, int[] roomIDs, LocalDate arrDate, LocalDate depDate,) {
-        int newBookingID = createBookingID();
-
-    }
-
-
-    public int createBookingID() {
-        // TODO: Implement JDBC solution
-        return 0;
-    }
-    */
 }
