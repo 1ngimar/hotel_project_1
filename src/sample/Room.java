@@ -35,7 +35,7 @@ public class Room {
     private RoomAmenities[] room_amenities;
     private ArrayList<ArrayList<LocalDate>> room_occupancy;
     private int room_capacity;
-    private ObservableValue<Boolean> isChecked;
+    private ObservableValue<Boolean> isChecked = new SimpleBooleanProperty(false);
     private String roomAmenityString;
 
 
@@ -48,8 +48,6 @@ public class Room {
         this.room_amenities = room_amenities;
         this.room_occupancy = room_occupancy;
         this.room_price = -1;
-        this.isChecked = new SimpleBooleanProperty(false);
-
 
         if (room_capacity == RoomCategory.SINGLE) {
             this.room_capacity = 1;
