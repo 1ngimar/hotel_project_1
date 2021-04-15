@@ -78,8 +78,9 @@ public class HotelBookingController implements Initializable {
         initializeRoomListForSelectedHotel();
 
         //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
-        DataFactory dataFactory = new DataFactory();
-        ObservableList<User> allUsers = dataFactory.getUsers();
+        //DataFactory dataFactory = new DataFactory();
+        HotelDatabaseManager databaseManager = new HotelDatabaseManager();
+        ObservableList<User> allUsers = databaseManager.getUsers();
         loggedInUser = allUsers.get(0);
         //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
 

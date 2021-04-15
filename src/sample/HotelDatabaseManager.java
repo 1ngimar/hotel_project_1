@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -227,6 +230,45 @@ public class HotelDatabaseManager {
             }
         }
 
+    }
+
+    public ObservableList<String> getLocation() {
+        ObservableList<String> locations = FXCollections.observableArrayList();
+        String sqlLocations = "SELECT DISTINCT HotelLocation FROM HOTEL";
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtLocations = conn.createStatement();
+            ResultSet rsHotelLocation = stmtLocations.executeQuery(sqlLocations);
+            while (rsHotelLocation.next()) {
+                locations.add(rsHotelLocation.getString("HotelLocation"));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL getHotelLocations in HOTEL");
+            System.out.println(e.getMessage());
+        }
+        return locations;
+    }
+
+    public ObservableList<User> getUsers() {
+        ObservableList<User> userList = FXCollections.observableArrayList();
+        String sqlUsers = "SELECT * FROM USER";
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtUsers = conn.createStatement();
+            ResultSet rsUsers = stmtUsers.executeQuery(sqlUsers);
+            while (rsUsers.next()) {
+                User u = new User();
+                u.setUser_id(rsUsers.getInt("UserID"));
+                u.setUserName(rsUsers.getString("UserName"));
+                u.setEmail(rsUsers.getString("UserEmail"));
+                userList.add(u);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in SQL getUsers in USER");
+            System.out.println(e.getMessage());
+        }
+        return userList;
     }
 
 }

@@ -57,7 +57,7 @@ public class HotelSearchController implements Initializable {
     private Label numOfRoomsLabel;
 
 
-    private DataFactory dataFactory = new DataFactory();
+    //private DataFactory dataFactory = new DataFactory();
     private HotelDatabaseManager databaseManager = new HotelDatabaseManager();
     private ArrayList<Hotel> hotels = databaseManager.getAllHotels();
     private String selectedLocation;
@@ -82,7 +82,7 @@ public class HotelSearchController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         noResultsErrorMsg.setVisible(false);
-        locations = dataFactory.getLocation();
+        locations = databaseManager.getLocation();
         afangastadir.setItems(locations);
         int max = 30;
         ObservableList<Integer> maxGuestsList = FXCollections.observableArrayList();
