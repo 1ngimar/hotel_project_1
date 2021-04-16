@@ -10,43 +10,43 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="515.0" prefWidth="742.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.HotelBookingController">
-    <children>
-        <BorderPane prefHeight="515.0" prefWidth="742.0">
-            <center>
-                <Pane prefHeight="486.0" prefWidth="692.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <Label layoutX="14.0" layoutY="159.0" prefHeight="29.0" prefWidth="196.0" text="Símanúmer:">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Label>
-                        <Label layoutX="14.0" layoutY="50.0" prefHeight="29.0" prefWidth="196.0" text="Nafn hótels:">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Label>
-                        <Label layoutX="14.0" layoutY="101.0" prefHeight="29.0" prefWidth="196.0" text="Heimilisfang:">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="hotelPhoneNumberLabel" layoutX="14.0" layoutY="176.0" prefHeight="29.0" prefWidth="196.0" text="hotelPhoneNumberLabel" />
-                        <Label fx:id="hotelAddressLabel" layoutX="14.0" layoutY="119.0" prefHeight="29.0" prefWidth="196.0" text="hotelAddressLabel" />
-                        <Label fx:id="hotelNameLabel" layoutX="14.0" layoutY="68.0" prefHeight="29.0" prefWidth="196.0" text="hotelNameLabel" />
-                        <TableView fx:id="roomTableView" layoutX="197.0" layoutY="14.0" prefHeight="401.0" prefWidth="541.0">
-                            <columns>
-                                <TableColumn fx:id="tegundColumn" prefWidth="111.0" resizable="false" text="Herbergistegund" />
-                                <TableColumn fx:id="rumarColumn" maxWidth="6000.0" prefWidth="48.0" resizable="false" text="Rúmar" />
-                                <TableColumn fx:id="verdColumn" minWidth="9.0" prefWidth="176.0" resizable="false" text="Verð fyrir valdar dagsetningar" />
-                                <TableColumn fx:id="amenColumn" minWidth="9.0" prefWidth="136.0" resizable="false" text="Amenities" />
-                                <TableColumn fx:id="checkBoxColumn" minWidth="9.0" prefWidth="69.0" resizable="false" text="Velja" />
-                            </columns>
-                        </TableView>
-                        <Button fx:id="bookingButton" layoutX="197.0" layoutY="431.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="130.0" text="Bóka valin herbergi" />
-                        <Button fx:id="goBackButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Til baka" />
-                    </children>
-                </Pane>
-            </center>
-        </BorderPane>
-    </children>
+   <children>
+      <BorderPane prefHeight="515.0" prefWidth="742.0">
+         <center>
+            <Pane prefHeight="486.0" prefWidth="692.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="14.0" layoutY="159.0" prefHeight="29.0" prefWidth="196.0" text="Símanúmer:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="50.0" prefHeight="29.0" prefWidth="196.0" text="Nafn hótels:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="101.0" prefHeight="29.0" prefWidth="196.0" text="Heimilisfang:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="hotelPhoneNumberLabel" layoutX="14.0" layoutY="176.0" prefHeight="29.0" prefWidth="196.0" text="hotelPhoneNumberLabel" />
+                  <Label fx:id="hotelAddressLabel" layoutX="14.0" layoutY="119.0" prefHeight="29.0" prefWidth="196.0" text="hotelAddressLabel" />
+                  <Label fx:id="hotelNameLabel" layoutX="14.0" layoutY="68.0" prefHeight="29.0" prefWidth="196.0" text="hotelNameLabel" />
+                  <TableView fx:id="roomTableView" layoutX="197.0" layoutY="14.0" prefHeight="401.0" prefWidth="541.0">
+                    <columns>
+                      <TableColumn fx:id="tegundColumn" prefWidth="111.0" resizable="false" text="Herbergistegund" />
+                        <TableColumn fx:id="rumarColumn" maxWidth="6000.0" prefWidth="48.0" resizable="false" text="Rúmar" />
+                        <TableColumn fx:id="verdColumn" minWidth="9.0" prefWidth="176.0" resizable="false" text="Verð fyrir valdar dagsetningar" />
+                        <TableColumn fx:id="amenColumn" minWidth="9.0" prefWidth="136.0" resizable="false" text="Amenities" />
+                        <TableColumn fx:id="checkBoxColumn" minWidth="9.0" prefWidth="69.0" resizable="false" text="Velja" />
+                    </columns>
+                  </TableView>
+                  <Button fx:id="bookingButton" layoutX="197.0" layoutY="431.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="130.0" text="Bóka valin herbergi" />
+                  <Button fx:id="goBackButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Til baka" />
+               </children>
+            </Pane>
+         </center>
+      </BorderPane>
+   </children>
 </AnchorPane>

@@ -203,6 +203,7 @@ public class NonUIHotelSearchController {
         }
 
 
+
         /*
         // TODO útfæra skilyrði þannig að þú getir ekki leitað af herbergjum fyrir fleiri en herbergjafjöldinn rýmir
         //if ((selectedNumOfGuests > selectedNumOfRooms) || (selectedNumOfGuests % selectedNumOfRooms) )
@@ -243,6 +244,12 @@ public class NonUIHotelSearchController {
             r.setRoom_price(tempPrice * daysBetween);
         }
         return availableRooms;
+    }
+
+    public HotelBooking createNewBooking(Hotel hotel, User user, LocalDate arrDate, LocalDate depDate, ArrayList<Room> listOfRooms, int numOfGuests) {
+        HotelBooking booking = new HotelBooking(hotel, user, arrDate, depDate, listOfRooms, numOfGuests);
+        databaseManager.addNewBooking(booking);
+        return booking;
     }
 
 
