@@ -48,6 +48,18 @@ public class HotelBookingController implements Initializable {
     private Button bookingButton;
     @FXML
     private Button goBackButton;
+    @FXML
+    private Button loginUserButton;
+    @FXML
+    private Label userNameLabel;
+    @FXML
+    private Label userEmailLabel;
+    @FXML
+    private TextField userNameTF;
+    @FXML
+    private TextField userEmailTF;
+    @FXML
+    private Label pleaseLoginFirstLabel;
 
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
     private ObservableList<Hotel> searchResult = FXCollections.observableArrayList();
@@ -58,6 +70,7 @@ public class HotelBookingController implements Initializable {
     private ArrayList<Room> bookingRooms = new ArrayList<>();
     private NonUIHotelSearchController nonUIHotelSearchController = new NonUIHotelSearchController();
     private int numOfGuests;
+    private HotelDatabaseManager databaseManager = new HotelDatabaseManager();
 
     @Override
 
@@ -71,6 +84,14 @@ public class HotelBookingController implements Initializable {
         arrDate = state.getArrDate();
         depDate = state.getDepDate();
         numOfGuests = state.getNumOfGuests();
+
+        bookingButton.setDisable(true);
+        loginUserButton.setVisible(false);
+        userEmailLabel.setVisible(false);
+        userNameLabel.setVisible(false);
+        userEmailTF.setVisible(false);
+        userNameTF.setVisible(false);
+        pleaseLoginFirstLabel.setVisible(false);
 
         // Fill all labels in the scene
         hotelNameLabel.setText(selectedHotel.getHotel_name());
@@ -98,6 +119,7 @@ public class HotelBookingController implements Initializable {
                 BooleanProperty observable = new SimpleBooleanProperty();
 
                 observable.addListener((obs, wasSelected, isNowSelected) -> {
+                    initializeLoginUserstuff();
                     Room currentRoom = newRoomList.get(itemIndex);
                     currentRoom.setIsChecked(new SimpleBooleanProperty(isNowSelected));
                     System.out.println("Checkbox for " + itemIndex + " changed from " + wasSelected + "  to " + isNowSelected);
@@ -108,10 +130,22 @@ public class HotelBookingController implements Initializable {
             }
         }));
 
+        loginUserButton.setOnAction(event -> {
+            try {
+                String userNameString = userNameTF.getText();
+                String userEmailString = userEmailTF.getText();
+                databaseManager.addNewUser(userNameString, userEmailString);
+                bookingButton.setDisable(false);
+            } catch (Exception e) {
+                System.out.println("Einhver villa hér !!! pls fix now");
+                e.printStackTrace();
+            }
+        });
+
         bookingButton.setOnAction(event -> {
             for (Room room : newRoomList) {
-                // TODO store in database
-                if (room.getIsChecked() != null) {
+                // TODO store in database  DONE!
+                if (room.getIsChecked() != null && room.getIsChecked().getValue()) {
                     bookingRooms.add(room);
                 }
                 System.out.println(room.getIsChecked());
@@ -126,6 +160,15 @@ public class HotelBookingController implements Initializable {
         ObservableList<User> allUsers = databaseManager.getUsers();
         loggedInUser = allUsers.get(0);
         //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
+    }
+
+    private void initializeLoginUserstuff() {
+        loginUserButton.setVisible(true);
+        userEmailLabel.setVisible(true);
+        userNameLabel.setVisible(true);
+        userEmailTF.setVisible(true);
+        userNameTF.setVisible(true);
+        pleaseLoginFirstLabel.setVisible(true);
     }
 
     @FXML
@@ -148,7 +191,9 @@ public class HotelBookingController implements Initializable {
         for (Room r : availableRoomsForSelectedHotel) {
 
             String roomAmenityString = createRoomAmenityString(r);
-            Room newRoom = new Room(r.getRoom_category(), r.getRoom_capacity(), r.getRoom_price(), roomAmenityString);
+            Room newRoom = new Room(r.getRoom_id(), r.getRoom_category(), r.getRoom_price_multiplier(),
+                    r.getRoom_capacity(), r.getRoom_price(), r.getHotel_id(), r.getRoom_occupancy(),
+                    r.getRoom_amenities(), roomAmenityString);
             newRoomList.add(newRoom);
         }
 

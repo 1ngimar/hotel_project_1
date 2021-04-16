@@ -14,6 +14,7 @@ public class NonUIHotelSearchController {
     //private DataFactory dataFactory = new DataFactory();
     private HotelDatabaseManager databaseManager = new HotelDatabaseManager();
     private ArrayList<Hotel> hotels = databaseManager.getAllHotels();
+    //private ArrayList<HotelBooking> allBookingsPerRoom = databaseManager.getBookingsPerRoom();
 
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
 
@@ -246,10 +247,18 @@ public class NonUIHotelSearchController {
         return availableRooms;
     }
 
+    /*
     public HotelBooking createNewBooking(Hotel hotel, User user, LocalDate arrDate, LocalDate depDate, ArrayList<Room> listOfRooms, int numOfGuests) {
         HotelBooking booking = new HotelBooking(hotel, user, arrDate, depDate, listOfRooms, numOfGuests);
         databaseManager.addNewBooking(booking);
         return booking;
+    }
+     */
+
+    // Breytti fallinu að ofan í void því það á ekki að skila Booking, bara búa hana til
+    public void createNewBooking(Hotel hotel, User user, LocalDate arrDate, LocalDate depDate, ArrayList<Room> listOfRooms, int numOfGuests) {
+        HotelBooking booking = new HotelBooking(hotel, user, arrDate, depDate, listOfRooms, numOfGuests);
+        databaseManager.addNewBooking(booking);
     }
 
 

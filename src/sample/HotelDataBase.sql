@@ -24,7 +24,7 @@ create table BOOKING
 , BookingHotelID int
 , BookingUserID int
 , BookingNumOfGuests int
-, BookingPaymentFinalized boolean
+, BookingPaymentFinalized BOOLEAN
 );
 
 create table BOOKING_ROOM
@@ -35,7 +35,7 @@ create table BOOKING_ROOM
 );
 
 create table USER
-( UserID int
+( UserID INTEGER PRIMARY KEY AUTOINCREMENT
 , UserName varchar(30)
 , UserEmail varchar(30)
 );

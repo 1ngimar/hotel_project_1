@@ -3,6 +3,10 @@ package sample;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -58,10 +62,17 @@ public class Room {
         }
     }
 
-    public Room(RoomCategory room_category, int room_capacity, int room_price, String roomAmenityString) {
+    public Room(int room_id, RoomCategory room_category, double room_price_multiplier, int room_capacity, int room_price, int hotel_id,
+                ArrayList<ArrayList<LocalDate>> room_occupancy, RoomAmenities[] room_amenities,
+                String roomAmenityString) {
+        this.room_id = room_id;
+        this.hotel_id = hotel_id;
         this.room_category = room_category;
         this.room_capacity = room_capacity;
+        this.room_price_multiplier = room_price_multiplier;
         this.room_price = room_price;
+        this.room_occupancy = room_occupancy;
+        this.room_amenities = room_amenities;
         this.roomAmenityString = roomAmenityString;
     }
 
