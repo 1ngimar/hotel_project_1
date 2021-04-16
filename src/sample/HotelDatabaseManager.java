@@ -192,21 +192,33 @@ public class HotelDatabaseManager {
         User user = booking.getBooking_user();
         int userID = user.getUser_id();
         int numOfGuests = booking.getBooking_num_of_guests();
-        boolean paymentFinalized = booking.isBooking_payment_finalized();
+        //boolean paymentFinalized = booking.isBooking_payment_finalized();
+        boolean paymentFinalized = false;
         int bookingID = 0;
 
-        String bookingInsertString = ("INSERT into BOOKING(BookingHotelID, BookingUserID, "
-                + "BookingNumOfGuests, BookingPaymentFinalized) " + "VALUES (" + hotelID + ", "
-                + userID + ", " + numOfGuests + ", " + paymentFinalized + ")");
+        String bookingInsertString = ("INSERT into BOOKING(BookingUserID, "
+                + "BookingNumOfGuests, BookingPaymentFinalized) " + "VALUES (" + userID + ", " + numOfGuests + ", " + paymentFinalized + ")");
 
         try {
             Connection conn = new DBFactory().connect();
             Statement stmtBooking = conn.createStatement();
-            ResultSet rsBooking = stmtBooking.executeQuery(bookingInsertString);
-            bookingID = rsBooking.getInt("BookingID");
+            stmtBooking.executeUpdate(bookingInsertString);
             conn.close();
         } catch (SQLException e) {
             System.out.println("Error in SQL addNewBooking() in BOOKING");
+            System.out.println(e.getMessage());
+        }
+
+        String bookingIDSQL = "SELECT MAX(BookingID) FROM BOOKING";
+
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtBookingID = conn.createStatement();
+            ResultSet rsBookingID = stmtBookingID.executeQuery(bookingIDSQL);
+            bookingID = rsBookingID.getInt("BookingID");
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL addNewBooking() in getting bookingID");
             System.out.println(e.getMessage());
         }
 
@@ -215,23 +227,24 @@ public class HotelDatabaseManager {
         String bookingDepDate = booking.getBooking_dep_date().toString();
         ArrayList<Room> bookingRooms = booking.getBooking_rooms();
         int bookingRoomID;
-        for (Room room_i : bookingRooms) {
-            bookingRoomID = room_i.getRoom_id();
-            String bookingRoomInsertString = ("INSERT into BOOKING_ROOM(BookingID, BookingRoomID, BookingArrDate, " +
-                    "BookingDepDate) " + "VALUES ( " + bookingID + ", " + bookingRoomID + ", " + bookingArrDate + ", "
-                    + bookingDepDate + ")");
-            try {
-                Connection conn = new DBFactory().connect();
+        try {
+            Connection conn = new DBFactory().connect();
+            String bookingRoomInsertString;
+            for (Room room_i : bookingRooms) {
+                bookingRoomID = room_i.getRoom_id();
+                bookingRoomInsertString = ("INSERT into BOOKING_ROOM(BookingID, BookingRoomID, BookingArrDate, " +
+                        "BookingDepDate) " + "VALUES ( " + bookingID + ", " + bookingRoomID + ", " + bookingArrDate + ", "
+                        + bookingDepDate + ")");
                 Statement stmtBookingRoom = conn.createStatement();
-                ResultSet rsBookingRoom = stmtBookingRoom.executeQuery(bookingRoomInsertString);
-                conn.close();
-            } catch (SQLException e) {
-                System.out.println("Error in SQL addNewBooking() in BOOKING_ROOM");
-                System.out.println(e.getMessage());
+                stmtBookingRoom.executeUpdate(bookingRoomInsertString);
             }
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL addNewBooking() in BOOKING_ROOM");
+            System.out.println(e.getMessage());
         }
-
     }
+
 
     public ObservableList<String> getLocation() {
         ObservableList<String> locations = FXCollections.observableArrayList();

@@ -11,16 +11,14 @@ public class HotelBooking {
     private LocalDate booking_dep_date;
     private ArrayList<Room> booking_rooms;
     private int booking_num_of_guests;
-    private boolean booking_payment_finalized;
 
-    public HotelBooking(Hotel booking_hotel, User booking_user, LocalDate booking_arr_date, LocalDate booking_dep_date, ArrayList<Room> booking_rooms, int booking_num_of_guests, boolean booking_payment_finalized) {
+    public HotelBooking(Hotel booking_hotel, User booking_user, LocalDate booking_arr_date, LocalDate booking_dep_date, ArrayList<Room> booking_rooms, int booking_num_of_guests) {
         this.booking_hotel = booking_hotel;
         this.booking_user = booking_user;
         this.booking_arr_date = booking_arr_date;
         this.booking_dep_date = booking_dep_date;
         this.booking_rooms = booking_rooms;
         this.booking_num_of_guests = booking_num_of_guests;
-        this.booking_payment_finalized = booking_payment_finalized;
     }
 
     public int getBooking_id() {
@@ -77,14 +75,6 @@ public class HotelBooking {
 
     public void setBooking_num_of_guests(int booking_num_of_guests) {
         this.booking_num_of_guests = booking_num_of_guests;
-    }
-
-    public boolean isBooking_payment_finalized() {
-        return booking_payment_finalized;
-    }
-
-    public void setBooking_payment_finalized(boolean booking_payment_finalized) {
-        this.booking_payment_finalized = booking_payment_finalized;
     }
 
     public HotelBooking() {

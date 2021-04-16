@@ -1,7 +1,9 @@
-package sample;
-
-import javafx.collections.FXCollections;
+/*import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import sample.Hotel;
+import sample.HotelBooking;
+import sample.Room;
+import sample.User;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -11,6 +13,14 @@ import static sample.Hotel.HotelAmenities.*;
 import static sample.Hotel.StarRating.*;
 import static sample.Room.RoomAmenities.*;
 import static sample.Room.RoomCategory.*;
+
+mport javafx.collections.FXCollections;
+
+iport javafx.collections.FXCollections;
+
+i/mport javafx.collections.FXCollections;
+
+*package sample;
 
 public class DataFactory {
     // Create all rooms
@@ -45,7 +55,7 @@ public class DataFactory {
         // Get the rooms for this user and add them to a list for that one user
         booking_room_list1.add(rooms.get(0));
         hotelBooking1.add(new HotelBooking(hotels.get(0), user1, LocalDate.of(2021, 4, 2),
-                LocalDate.of(2021, 4, 3), booking_room_list1, 2, false));
+                LocalDate.of(2021, 4, 3), booking_room_list1, 2));
         // end of booking for user1
         users.addAll(user1, user2, user3, user4, user5, user6);
         return users;
@@ -179,3 +189,4 @@ public class DataFactory {
     }
 
 }
+*/

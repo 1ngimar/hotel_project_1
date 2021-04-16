@@ -10,6 +10,7 @@ public class AppState {
     private ObservableList<Room> availableRoomsForSelectedHotel;
     private LocalDate arrDate, depDate;
     private final static AppState INSTANCE = new AppState();
+    private int numOfGuests;
 
     private AppState() {
     }
@@ -56,5 +57,13 @@ public class AppState {
 
     public void setDepDate(LocalDate depDate) {
         this.depDate = depDate;
+    }
+
+    public int getNumOfGuests() {
+        return numOfGuests;
+    }
+
+    public void setNumOfGuests(int numOfGuests) {
+        this.numOfGuests = numOfGuests;
     }
 }

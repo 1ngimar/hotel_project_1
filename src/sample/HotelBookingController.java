@@ -21,6 +21,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HotelBookingController implements Initializable {
@@ -54,9 +55,12 @@ public class HotelBookingController implements Initializable {
     private ObservableList<Room> newRoomList = FXCollections.observableArrayList();
     private LocalDate arrDate;
     private LocalDate depDate;
-
+    private ArrayList<Room> bookingRooms = new ArrayList<>();
+    private NonUIHotelSearchController nonUIHotelSearchController = new NonUIHotelSearchController();
+    private int numOfGuests;
 
     @Override
+
     public void initialize(URL location, ResourceBundle resources) {
         // Allow user to go back to previous scene
         goBackButton.setOnAction(e -> goBack(e));
@@ -64,6 +68,9 @@ public class HotelBookingController implements Initializable {
         searchResult = state.getSearchResult(); //Getting the observable list of hotels in searchResult
         selectedHotel = state.getSelectedHotel(); //Getting the selected hotel
         availableRoomsForSelectedHotel = state.getAvailableRoomsForSelectedHotel(); // getting the available rooms for the selected hotel
+        arrDate = state.getArrDate();
+        depDate = state.getDepDate();
+        numOfGuests = state.getNumOfGuests();
 
         // Fill all labels in the scene
         hotelNameLabel.setText(selectedHotel.getHotel_name());
@@ -104,8 +111,12 @@ public class HotelBookingController implements Initializable {
         bookingButton.setOnAction(event -> {
             for (Room room : newRoomList) {
                 // TODO store in database
-                System.out.println(room.getIsChecked().getValue());
+                if (room.getIsChecked() != null) {
+                    bookingRooms.add(room);
+                }
+                System.out.println(room.getIsChecked());
             }
+            nonUIHotelSearchController.createNewBooking(selectedHotel, loggedInUser, arrDate, depDate, bookingRooms, numOfGuests);
         });
 
 

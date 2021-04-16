@@ -453,6 +453,7 @@ public class HotelSearchController implements Initializable {
             state.setAvailableRoomsForSelectedHotel(availableRooms);
             state.setArrDate(selected_arr_date);
             state.setDepDate(selected_dep_date);
+            state.setNumOfGuests(selectedNumOfGuests);
 
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
 
