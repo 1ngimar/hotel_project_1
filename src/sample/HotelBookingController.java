@@ -111,7 +111,7 @@ public class HotelBookingController implements Initializable {
         bookingButton.setOnAction(event -> {
             for (Room room : newRoomList) {
                 // TODO store in database
-                if (room.getIsChecked() != null) {
+                if (room.getIsChecked() != null && room.getIsChecked().getValue()) {
                     bookingRooms.add(room);
                 }
                 System.out.println(room.getIsChecked());
@@ -148,7 +148,9 @@ public class HotelBookingController implements Initializable {
         for (Room r : availableRoomsForSelectedHotel) {
 
             String roomAmenityString = createRoomAmenityString(r);
-            Room newRoom = new Room(r.getRoom_category(), r.getRoom_capacity(), r.getRoom_price(), roomAmenityString);
+            Room newRoom = new Room(r.getRoom_id(), r.getRoom_category(), r.getRoom_price_multiplier(),
+                    r.getRoom_capacity(), r.getRoom_price(), r.getHotel_id(), r.getRoom_occupancy(),
+                    r.getRoom_amenities(), roomAmenityString);
             newRoomList.add(newRoom);
         }
 

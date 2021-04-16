@@ -24,7 +24,7 @@ create table BOOKING
 , BookingHotelID int
 , BookingUserID int
 , BookingNumOfGuests int
-, BookingPaymentFinalized boolean
+, BookingPaymentFinalized BOOLEAN
 );
 
 create table BOOKING_ROOM
