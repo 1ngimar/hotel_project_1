@@ -292,6 +292,19 @@ public class HotelDatabaseManager {
         return userList;
     }
 
+    public void addNewUser(String userName, String userEmail) {
+        String sqlNewUserString = "INSERT INTO USER(UserName, UserEmail) VALUES ('" + userName + "', '" + userEmail + "')";
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtNewUser = conn.createStatement();
+            stmtNewUser.executeUpdate(sqlNewUserString);
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL addNewUser in USER");
+            System.out.println(e.getMessage());
+        }
+    }
+
     /*
     public ArrayList<Room> getBookedRooms() {
         ArrayList<HotelBooking> allBookingsPerRoom;
