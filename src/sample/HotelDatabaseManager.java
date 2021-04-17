@@ -355,13 +355,16 @@ public class HotelDatabaseManager {
             System.out.println(e.getMessage());
         }
 
-        user.setUserName(userName);
-        user.setEmail(userEmail);
-        user.setUser_id(userID);
 
         if (userID == 0) {
             return null;
+        } else {
+            user.setUserName(userName);
+            user.setEmail(userEmail);
+            user.setUser_id(userID);
         }
+
+
         String getBookingsByUserID = "SELECT * FROM BOOKING WHERE BookingUserID = " + userID;
         int hotelID;
         try {

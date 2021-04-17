@@ -222,5 +222,18 @@ public class NonUIHotelSearchController {
         return booking;
     }
 
+    public User createNewUser(String userName, String userEmail) {
+        int userID = databaseManager.getMaxUserID() + 1;
+        User user = new User(userID, userName, userEmail);
+        databaseManager.addNewUser(userName, userEmail);
+        return user;
+    }
+
+    public void addUserToDataBase(User user) {
+        String userName = user.getUserName();
+        String userEmail = user.getEmail();
+        databaseManager.addNewUser(userName, userEmail);
+    }
+
 
 }
