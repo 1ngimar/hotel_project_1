@@ -62,7 +62,6 @@ public class HotelBookingController implements Initializable {
     private Label pleaseLoginFirstLabel;
 
     private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
-    private ObservableList<Hotel> searchResult = FXCollections.observableArrayList();
     private Hotel selectedHotel;
     private ObservableList<Room> newRoomList = FXCollections.observableArrayList();
     private LocalDate arrDate;
@@ -78,7 +77,6 @@ public class HotelBookingController implements Initializable {
         // Allow user to go back to previous scene
         goBackButton.setOnAction(e -> goBack(e));
         AppState state = AppState.getInstance();
-        searchResult = state.getSearchResult(); //Getting the observable list of hotels in searchResult
         selectedHotel = state.getSelectedHotel(); //Getting the selected hotel
         availableRoomsForSelectedHotel = state.getAvailableRoomsForSelectedHotel(); // getting the available rooms for the selected hotel
         arrDate = state.getArrDate();
@@ -122,8 +120,6 @@ public class HotelBookingController implements Initializable {
                     initializeLoginUserstuff();
                     Room currentRoom = newRoomList.get(itemIndex);
                     currentRoom.setIsChecked(new SimpleBooleanProperty(isNowSelected));
-                    System.out.println("Checkbox for " + itemIndex + " changed from " + wasSelected + "  to " + isNowSelected);
-                    System.out.println(currentRoom.getIsChecked().getValue());
                 });
 
                 return observable;
@@ -136,30 +132,37 @@ public class HotelBookingController implements Initializable {
                 String userEmailString = userEmailTF.getText();
                 databaseManager.addNewUser(userNameString, userEmailString);
                 bookingButton.setDisable(false);
+                int userID = databaseManager.getMaxUserID();
+                loggedInUser = new User(userID, userNameString, userEmailString);
             } catch (Exception e) {
-                System.out.println("Einhver villa hér !!! pls fix now");
+                System.out.println("Error logging in");
                 e.printStackTrace();
             }
         });
 
         bookingButton.setOnAction(event -> {
             for (Room room : newRoomList) {
-                // TODO store in database  DONE!
                 if (room.getIsChecked() != null && room.getIsChecked().getValue()) {
                     bookingRooms.add(room);
                 }
-                System.out.println(room.getIsChecked());
             }
-            nonUIHotelSearchController.createNewBooking(selectedHotel, loggedInUser, arrDate, depDate, bookingRooms, numOfGuests);
+            HotelBooking booking = nonUIHotelSearchController.createNewBooking(selectedHotel, loggedInUser, arrDate, depDate, bookingRooms, numOfGuests);
+
+            Node node = (Node) event.getSource();
+            Stage stage = (Stage) node.getScene().getWindow();
+            stage.close();
+            try {
+                AppState bookingState = AppState.getInstance();
+                bookingState.setBooking(booking);
+                Parent root = FXMLLoader.load(getClass().getResource("BookingConfirmation.fxml"));
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
-
-
-        //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
-        //DataFactory dataFactory = new DataFactory();
-        HotelDatabaseManager databaseManager = new HotelDatabaseManager();
-        ObservableList<User> allUsers = databaseManager.getUsers();
-        loggedInUser = allUsers.get(0);
-        //TODO -------------------------------------------------Siggi bað um þetta ----------------------------------
     }
 
     private void initializeLoginUserstuff() {

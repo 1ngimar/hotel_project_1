@@ -57,7 +57,6 @@ public class HotelSearchController implements Initializable {
     private Label numOfRoomsLabel;
 
 
-    //private DataFactory dataFactory = new DataFactory();
     private HotelDatabaseManager databaseManager = new HotelDatabaseManager();
     private ArrayList<Hotel> hotels = databaseManager.getAllHotels();
     private String selectedLocation;
@@ -71,8 +70,8 @@ public class HotelSearchController implements Initializable {
     private ObservableList<String> searchResultsHotelLocations = FXCollections.observableArrayList();
     private Hotel selectedHotel;
     private ObservableList<Room> availableRooms = FXCollections.observableArrayList();
-    private ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
     private boolean fiveStar, fourStar, threeStar;
+    private NonUIHotelSearchController nonUIHotelSearchController = new NonUIHotelSearchController();
 
     @Override
     public String toString() {
@@ -82,7 +81,7 @@ public class HotelSearchController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         noResultsErrorMsg.setVisible(false);
-        locations = databaseManager.getLocation();
+        locations = databaseManager.getLocations();
         afangastadir.setItems(locations);
         int max = 30;
         ObservableList<Integer> maxGuestsList = FXCollections.observableArrayList();
@@ -150,29 +149,7 @@ public class HotelSearchController implements Initializable {
 
             // Validate user input
             if (validateInputs()) {
-                // Filter hotels
-                /*
-                ArrayList<Hotel> filteredHotels = filterHotelsByLocation(hotels);
-                filteredHotels = filterHotelsByDates(filteredHotels);
-                filteredHotels = filterHotelsByStarRating(filteredHotels);
 
-                // TODO færa inn virkni til að leita í hótelum eftir völdum amenities, setja upp check box í viðmóti sem birtist eftir fyrstu leit að hótelum
-
-                searchResults = FXCollections.observableArrayList(filteredHotels);
-
-                if (searchResults.isEmpty()) {
-                    noResultsErrorMsg.setVisible(true);
-                } else {
-                    for (Hotel hotel : searchResults) {
-                        searchResultsHotelNames.add(hotel.getHotel_name());
-                        searchResultsHotelLocations.add(hotel.getHotel_location());
-                    }
-
-                    hotelListView.setItems(searchResultsHotelNames);
-                }
-
-                */
-                /*********************************************************************/
                 //Test for NonUIHotelSearchController
 
                 if (fimmStjornur.isSelected()) {
@@ -185,8 +162,8 @@ public class HotelSearchController implements Initializable {
                     threeStar = true;
                 }
 
-                searchResults = NonUIHotelSearchController.getHotelSearchResults(
-                        hotels, selectedLocation, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms,
+                searchResults = nonUIHotelSearchController.getHotelSearchResults(
+                        selectedLocation, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms,
                         threeStar, fourStar, fiveStar);
                 fiveStar = false;
                 fourStar = false;
@@ -268,152 +245,32 @@ public class HotelSearchController implements Initializable {
         }
 
         if (arrivalDate != null && departureDate != null) {
+            // Valin komudagsetning er á eftir valinni brottfarardagsetningu
             if (arrivalDate.isAfter(departureDate)) {
                 koma_label.setTextFill(Color.RED);
-                // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-                //koma_label.setText("Valin komudagsetning er á eftir valinni brottfarardagsetningu");
                 isValid = false;
             }
 
+            // Valin dagsetning er liðin
             if (arrivalDate.isBefore(LocalDate.now())) {
                 koma_label.setTextFill(Color.RED);
-                // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-                // koma_label.setText("Valin dagsetning eru liðinn");
                 isValid = false;
             }
 
+            // Valin dagsetning er liðin
             if (departureDate.isBefore(LocalDate.now())) {
                 brottfor_label.setTextFill(Color.RED);
-                // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-                // brottfor_label.setText("Valin dagsetning eru liðinn");
                 isValid = false;
             }
         }
-
-        // TODO útfæra skilyrði þannig að þú getir ekki leitað af herbergjum fyrir fleiri en herbergjafjöldinn rýmir
-
-        if (selectedNumOfGuests > selectedNumOfRooms && ((selectedNumOfGuests % selectedNumOfRooms > 0) || (selectedNumOfRooms == 1))) {
-            System.out.println();
-        }
-
 
         if (!isValid) {
             error_label.setTextFill(Color.RED);
-            error_label.setText("Vinsamlegast fylltu rauða reiti");
+            error_label.setText("Villa í rauðum reit/um");
         }
 
         return isValid;
     }
-    /*
-    private ArrayList<Hotel> filterHotelsByStarRating(ArrayList<Hotel> hotels) {
-        ArrayList<Hotel> starRatedHotels = new ArrayList<Hotel>();
-
-        if (fimmStjornur.isSelected() || fjorarStjornur.isSelected() || trjarStrjornur.isSelected()) {
-            for (Hotel hotel : hotels) {
-                if (fimmStjornur.isSelected() && hotel.getHotel_star_rating() == Hotel.StarRating.FIVE) {
-                    starRatedHotels.add(hotel);
-                }
-
-                if (fjorarStjornur.isSelected() && hotel.getHotel_star_rating() == Hotel.StarRating.FOUR) {
-                    starRatedHotels.add(hotel);
-                }
-
-                if (trjarStrjornur.isSelected() && hotel.getHotel_star_rating() == Hotel.StarRating.THREE) {
-                    starRatedHotels.add(hotel);
-                }
-            }
-
-            return starRatedHotels;
-        }
-
-        return hotels;
-    }
-
-    private ArrayList<Hotel> filterHotelsByLocation(ArrayList<Hotel> hotels) {
-        ArrayList<Hotel> hotelsByLocation = new ArrayList<Hotel>();
-
-        for (Hotel hotel : hotels) {
-            if (hotel.getHotel_location().equals(selectedLocation)) {
-                hotelsByLocation.add(hotel);
-            }
-        }
-
-        if (hotelsByLocation.size() > 0) {
-            return hotelsByLocation;
-        }
-
-        return hotels;
-    }
-
-    private ArrayList<Hotel> filterHotelsByDates(ArrayList<Hotel> hotels) {
-        ArrayList<Hotel> hotelsByDates = new ArrayList<Hotel>();
-
-        for (Hotel hotel : hotels) {
-            ObservableList<Room> availableRooms = filterRooms(hotel);
-            //filterRooms(hotel);
-
-            if (availableRooms != null && availableRooms.size() > 0) {
-                hotelsByDates.add(hotel);
-            }
-        }
-
-        return hotelsByDates;
-    }
-
-    // Do not use this function directly!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    private ObservableList<Room> filterRooms(Hotel hotel) {
-        //availableRooms = FXCollections.observableArrayList();
-        ArrayList<Room> roomList = hotel.getHotel_room_list();
-        int hotelCapacity = 0;
-        int selectedNumOfGuests = Integer.parseInt(numOfGuests.getSelectionModel().getSelectedItem().toString());
-        int selectedNumOfRooms = Integer.parseInt(numOfRooms.getSelectionModel().getSelectedItem().toString());
-
-        // Make a list of available rooms
-        for (Room room : roomList) {
-            ArrayList<ArrayList<LocalDate>> roomOccupancy = room.getRoom_occupancy();
-
-            for (ArrayList<LocalDate> occupancyDates : roomOccupancy) {
-                LocalDate arrivalDate = occupancyDates.get(0);
-                LocalDate departureDate = occupancyDates.get(1);
-
-                if (((selected_arr_date.isAfter(departureDate) && selected_dep_date.isAfter(departureDate)) ||
-                        (selected_arr_date.isBefore(arrivalDate) && selected_dep_date.isBefore(arrivalDate)))) {
-                    availableRooms.add(room);
-                }
-            }
-        }
-
-        for (Room room : availableRooms) {
-            hotelCapacity += room.getRoom_capacity();
-        }
-
-        // Check if total room capacity of available rooms is enough for selected number of guests
-        // and if number of available rooms is enough for selected number of rooms
-        if (hotelCapacity < selectedNumOfGuests || availableRooms.size() < selectedNumOfRooms) {
-            return null;
-        }
-
-        // Filter list of available rooms to list of available rooms of SINGLE category
-        if (selectedNumOfGuests == selectedNumOfRooms) {
-            availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.SINGLE);
-            // Filter list of available rooms to list of available rooms of DOUBLE category
-        } else if (selectedNumOfGuests / selectedNumOfRooms == 2) {
-            availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.DOUBLE);
-            // Filter list of available rooms to list of available rooms of FAMILY category
-        } else if (selectedNumOfGuests / selectedNumOfRooms == 4) {
-            availableRooms = filterRoomsByCategory(availableRooms, Room.RoomCategory.FAMILY);
-        }
-        return availableRooms;
-    }
-
-    private ObservableList<Room> filterRoomsByCategory(ObservableList<Room> rooms, Room.RoomCategory category) {
-        return rooms.stream()
-                // Filter rooms by category type (SINGLE, DOUBLE or FAMILY)
-                .filter((room -> room.getRoom_category() == category))
-                // Convert Stream to ObservableList
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
-    }
-    */
 
 
     public Hotel getHotelByName(String hotelName, ObservableList<Hotel> hotelList) {
@@ -425,26 +282,18 @@ public class HotelSearchController implements Initializable {
         return null;
     }
 
-    // This is a pure UI function DO NOT USE DIRECTLY
     @FXML
     public void getSelectedHotel(MouseEvent clickOnHotel) {
         String selectedHotelName = (String) hotelListView.getSelectionModel().getSelectedItem();
         selectedHotel = getHotelByName(selectedHotelName, searchResults);
-        //ObservableList<Room> availableRoomsForSelectedHotel = FXCollections.observableArrayList();
 
         Node node = (Node) clickOnHotel.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
         stage.close();
 
         try {
-            //FXMLLoader loader = FXMLLoader.load(getClass().getClassLoader().getResource("RoomSearch.fxml"));
-            //HotelBookingController roomSearchController = new HotelBookingController();
-            //loader.setController(roomSearchController);
 
-            // only transfer the available rooms for the selected hotel
-            int tempHotelID = selectedHotel.getHotel_id();
 
-            // Þetta er test
             availableRooms = NonUIHotelSearchController.filterRooms(selectedHotel, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms);
 
             AppState state = AppState.getInstance();

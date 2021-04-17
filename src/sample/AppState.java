@@ -11,6 +11,15 @@ public class AppState {
     private LocalDate arrDate, depDate;
     private final static AppState INSTANCE = new AppState();
     private int numOfGuests;
+    private HotelBooking booking;
+
+    public HotelBooking getBooking() {
+        return booking;
+    }
+
+    public void setBooking(HotelBooking booking) {
+        this.booking = booking;
+    }
 
     private AppState() {
     }

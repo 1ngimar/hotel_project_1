@@ -252,7 +252,7 @@ public class HotelDatabaseManager {
     }
 
 
-    public ObservableList<String> getLocation() {
+    public ObservableList<String> getLocations() {
         ObservableList<String> locations = FXCollections.observableArrayList();
         String sqlLocations = "SELECT DISTINCT HotelLocation FROM HOTEL";
         try {
@@ -305,6 +305,38 @@ public class HotelDatabaseManager {
         }
     }
 
+    public int getMaxUserID() {
+        int maxUserID = 0;
+        String getMaxUserIDString = "SELECT MAX(UserID) FROM USER";
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtMaxUserID = conn.createStatement();
+            ResultSet rsMaxUserID = stmtMaxUserID.executeQuery(getMaxUserIDString);
+            maxUserID = rsMaxUserID.getInt("MAX(UserID)");
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL getMaxUserID getting UserID");
+            System.out.println(e.getMessage());
+        }
+        return maxUserID;
+    }
+
+    public int getMaxBookingID() {
+        int maxBookingID = 0;
+        String getMaxBookingIDString = "SELECT MAX(BookingID) FROM BOOKING";
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtMaxBookingID = conn.createStatement();
+            ResultSet rsMaxBookingID = stmtMaxBookingID.executeQuery(getMaxBookingIDString);
+            maxBookingID = rsMaxBookingID.getInt("MAX(BookingID)");
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL getMaxBookingID getting BookingID");
+            System.out.println(e.getMessage());
+        }
+        return maxBookingID;
+    }
+
     /*
     public ArrayList<Room> getBookedRooms() {
         ArrayList<HotelBooking> allBookingsPerRoom;
@@ -330,6 +362,45 @@ public class HotelDatabaseManager {
 
     }
 
+     */
+    /*
+    public HotelBooking getBookingByMaxID() {
+        HotelBooking booking = new HotelBooking();
+        int bookingID = 0;
+        try { // Get the auto-generated bookingID from the hotelDataBase.db file
+            String sqlThisBookingID = ("SELECT MAX(BookingID) FROM BOOKING");
+            Connection conn = new DBFactory().connect();
+            Statement stmtThisBookingID = conn.createStatement();
+            ResultSet rsBookingID = stmtThisBookingID.executeQuery(sqlThisBookingID);
+            bookingID = rsBookingID.getInt("MAX(BookingID)");
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL getBookingByMaxID() in getting bookingID");
+            System.out.println(e.getMessage());
+        }
+
+        booking.setBooking_id(bookingID);
+
+        try {
+            String getBookingByMaxIDString = ("SELECT * FROM BOOKING WHERE BookingID = " + bookingID);
+            Connection conn = new DBFactory().connect();
+            Statement stmtGetBookingByMaxID = conn.createStatement();
+            ResultSet rsBookingByMaxID = stmtGetBookingByMaxID.executeQuery(getBookingByMaxIDString);
+            String arrDateAsString = rsBookingByMaxID.getString("BookingArrDate");
+            String depDateAsString = rsBookingByMaxID.getString("BookingDepDate");
+            LocalDate arrDate = LocalDate.parse(arrDateAsString);
+            LocalDate depDate = LocalDate.parse(depDateAsString);
+            booking.setBooking_arr_date(arrDate);
+            booking.setBooking_dep_date(depDate);
+            booking.setBooking_hotel();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL getBookingByMaxID in getting booking");
+            System.out.println(e.getMessage());
+        }
+
+
+    }
+    */
     /*
     public ArrayList<HotelBooking> getBookingsPerRoom() {
         ArrayList<HotelBooking> allBookingsPerRoom;
