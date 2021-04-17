@@ -148,6 +148,7 @@ public class HotelBookingController implements Initializable {
             }
             HotelBooking booking = nonUIHotelSearchController.createNewBooking(selectedHotel, loggedInUser, arrDate, depDate, bookingRooms, numOfGuests);
 
+            // Test fyrir getBookingsByUserName
             ObservableList<HotelBooking> bookingList = nonUIHotelSearchController.getBookingsByUserName(loggedInUser.getUserName());
             for (HotelBooking hb : bookingList) {
                 System.out.print(hb.getBooking_user().getUserName());
