@@ -148,6 +148,18 @@ public class HotelBookingController implements Initializable {
             }
             HotelBooking booking = nonUIHotelSearchController.createNewBooking(selectedHotel, loggedInUser, arrDate, depDate, bookingRooms, numOfGuests);
 
+            ObservableList<HotelBooking> bookingList = nonUIHotelSearchController.getBookingsByUserName(loggedInUser.getUserName());
+            for (HotelBooking hb : bookingList) {
+                System.out.print(hb.getBooking_user().getUserName());
+                System.out.print(hb.getBooking_arr_date().toString());
+                System.out.print(hb.getBooking_dep_date().toString());
+                System.out.print(hb.getBooking_hotel().getHotel_name());
+                System.out.print(hb.getBooking_rooms().get(0).getRoom_id());
+                System.out.print(hb.getBooking_id());
+                System.out.print(hb.getBooking_num_of_guests());
+                System.out.println("--");
+            }
+
             Node node = (Node) event.getSource();
             Stage stage = (Stage) node.getScene().getWindow();
             stage.close();

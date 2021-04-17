@@ -210,6 +210,11 @@ public class NonUIHotelSearchController {
         return locations;
     }
 
+    public ObservableList<HotelBooking> getBookingsByUserName(String userName) {
+        ObservableList<HotelBooking> bookings = databaseManager.getBookingsByUserName(userName);
+        return bookings;
+    }
+
     public HotelBooking createNewBooking(Hotel hotel, User user, LocalDate arrDate, LocalDate depDate, ArrayList<Room> listOfRooms, int numOfGuests) {
         int bookingID = databaseManager.getMaxBookingID() + 1;
         HotelBooking booking = new HotelBooking(bookingID, hotel, user, arrDate, depDate, listOfRooms, numOfGuests);
