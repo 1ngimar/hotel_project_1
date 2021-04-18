@@ -235,5 +235,9 @@ public class NonUIHotelSearchController {
         databaseManager.addNewUser(userName, userEmail);
     }
 
+    public int getUserIDByUserEmail(String userEmail) {
+        return databaseManager.getUserIDByUserEmail(userEmail);
+    }
+
 
 }

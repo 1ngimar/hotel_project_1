@@ -337,6 +337,25 @@ public class HotelDatabaseManager {
         return maxBookingID;
     }
 
+    public int getUserIDByUserEmail(String userEmail) {
+        String getUserIdByUserNameString = "SELECT UserID FROM USER WHERE UserEmail = '" + userEmail + "'";
+        int userID = 0;
+        try {
+            Connection conn = new DBFactory().connect();
+            Statement stmtUserIDByName = conn.createStatement();
+            ResultSet rsUser = stmtUserIDByName.executeQuery(getUserIdByUserNameString);
+            userID = rsUser.getInt("UserID");
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Error in SQL getUserIDByUserEmail getting UserID");
+            System.out.println(e.getMessage());
+        }
+        if (userID == 0) {
+            throw new NullPointerException();
+        }
+        return userID;
+    }
+
     public ObservableList<HotelBooking> getBookingsByUserName(String userName) {
         ObservableList<HotelBooking> bookingsForUser = FXCollections.observableArrayList();
         String getUserIdByUserNameString = "SELECT * FROM USER WHERE UserName = '" + userName + "'";
