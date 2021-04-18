@@ -545,7 +545,7 @@ public class HotelDatabaseManager {
                 }
                 h.setHotel_room_list(allRoomsForHotel);
                 nextBooking.setBooking_hotel(h);
-                String getBookingRoomsString = "SELECT * FROM BOOKING_ROOM WHERE BookingID = " + booking.getBooking_id();
+                String getBookingRoomsString = "SELECT * FROM BOOKING_ROOM WHERE BookingID = " + nextBooking.getBooking_id();
                 Statement stmtGetBookingRooms = conn.createStatement();
                 ResultSet rsBookingRooms = stmtGetBookingRooms.executeQuery(getBookingRoomsString);
                 ArrayList<Room> rooms = new ArrayList<>();
