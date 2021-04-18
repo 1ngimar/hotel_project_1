@@ -14,11 +14,9 @@ import static sample.Hotel.StarRating.*;
 import static sample.Room.RoomAmenities.*;
 import static sample.Room.RoomCategory.*;
 
-mport javafx.collections.FXCollections;
-
-iport javafx.collections.FXCollections;
-
-i/mport javafx.collections.FXCollections;
+import javafx.collections.FXCollections;
+import javafx.collections.FXCollections;
+import javafx.collections.FXCollections;
 
 *package sample;
 

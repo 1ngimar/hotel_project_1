@@ -54,7 +54,6 @@ public class BookingConfirmationController implements Initializable {
             roomsForTableView.add(r);
         }
 
-
         bookingID = booking.getBooking_id();
         BookedHotelNameLabel.setText(hotelName);
         BookedArrDateLabel.setText(arrDateString);

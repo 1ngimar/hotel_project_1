@@ -56,7 +56,6 @@ public class HotelSearchController implements Initializable {
     @FXML
     private Label numOfRoomsLabel;
 
-
     private HotelDatabaseManager databaseManager = new HotelDatabaseManager();
     private ArrayList<Hotel> hotels = databaseManager.getAllHotels();
     private String selectedLocation;
@@ -149,9 +148,6 @@ public class HotelSearchController implements Initializable {
 
             // Validate user input
             if (validateInputs()) {
-
-                //Test for NonUIHotelSearchController
-
                 if (fimmStjornur.isSelected()) {
                     fiveStar = true;
                 }
@@ -194,10 +190,9 @@ public class HotelSearchController implements Initializable {
             //Get hotels by location
             selectedLocation = afangastadir.getSelectionModel().getSelectedItem().toString();
         } else {
+            // Engin staðsetning valin
             isValid = false;
             stadsetningLabel.setTextFill(Color.RED);
-            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-            // stadsetningLabel.setText("Engin staðsetning valin");
         }
 
         if (numOfGuests.getSelectionModel().getSelectedItem() != null) {
@@ -218,18 +213,16 @@ public class HotelSearchController implements Initializable {
             //Get hotels by arrival date
             selected_arr_date = arr_date_selector.getValue();
         } else {
+            // Engin komu dagsetning valin
             koma_label.setTextFill(Color.RED);
-            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-            // koma_label.setText("Engin komu dagsetning valin");
             isValid = false;
         }
 
         if (dep_date_selector != null && dep_date_selector.getValue() != null) {
             selected_dep_date = dep_date_selector.getValue();
         } else {
+            // Engin brottfarar dagsetning valin
             brottfor_label.setTextFill(Color.RED);
-            // TODO breyta í error message label og restarta í resetLabels þegar búið er að bæta við
-            //brottfor_label.setText("Engin brottfarar dagsetning valin");
             isValid = false;
         }
 
@@ -268,10 +261,8 @@ public class HotelSearchController implements Initializable {
             error_label.setTextFill(Color.RED);
             error_label.setText("Villa í rauðum reit/um");
         }
-
         return isValid;
     }
-
 
     public Hotel getHotelByName(String hotelName, ObservableList<Hotel> hotelList) {
         for (Hotel h : hotelList) {
@@ -286,16 +277,12 @@ public class HotelSearchController implements Initializable {
     public void getSelectedHotel(MouseEvent clickOnHotel) {
         String selectedHotelName = (String) hotelListView.getSelectionModel().getSelectedItem();
         selectedHotel = getHotelByName(selectedHotelName, searchResults);
-
         Node node = (Node) clickOnHotel.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
         stage.close();
 
         try {
-
-
             availableRooms = NonUIHotelSearchController.filterRooms(selectedHotel, selected_arr_date, selected_dep_date, selectedNumOfGuests, selectedNumOfRooms);
-
             AppState state = AppState.getInstance();
             state.setSearchResult(searchResults);
             state.setSelectedHotel(selectedHotel);
@@ -303,9 +290,7 @@ public class HotelSearchController implements Initializable {
             state.setArrDate(selected_arr_date);
             state.setDepDate(selected_dep_date);
             state.setNumOfGuests(selectedNumOfGuests);
-
             Parent root = FXMLLoader.load(getClass().getResource("RoomSearch.fxml"));
-
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();

@@ -14,11 +14,8 @@ public class HotelDatabaseManager {
     private ArrayList<Hotel> allHotels = new ArrayList<>();
     private User dummyUser;
     private ArrayList<HotelBooking> allBookings;
-    //private ArrayList<Room> allRoomsForHotel = new ArrayList<>();
     private HotelBooking booking;
     private Hotel hotel;
-    //Connection conn = new DBFactory().connect(); Færði þetta inn í try inni í getAllHotels()
-
 
     public HotelDatabaseManager() {
 
@@ -35,7 +32,6 @@ public class HotelDatabaseManager {
 
             while (rsHotels.next()) {
                 ArrayList<Room> allRoomsForHotel = new ArrayList<>();
-                //allRoomsForHotel.clear();
                 Hotel h = new Hotel();
                 // Set hotel id into the hotel object
                 int hotelID = rsHotels.getInt("hotelID");
@@ -98,7 +94,6 @@ public class HotelDatabaseManager {
                 int hotelBasePrice = rsHotels.getInt("HotelBasePrice");
                 h.setHotel_base_price(hotelBasePrice);
 
-
                 // Now, for each hotel we will assign all the rooms for that hotel
                 String sqlRoomsForHotel = "SELECT * FROM ROOM WHERE RoomHotelID = " + hotelID;
                 Statement stmtRooms = conn.createStatement();
@@ -148,9 +143,6 @@ public class HotelDatabaseManager {
                         resultRA[i] = Room.RoomAmenities.valueOf(singleRoomAmenity);
                     }
                     r.setRoom_amenities(resultRA);
-                    //Þetta að neðan var von mín um að þetta gæti virkað eins og inni í DataFactory en þetta virkar ekki
-                    //Room.RoomAmenities resultRA = new Room.RoomAmenities[]{roomAmenityString};
-
 
                     // Set room occupancy into the room object
                     String sqlOccupancyForRoom = "SELECT * FROM BOOKING_ROOM WHERE BookingRoomID = " + roomID;
@@ -167,12 +159,9 @@ public class HotelDatabaseManager {
                         depDateString = rsBookingRoom.getString("BookingDepDate");
                         arrDate = LocalDate.parse(arrDateString);
                         depDate = LocalDate.parse(depDateString);
-                        //roomOccupancy.set(i, new ArrayList<>()); // þetta gefur villu
                         temp.add(arrDate);
                         temp.add(depDate);
                         roomOccupancy.add(temp);
-                        //roomOccupancy.get(i).add(arrDate);
-                        //roomOccupancy.get(i).add(depDate);
                         i++;
                     }
                     r.setRoom_occupancy(roomOccupancy);
@@ -183,7 +172,7 @@ public class HotelDatabaseManager {
 
                 allHotels.add(h);
             }
-            conn.close(); // Held að þetta vanti hér (ILG)
+            conn.close();
         } catch (SQLException e) {
             System.out.println("Error in SQL Selectall()");
             System.out.println(e.getMessage());
@@ -198,7 +187,6 @@ public class HotelDatabaseManager {
         User user = booking.getBooking_user();
         int userID = user.getUser_id();
         int numOfGuests = booking.getBooking_num_of_guests();
-        //boolean paymentFinalized = booking.isBooking_payment_finalized();
         boolean paymentFinalized = false;
         int bookingID = 0;
         ArrayList<Room> selectedRooms = new ArrayList<>();
@@ -374,7 +362,6 @@ public class HotelDatabaseManager {
             System.out.println(e.getMessage());
         }
 
-
         if (userID == 0) {
             return null;
         } else {
@@ -382,7 +369,6 @@ public class HotelDatabaseManager {
             user.setEmail(userEmail);
             user.setUser_id(userID);
         }
-
 
         String getBookingsByUserID = "SELECT * FROM BOOKING WHERE BookingUserID = " + userID;
         int hotelID;
@@ -512,9 +498,6 @@ public class HotelDatabaseManager {
                         resultRA[i] = Room.RoomAmenities.valueOf(singleRoomAmenity);
                     }
                     r.setRoom_amenities(resultRA);
-                    //Þetta að neðan var von mín um að þetta gæti virkað eins og inni í DataFactory en þetta virkar ekki
-                    //Room.RoomAmenities resultRA = new Room.RoomAmenities[]{roomAmenityString};
-
 
                     // Set room occupancy into the room object
                     String sqlOccupancyForRoom = "SELECT * FROM BOOKING_ROOM WHERE BookingRoomID = " + roomID;
@@ -531,12 +514,9 @@ public class HotelDatabaseManager {
                         depDateString = rsBookingRoom.getString("BookingDepDate");
                         arrDate = LocalDate.parse(arrDateString);
                         depDate = LocalDate.parse(depDateString);
-                        //roomOccupancy.set(i, new ArrayList<>()); // þetta gefur villu
                         temp.add(arrDate);
                         temp.add(depDate);
                         roomOccupancy.add(temp);
-                        //roomOccupancy.get(i).add(arrDate);
-                        //roomOccupancy.get(i).add(depDate);
                         i++;
                     }
                     r.setRoom_occupancy(roomOccupancy);
@@ -618,89 +598,5 @@ public class HotelDatabaseManager {
         }
         return bookingsForUser;
     }
-
-    /*
-    public ArrayList<Room> getBookedRooms() {
-        ArrayList<HotelBooking> allBookingsPerRoom;
-
-        String sqlBookingRoom = "SELECT * FROM BOOKING_ROOM";
-
-        try {
-            Connection conn = new DBFactory().connect();
-            Statement stmtBookingRoom = conn.createStatement();
-            ResultSet rsBookingRoom = stmtBookingRoom.executeQuery(sqlBookingRoom);
-            while (rsBookingRoom.next()){
-                HotelBooking hb = new HotelBooking();
-                hb.setBooking_id(rsBookingRoom.getInt("BookingID"));
-
-                for (Room r : allRoomsForHotel) {
-
-                }
-
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-    }
-
-     */
-    /*
-    public HotelBooking getBookingByMaxID() {
-        HotelBooking booking = new HotelBooking();
-        int bookingID = 0;
-        try { // Get the auto-generated bookingID from the hotelDataBase.db file
-            String sqlThisBookingID = ("SELECT MAX(BookingID) FROM BOOKING");
-            Connection conn = new DBFactory().connect();
-            Statement stmtThisBookingID = conn.createStatement();
-            ResultSet rsBookingID = stmtThisBookingID.executeQuery(sqlThisBookingID);
-            bookingID = rsBookingID.getInt("MAX(BookingID)");
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println("Error in SQL getBookingByMaxID() in getting bookingID");
-            System.out.println(e.getMessage());
-        }
-
-        booking.setBooking_id(bookingID);
-
-        try {
-            String getBookingByMaxIDString = ("SELECT * FROM BOOKING WHERE BookingID = " + bookingID);
-            Connection conn = new DBFactory().connect();
-            Statement stmtGetBookingByMaxID = conn.createStatement();
-            ResultSet rsBookingByMaxID = stmtGetBookingByMaxID.executeQuery(getBookingByMaxIDString);
-            String arrDateAsString = rsBookingByMaxID.getString("BookingArrDate");
-            String depDateAsString = rsBookingByMaxID.getString("BookingDepDate");
-            LocalDate arrDate = LocalDate.parse(arrDateAsString);
-            LocalDate depDate = LocalDate.parse(depDateAsString);
-            booking.setBooking_arr_date(arrDate);
-            booking.setBooking_dep_date(depDate);
-            booking.setBooking_hotel();
-        } catch (SQLException e) {
-            System.out.println("Error in SQL getBookingByMaxID in getting booking");
-            System.out.println(e.getMessage());
-        }
-
-
-    }
-    */
-    /*
-    public ArrayList<HotelBooking> getBookingsPerRoom() {
-        ArrayList<HotelBooking> allBookingsPerRoom;
-        String sqlBookingRoom = "SELECT * FROM BOOKING_ROOM";
-
-        try {
-            Connection conn = new DBFactory().connect();
-            Statement stmtBookingRoom = conn.createStatement();
-            ResultSet rsBookingRoom = stmtBookingRoom.executeQuery(sqlBookingRoom);
-            while (rsBookingRoom.next()){
-                HotelBooking hb = new HotelBooking();
-                hb.setBooking_id(rsBookingRoom.getInt("BookingID"));
-
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-     */
 }
+
